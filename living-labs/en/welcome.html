@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" data-ubec-service="living-labs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome — UBEC Living Labs</title>
+  <link rel="preconnect" href="https://fonts.bunny.net">
+  <link href="https://fonts.bunny.net/css?family=dm-serif-display:400|dm-sans:400,500,600" rel="stylesheet">
+  <link rel="stylesheet" href="https://design.ubec.network/v1/ubec-design-system.css">
+  <style>
+    body {
+      padding-top: 68px;
+      background-color: var(--color-parchment);
+      color: var(--color-text);
+      font-family: var(--font-body);
+      min-height: 100vh;
+    }
+    .welcome-wrapper {
+      min-height: calc(100vh - 68px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 3rem 1.5rem;
+    }
+    .welcome-card {
+      text-align: center;
+      max-width: 520px;
+      background: #fff;
+      border: 1px solid var(--color-sand);
+      border-radius: 14px;
+      padding: 3rem 2.5rem;
+      box-shadow: 0 2px 16px rgba(58, 36, 24, 0.07);
+    }
+    .welcome-icon { font-size: 3rem; display: block; margin-bottom: 1rem; }
+    .welcome-card h1 {
+      font-family: var(--font-display);
+      font-size: var(--text-3xl);
+      color: var(--color-bark);
+      margin-bottom: 0.75rem;
+      line-height: var(--leading-tight);
+    }
+    .welcome-card p {
+      color: var(--color-clay);
+      font-size: var(--text-base);
+      line-height: 1.65;
+      margin-bottom: 1rem;
+    }
+    .welcome-card p:last-of-type { margin-bottom: 2rem; }
+    .notice {
+      display: inline-block;
+      background: var(--color-ochre-light);
+      border: 1px solid var(--color-ochre);
+      border-radius: 7px;
+      padding: 0.6rem 1rem;
+      font-size: var(--text-sm);
+      color: var(--color-humus);
+      margin-bottom: 2rem;
+    }
+    .btn-signin {
+      display: inline-block;
+      padding: 0.75rem 2rem;
+      background: var(--color-commons);
+      color: #fff;
+      border-radius: 8px;
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: var(--text-base);
+      text-decoration: none;
+      transition: background 0.15s;
+    }
+    .btn-signin:hover { background: var(--color-commons-dark); }
+  </style>
+</head>
+<body>
+  <nav id="ubec-nav"></nav>
+
+  <main class="welcome-wrapper">
+    <div class="welcome-card">
+      <span class="welcome-icon">🌿</span>
+      <h1>Welcome, Steward</h1>
+      <p>Your account has been created. You are now part of the UBEC Living Labs citizen science network.</p>
+      <p>This onboarding page is coming soon. For now, you can sign in to the Hub to start recording observations.</p>
+      <div class="notice">⚙️ Onboarding flow — coming in a future release</div>
+      <br>
+      <a href="https://iot.ubec.network/login" class="btn-signin">Sign in to the Hub</a>
+    </div>
+  </main>
+
+  <script src="https://design.ubec.network/v1/ubec-nav.js"></script>
+</body>
+</html>
