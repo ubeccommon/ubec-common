@@ -1,0 +1,55 @@
+/*
+ * Service: UBEC Living Labs (living-labs.ubec.network)
+ * Purpose: Service-local styles — design tokens come from design CDN.
+ * License: CC BY-SA 4.0
+ *
+ * This project uses the services of Claude and Anthropic PBC.
+ */
+
+/* Design tokens are defined in ubec-design-system.css (design CDN).
+   Override only what is unique to this service here. */
+
+/* ── Layout ──────────────────────────────── */
+body {
+  background-color: var(--color-parchment, #FBF6EE);
+  color: var(--color-humus, #5C3D2A);
+  font-family: var(--font-body, 'DM Sans', 'Helvetica Neue', sans-serif);
+  margin: 0;
+  padding-top: var(--nav-height, 64px); /* offset for fixed nav */
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display, 'DM Serif Display', Georgia, serif);
+  color: var(--color-bark, #3A2418);
+}
+
+a {
+  color: var(--color-link, var(--color-commons, #5A8A6A));
+}
+
+a:hover {
+  color: var(--color-link-hover, var(--color-commons-dark, #3D6B52));
+}
+
+/* ── Hero ────────────────────────────────── */
+.hero {
+  background: linear-gradient(
+    160deg,
+    var(--color-linen, #F2EBE0) 0%,
+    var(--color-peach-light, #FBF0E8) 50%,
+    var(--color-commons-light, #EAF4EE) 100%
+  );
+  border-bottom: 1px solid var(--color-sand, #E5D9CC);
+  padding: var(--space-16, 4rem) var(--space-8, 2rem);
+}
+
+.hero h1 {
+  font-size: var(--text-5xl, 3rem);
+  line-height: var(--leading-tight, 1.25);
+  margin-bottom: var(--space-4, 1rem);
+}
+
+.hero .subtitle {
+  font-size: var(--text-xl, 1.25rem);
+  color: var(--color-humus, #5C3D2A);
+}

@@ -1,0 +1,56 @@
+==================================================================
+https://keybase.io/ubuntu_ecocoin
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of https://ubec.network
+  * I am ubuntu_ecocoin (https://keybase.io/ubuntu_ecocoin) on keybase.
+  * I have a public key ASDoDxof_ZXHDWY-YM7vVZ4HaMLDOqd_MXnNoN6YrVG-6Ao
+
+To do so, I am signing this object:
+
+{
+  "body": {
+    "key": {
+      "eldest_kid": "0120e80f1a1ffd95c70d663e60ceef559e0768c2c33aa77f3179cda0de98ad51bee80a",
+      "host": "keybase.io",
+      "kid": "0120e80f1a1ffd95c70d663e60ceef559e0768c2c33aa77f3179cda0de98ad51bee80a",
+      "uid": "82a32e6ed6623cd646a983445f89b219",
+      "username": "ubuntu_ecocoin"
+    },
+    "merkle_root": {
+      "ctime": 1657038751,
+      "hash": "987718e83568d0d6d52bf2638259bec78b4af1c9869457ee4a88c1359567551b490ce2a6591df8da30c2ac5438f69b9e26fbc4424664bf6633dd3b5f35e84a24",
+      "hash_meta": "3e6814fe4a4cf4f45a597bbd7629fa64b78827f9d4c37e4da550ccbc8b148610",
+      "seqno": 22794136
+    },
+    "service": {
+      "entropy": "Pv/tNGH2b5b+yF91xevLaS3I",
+      "hostname": "ubec.network",
+      "protocol": "https:"
+    },
+    "type": "web_service_binding",
+    "version": 2
+  },
+  "client": {
+    "name": "keybase.io go client",
+    "version": "5.5.2"
+  },
+  "ctime": 1657038825,
+  "expire_in": 504576000,
+  "prev": "c0b7849e18e14865be5f7a5fe9296bf1779816a5dbcebd21f492b9123538a56a",
+  "seqno": 4,
+  "tag": "signature"
+}
+
+which yields the signature:
+
+hKRib2R5hqhkZXRhY2hlZMOpaGFzaF90eXBlCqNrZXnEIwEg6A8aH/2Vxw1mPmDO71WeB2jCwzqnfzF5zaDemK1RvugKp3BheWxvYWTESpcCBMQgwLeEnhjhSGW+X3pf6Slr8XeYFqXbzr0h9JK5EjU4pWrEIPnqEkb5Nyjjxi9T10SNdA6QFvHO5lYs70exAgefvDVUAgHCo3NpZ8RAdXsD+XsoGlbhAyZPSbgA7prWCmM9p2RE7WVICxdxVbYdbNuV3Ew7YDGHeb/24C7Hmh8utZJaoL1kzpDJIg39BqhzaWdfdHlwZSCkaGFzaIKkdHlwZQildmFsdWXEIOUGsUFyzTj6groZKcoi5dqPMvPeDVRNmPFvUEPR5XNwo3RhZ80CAqd2ZXJzaW9uAQ==
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/ubuntu_ecocoin
+
+==================================================================

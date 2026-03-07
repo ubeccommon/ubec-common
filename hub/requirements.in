@@ -1,0 +1,20 @@
+# requirements.in — compile with pip-tools:
+#   pip-compile requirements.in -o requirements.txt
+#
+# License: GNU AGPL v3.0
+
+fastapi>=0.110
+uvicorn[standard]>=0.29
+gunicorn>=21
+httpx>=0.27
+python-dotenv>=1.0
+pydantic>=2.6
+sqlalchemy>=2.0
+alembic>=1.13
+asyncpg>=0.29          # async PostgreSQL driver
+aiolimiter>=1.1        # rate limiting (Principle #9)
+stellar-sdk>=9.0       # Stellar blockchain integration
+pydantic-settings>=2.1     # loaded by config.py
+pyjwt>=2.8                 # steward session tokens
+passlib[bcrypt]>=1.7       # password hashing
+pydantic[email]>=2.6

@@ -1,0 +1,61 @@
+VERSION = "2.4.1"
+NETWORK_PASSPHRASE = "Public Global Stellar Network ; September 2015"
+SIGNING_KEY="GDEQ4KXOL6NV5RGETFTJLMULACO5M5GTYBKOEGTCN2MSSJCOAID5UBEC"
+ACCOUNTS=["GDEQ4KXOL6NV5RGETFTJLMULACO5M5GTYBKOEGTCN2MSSJCOAID5UBEC","GDPNB7S3IOM2J6C3NA2QG4TQAUCRZXPJJ4HSCSIKELEH7ORUCX5UB2VN","GDC2ECKYO4WJMD35M4E2JIABPTA4VLHC6L6MU4TIRCLSOPOOIYOYTM74", "GA3I6MN4NSUKZ2NQZBWLUP6MNMPLZFD3ABOA3CMBV23NBDBFRWRUUBEC", "GCBT4HZHOXJCCVDQDJHA7KR6IN3RANWBPK3DKCSUPN2R4BMCGBZYUBEC","GCFJCAHHHDI5XNK3CABHPN565DIPAXP2MPQXCQVYV7IDYQLA6G4JUBEC","GCPU3LUGRIYLWMPOQEEGIL2HI5Z637PQVK42Z5PYRRQMPFDTNT5SUBEC","GBVP7DDC4756HKQSDLIO5I6OTM37JX77MK3FZZUAEIZHMO7X2FQ3UBEC", "GBYOTGM27KLFNQQU3G6QWVEK7LQB36N6OX2YLYMN4WU3AFM4VRFZUBEC", "GDGQ4KNH22PZEN4G27HHDQ7LLQVFCO7CQUND7SMK7VH4YTHUVXEJUBEC", "GBWYGECRQ7R5E6QQKWBTVNYSCFVTIYZLF6MGDHJQBHP2KU2U65Z5UBEC", "GDWO2HUXDKQTZC3KIXLO5HEG5HMNA5FZW75ZURMKVPXQJ6CUPT4OUBEC",]
+
+[DOCUMENTATION]
+ORG_NAME="Ubuntu Bioregional Economic Commons"
+ORG_URL="https://ubec.network"
+ORG_LOGO="https://ubec.network/img/ubeclogo.png"
+ORG_DESCRIPTION="Our mission is to facilitate access and participation in digital infrastructures that economically empower small farms and communities to achieve economic freedom in their transition towards human-scaled symbiotic sustainable regenerative food systems and local food sovereignty. The Ubuntu EcoCoin (UBEC) is a utility token of the Ubuntu Economic Commons DAO. The UBEC utility token and other tools provide a gateway to digital infrastructures which enable individuals, communities or organizations to achieve economic freedom."
+ORG_KEYBASE="ubuntu_ecocoin"
+ORG_OFFICIAL_EMAIL="hello@ubec.network"
+
+[[PRINCIPALS]]
+name="Michel Garand"
+email="hello@ubec.network"
+keybase="ubuntu_ecocoin"
+
+[[CURRENCIES]]
+code="UBEC"
+issuer="GDPNB7S3IOM2J6C3NA2QG4TQAUCRZXPJJ4HSCSIKELEH7ORUCX5UB2VN"
+status="live"
+display_decimals=7
+name="Ubuntu EcoCoin"
+desc="The Ubuntu EcoCoin (UBEC) is a utility token of the Ubuntu Economic Commons DAO. The UBEC utility token and other tools provide a gateway to digital infrastructures which enable individuals, communities or organizations all over the world to achieve economic freedom."
+conditions="The number of issued UBEC utility tokens is equal to 1 UBEC per 1 Square Decimeter [dm^2] of land under stewardship according to the philosophy and founding principles of the Ubuntu Economic Commons Agreement [UBECA]. 65% of the issued utility tokens are dedicated for general distribution to crowd-fund small farms and communities committed to human-scaled symbiotic sustainable regenerative food systems and local food sovereignty. 35% of the issued utility tokens are dedicated to token ecosystem stewardship. 5% of the issued utility tokens are dedicated to administrative purposes"
+image="https://ubec.network/img/UBECoin_LOGO.png"
+is_asset_anchored=true
+anchor_asset_type="other"
+anchor_asset="UBEC"
+redemption_instructions="Information will be published on our internet site or please get in touch with us hello@ubec.network"
+
+[[CURRENCIES]]
+code="UBECrc"
+issuer="GBYOTGM27KLFNQQU3G6QWVEK7LQB36N6OX2YLYMN4WU3AFM4VRFZUBEC"
+status="live"
+display_decimals=2
+name="Ubuntu Economic Commons Reciprocity Credits"
+desc="UBECrc serves as Reciprocity Credits (RCs) within the broader Ubuntu Economic Commons ecosystem, which aims to support sustainable farming and local food sovereignty. By providing inflation-resistant value storage, it enables communities to engage in long-term planning and cross-border transactions without worrying about currency devaluation."
+conditions="Terms and conditions for UBECrc"
+image="https://ubec.network/img/UBECoin_LOGO.png"
+
+[[CURRENCIES]]
+code="UBECgpi"
+issuer="GCPU3LUGRIYLWMPOQEEGIL2HI5Z637PQVK42Z5PYRRQMPFDTNT5SUBEC"
+status="live"
+display_decimals=2
+name="Ubuntu EcoCoin GPI"
+desc="UBECgpi serves as a stable unit of account within the broader Ubuntu Economic Commons ecosystem, which aims to support sustainable farming and local food sovereignty. By providing inflation-resistant value storage, it enables communities to engage in long-term planning and cross-border transactions without worrying about currency devaluation."
+conditions="Terms and conditions for UBECgpi"
+image="https://ubec.network/img/UBECoin_LOGO.png"
+
+[[CURRENCIES]]
+code="UBECtt"
+issuer="GBWYGECRQ7R5E6QQKWBTVNYSCFVTIYZLF6MGDHJQBHP2KU2U65Z5UBEC"
+status="live"
+display_decimals=2
+name="Ubuntu Bioregional Economic Commons transformation token"
+desc="UBECtt serves as a transformation token within the broader Ubuntu Bioregional Economic Commons ecosystem, which aims to support sustainable farming and local food sovereignty. By providing inflation-resistant value storage, it enables communities to engage in long-term planning and cross-border transactions without worrying about currency devaluation."
+conditions="Terms and conditions for UBECtt"
+image="https://ubec.network/img/UBECoin_LOGO.png"

@@ -1,0 +1,24 @@
+server {
+    listen 80;
+    server_name analytics.ubec.network;
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    server_name analytics.ubec.network;
+
+    ssl_certificate /etc/letsencrypt/live/design.ubec.network/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/design.ubec.network/privkey.pem;
+
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_prefer_server_ciphers off;
+
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+
+    # Placeholder — Plausible proxy will replace this in Phase 2
+    return 503;
+}

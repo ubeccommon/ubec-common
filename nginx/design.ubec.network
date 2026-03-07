@@ -1,0 +1,34 @@
+server {
+    listen 80;
+    server_name design.ubec.network;
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    server_name design.ubec.network;
+
+    ssl_certificate /etc/letsencrypt/live/design.ubec.network/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/design.ubec.network/privkey.pem;
+
+
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+
+    root /srv/ubec/design-cdn;
+
+    location /v1/ {
+        expires 1h;
+        add_header Cache-Control "public, max-age=3600";
+        add_header Access-Control-Allow-Origin "*";
+        add_header Access-Control-Allow-Methods "GET, OPTIONS";
+        gzip on;
+        gzip_types text/css application/javascript;
+    }
+
+    location ~ /\. {
+        deny all;
+    }
+}

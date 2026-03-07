@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<!-- License: CC BY-SA 4.0 -->
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>UBEC Living Labs</title>
+  <script>
+    // Detect browser language and redirect to the appropriate version.
+    // Falls back to English if no match.
+    (function() {
+      var lang = (navigator.language || navigator.userLanguage || 'en').toLowerCase().substring(0, 2);
+      var supported = { 'de': '/de/', 'pl': '/pl/' };
+      var target = supported[lang] || '/en/';
+      window.location.replace(target);
+    })();
+  </script>
+  <noscript>
+    <meta http-equiv="refresh" content="0; url=/en/">
+  </noscript>
+</head>
+<body>
+  <p>Redirecting&hellip; <a href="/en/">English</a> | <a href="/de/">Deutsch</a> | <a href="/pl/">Polski</a></p>
+</body>
+</html>
