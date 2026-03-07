@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terms of Service / Nutzungsbedingungen — UBEC Commons</title>
+  <link rel="preconnect" href="https://fonts.bunny.net">
+  <link href="https://fonts.bunny.net/css?family=dm-serif-display:400|dm-sans:400,500,600|jetbrains-mono:400" rel="stylesheet">
+  <style>
+    :root {
+      --color-parchment:      #FBF6EE;
+      --color-linen:          #F2EBE0;
+      --color-sand:           #E5D9CC;
+      --color-clay:           #9E8070;
+      --color-humus:          #5C3D2A;
+      --color-bark:           #3A2418;
+      --color-commons:        #5A8A6A;
+      --color-commons-dark:   #3D6B52;
+      --color-commons-light:  #EAF4EE;
+      --color-ochre:          #D4A84B;
+      --color-ochre-light:    #FBF3E0;
+      --font-display: 'DM Serif Display', Georgia, serif;
+      --font-body:    'DM Sans', 'Helvetica Neue', sans-serif;
+      --font-mono:    'JetBrains Mono', 'Fira Code', monospace;
+      --nav-height:   64px;
+      --content-width: 740px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--color-parchment);
+      color: var(--color-humus);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      line-height: 1.7;
+      padding-top: var(--nav-height);
+    }
+    h1, h2, h3 { font-family: var(--font-display); color: var(--color-bark); line-height: 1.25; }
+    a { color: var(--color-commons); text-decoration: none; }
+    a:hover { color: var(--color-commons-dark); text-decoration: underline; }
+
+    /* ── Minimal bespoke nav (matches portal style) ── */
+    .site-nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      height: var(--nav-height);
+      background: var(--color-bark);
+      display: flex; align-items: center;
+      padding: 0 2rem;
+      gap: 2rem;
+    }
+    .site-nav__brand {
+      font-family: var(--font-display);
+      font-size: 1rem; font-weight: 400;
+      color: var(--color-parchment);
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+    .site-nav__brand span { display: block; font-family: var(--font-body); font-size: 0.7rem; color: var(--color-clay); letter-spacing: 0.08em; text-transform: uppercase; }
+    .site-nav__links { display: flex; gap: 1.5rem; margin-left: auto; }
+    .site-nav__links a { color: var(--color-sand); font-size: 0.875rem; transition: color 0.15s; }
+    .site-nav__links a:hover { color: #fff; text-decoration: none; }
+    @media (max-width: 600px) { .site-nav__links { display: none; } }
+
+    /* ── Legal content wrapper ── */
+    .legal-page { max-width: var(--content-width); margin: 0 auto; padding: 3.5rem 1.5rem 5rem; }
+    .legal-page h1 { font-size: 2.2rem; margin-bottom: 0.4rem; }
+    .legal-page .page-meta { color: var(--color-clay); font-size: 0.9rem; margin-bottom: 3rem; }
+    .legal-page h2 {
+      font-size: 1.15rem; margin: 2.5rem 0 0.6rem;
+      padding-bottom: 0.35rem;
+      border-bottom: 1px solid var(--color-sand);
+    }
+    .legal-page h3 { font-size: 1rem; font-weight: 600; margin: 1.5rem 0 0.4rem; color: var(--color-humus); }
+    .legal-page p { margin-bottom: 0.9rem; }
+    .legal-page address { font-style: normal; margin-bottom: 0.9rem; line-height: 1.9; }
+    .legal-page ul { padding-left: 1.4rem; margin-bottom: 1rem; }
+    .legal-page li { margin-bottom: 0.4rem; }
+    .legal-page code { font-family: var(--font-mono); font-size: 0.85em; background: var(--color-linen); padding: 0.1em 0.4em; border-radius: 3px; }
+    .notice-linen  { background: var(--color-linen);  border-left: 3px solid var(--color-clay);   padding: 0.85rem 1.1rem; border-radius: 0 4px 4px 0; margin: 1.2rem 0; font-size: 0.92rem; }
+    .notice-green  { background: var(--color-commons-light); border-left: 3px solid var(--color-commons); padding: 0.85rem 1.1rem; border-radius: 0 4px 4px 0; margin: 1.2rem 0; font-size: 0.92rem; }
+    .notice-ochre  { background: var(--color-ochre-light); border-left: 3px solid var(--color-ochre); padding: 0.85rem 1.1rem; border-radius: 0 4px 4px 0; margin: 1.2rem 0; font-size: 0.92rem; }
+    table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+    th { background: var(--color-linen); text-align: left; padding: 0.5rem 0.75rem; color: var(--color-bark); font-weight: 600; border-bottom: 2px solid var(--color-sand); }
+    td { padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--color-sand); vertical-align: top; }
+
+    /* ── Contact form ── */
+    .form-group { margin-bottom: 1.25rem; }
+    .form-group label { display: block; font-size: 0.875rem; font-weight: 600; color: var(--color-bark); margin-bottom: 0.35rem; }
+    .form-group input, .form-group textarea, .form-group select {
+      width: 100%; padding: 0.6rem 0.85rem;
+      border: 1px solid var(--color-sand); border-radius: 4px;
+      font-family: var(--font-body); font-size: 0.95rem;
+      color: var(--color-humus); background: #fff;
+      transition: border-color 0.15s;
+    }
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+      outline: none; border-color: var(--color-commons);
+      box-shadow: 0 0 0 3px rgba(90,138,106,0.12);
+    }
+    .form-group textarea { min-height: 140px; resize: vertical; }
+    .form-hint { font-size: 0.8rem; color: var(--color-clay); margin-top: 0.35rem; }
+    .btn-primary {
+      background: var(--color-commons); color: #fff; border: none;
+      padding: 0.65rem 2rem; border-radius: 4px;
+      font-family: var(--font-body); font-size: 0.95rem; font-weight: 600;
+      cursor: pointer; transition: background 0.15s;
+    }
+    .btn-primary:hover { background: var(--color-commons-dark); }
+
+    /* ── Footer (matches portal exactly) ── */
+    .footer { background: #180F0A; color: var(--color-sand); padding: 3rem 2rem 2rem; margin-top: 0; }
+    .footer__inner { max-width: var(--max-width, 1200px); margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 3rem; padding-bottom: 2rem; }
+    .footer__brand-name { font-family: var(--font-display); font-size: 1.1rem; color: #fff; margin-bottom: 0.75rem; }
+    .footer__brand-desc { font-size: 0.85rem; line-height: 1.7; color: var(--color-clay); }
+    .footer__col-title { font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-clay); margin-bottom: 0.85rem; }
+    .footer__links { list-style: none; padding: 0; }
+    .footer__links li { margin-bottom: 0.5rem; }
+    .footer__links a { color: var(--color-sand); font-size: 0.875rem; transition: color 0.15s; }
+    .footer__links a:hover { color: #fff; text-decoration: none; }
+    .footer__bottom { max-width: var(--max-width, 1200px); margin: 0 auto; padding-top: 1.5rem; border-top: 1px solid #2a1a10; font-size: 0.8rem; color: var(--color-clay); display: flex; flex-direction: column; gap: 0.35rem; }
+    .footer__bottom a { color: var(--color-clay); }
+    .footer__bottom a:hover { color: var(--color-sand); text-decoration: none; }
+    @media (max-width: 768px) {
+      .footer__inner { grid-template-columns: 1fr; gap: 2rem; }
+      .footer__bottom { flex-direction: column; }
+    }
+</style>
+</head>
+<body>
+  <nav class="site-nav" role="navigation" aria-label="Site navigation">
+    <div class="site-nav__brand">
+      UBEC Commons
+      <span>Bioregional Protocol Network</span>
+    </div>
+    <div class="site-nav__links">
+      <a href="https://ubec.network">Home</a>
+      <a href="https://living-labs.ubec.network">Living Labs</a>
+      <a href="https://iot.ubec.network">Hub</a>
+      <a href="/contact">Contact</a>
+    </div>
+  </nav>
+  <main class="legal-page">
+    <h1>Terms of Service</h1>
+    <p class="page-meta">Last updated: March 2026 · <a href="#de">Deutsche Version ↓</a></p>
+
+    <div class="notice-ochre">
+      <strong>Living-lab notice:</strong> UBEC Commons is a non-commercial, experimental platform
+      operated in the spirit of open inquiry and community stewardship. By registering, you join
+      a community of practice, not a commercial service.
+    </div>
+
+    <h2>1. Acceptance</h2>
+    <p>By accessing or registering on any UBEC Commons service, you agree to these Terms.
+    If you do not agree, please do not use the services.</p>
+
+    <h2>2. Nature of the platform</h2>
+    <p>Operated by Michel Garand (Müllrose, Germany) as a non-commercial living-lab experiment.
+    Provided on a best-effort basis for educational and research purposes. No payment is required. No commercial transaction takes place.</p>
+
+    <h2>3. Registration</h2>
+    <p>Valid email required. You must be at least 16 years old (GDPR Art. 8, Germany).
+    One account per person. You are responsible for the confidentiality of your credentials.</p>
+
+    <h2>4. Steward conduct</h2>
+    <p>Contribute observations in good faith. Respect other stewards' contributions.
+    Do not use the platform for commercial purposes, spam, or unlawful activity.
+    Do not attempt to circumvent security measures.</p>
+
+    <h2>5. Your content</h2>
+    <p>Content you submit remains yours. By submitting, you grant UBEC Commons a non-exclusive,
+    royalty-free licence to store, display, and share your contributions within the platform under
+    CC BY-SA 4.0. You may request deletion at any time.</p>
+
+    <h2>6. Token rewards</h2>
+    <p>Participation may earn UBEC tokens distributed via the Stellar network. Tokens are
+    experimental instruments with no guaranteed monetary value. Distribution may be modified
+    or discontinued without notice. Tokens do not constitute securities or financial instruments.</p>
+
+    <h2>7. Availability</h2>
+    <p>Provided as-is. No guarantee of uninterrupted availability. The platform will change —
+    sometimes unexpectedly — as a living lab.</p>
+
+    <h2>8. Limitation of liability</h2>
+    <p>To the maximum extent permitted by law, the operator is not liable for indirect, incidental,
+    or consequential damages arising from your use of the platform.</p>
+
+    <h2>9. Governing law</h2>
+    <p>Laws of the Federal Republic of Germany. Jurisdiction: Brandenburg, Germany.
+    EU residents may use the
+    <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener">EU Online Dispute Resolution platform</a>.
+    We do not participate in consumer arbitration voluntarily.</p>
+
+    <h2>10. Contact</h2>
+    <p><a href="mailto:stewardship@ubec.network">stewardship@ubec.network</a> ·
+    <a href="/contact">Contact form</a></p>
+
+    <hr style="border:none;border-top:2px solid var(--color-sand);margin:3rem 0;">
+
+    <h1 id="de">Nutzungsbedingungen</h1>
+    <p class="page-meta">Stand: März 2026 — <strong>maßgebliche Fassung</strong></p>
+
+    <div class="notice-ochre">
+      <strong>Living-Lab-Hinweis:</strong> UBEC Commons ist eine nicht-kommerzielle, experimentelle Plattform
+      im Geiste offener Forschung und gemeinschaftlicher Stewardship.
+    </div>
+
+    <h2>1. Zustimmung</h2>
+    <p>Durch Zugang zu oder Registrierung auf UBEC-Commons-Diensten erklären Sie sich
+    mit diesen Bedingungen einverstanden.</p>
+
+    <h2>2. Charakter der Plattform</h2>
+    <p>Betrieben von Michel Garand (Müllrose, Deutschland) als nicht-kommerzielles Living-Lab-Experiment.
+    Bereitgestellt nach bestem Bemühen für Bildungs- und Forschungszwecke. Kostenlos, keine kommerzielle Transaktion.</p>
+
+    <h2>3. Registrierung</h2>
+    <p>Gültige E-Mail erforderlich. Mindestalter 16 Jahre (DSGVO Art. 8, Deutschland).
+    Ein Konto pro Person. Vertraulichkeit der Zugangsdaten liegt in Ihrer Verantwortung.</p>
+
+    <h2>4. Verhalten als Steward</h2>
+    <p>Beobachtungen nach bestem Wissen beitragen. Beiträge anderer respektieren.
+    Keine kommerzielle Nutzung, kein Spam, keine rechtswidrigen Aktivitäten.
+    Keine Umgehung von Sicherheitsmaßnahmen.</p>
+
+    <h2>5. Ihre Inhalte</h2>
+    <p>Eingereichte Inhalte verbleiben in Ihrem Eigentum. Mit der Einreichung gewähren Sie
+    UBEC Commons eine nicht-exklusive, gebührenfreie Lizenz zur Nutzung unter CC BY-SA 4.0.
+    Löschung jederzeit auf Anfrage.</p>
+
+    <h2>6. Token-Belohnungen</h2>
+    <p>Teilnahme kann UBEC-Token über Stellar generieren. Experimentelle Instrumente ohne garantierten
+    Geldwert. Verteilung kann ohne Vorankündigung geändert oder eingestellt werden.
+    Keine Wertpapiere oder Finanzinstrumente.</p>
+
+    <h2>7. Verfügbarkeit</h2>
+    <p>Bereitgestellt wie vorhanden. Keine Garantie unterbrechungsfreier Verfügbarkeit.
+    Als Living Lab wird sich die Plattform weiterentwickeln.</p>
+
+    <h2>8. Haftungsbeschränkung</h2>
+    <p>Im gesetzlich zulässigen Rahmen keine Haftung für mittelbare oder Folgeschäden.</p>
+
+    <h2>9. Anwendbares Recht</h2>
+    <p>Recht der Bundesrepublik Deutschland. Gerichtsstand: Brandenburg.
+    EU-Bürger können die
+    <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener">EU-Online-Streitbeilegungsplattform</a>
+    nutzen. Wir nehmen nicht freiwillig an Verbraucherarbitrage teil.</p>
+
+    <h2>10. Kontakt</h2>
+    <p><a href="mailto:stewardship@ubec.network">stewardship@ubec.network</a> ·
+    <a href="/contact">Kontaktformular</a></p>
+  </main>
+  <footer class="footer" role="contentinfo">
+    <div class="footer__inner">
+      <div>
+        <div class="footer__brand-name">UBEC Commons</div>
+        <p class="footer__brand-desc">
+          A Web 4.0 bioregional protocol network connecting people, place, and planet.
+          Rooted in Ubuntu philosophy. Anchored in the Schlaubetal, Brandenburg, Germany.
+        </p>
+      </div>
+      <div>
+        <div class="footer__col-title">Services</div>
+        <ul class="footer__links">
+          <li><a href="https://bioregional.ubec.network">UBEC Protocol</a></li>
+          <li><a href="https://living-labs.ubec.network">Living Labs</a></li>
+          <li><a href="https://mapservice.ubec.network">UBEC Maps</a></li>
+          <li><a href="https://iot.ubec.network">UBEC Hub</a></li>
+          <li><a href="https://erdpuls.ubec.network">Erdpuls</a></li>
+          <li><a href="https://ubeccommon.github.io/Pattern_Language_of_Place/">UBEC Learn</a></li>
+          <li><a href="https://ubeccommon.github.io">UBEC Open</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer__col-title">Commons</div>
+        <ul class="footer__links">
+          <li><a href="/legal">Impressum</a></li>
+          <li><a href="/privacy">Privacy Policy</a></li>
+          <li><a href="/terms">Terms of Service</a></li>
+          <li><a href="/contact">Contact</a></li>
+          <li><a href="https://ubeccommon.github.io">GNU AGPL v3.0</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <p>© 2026 UBEC Commons · <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> · Code: <a href="https://www.gnu.org/licenses/agpl-3.0.html">GNU AGPL v3.0</a></p>
+      <p>Made with the assistance of <a href="https://anthropic.com">Claude (Anthropic)</a> · <em>"I am because we are"</em></p>
+    </div>
+  </footer>
+</body>
+</html>

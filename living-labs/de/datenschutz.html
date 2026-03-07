@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="de" data-ubec-service="living-labs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Datenschutzerklärung — UBEC Living Labs</title>
+  <link rel="preconnect" href="https://fonts.bunny.net">
+  <link href="https://fonts.bunny.net/css?family=dm-serif-display:400|dm-sans:400,500,600|jetbrains-mono:400" rel="stylesheet">
+  <link rel="stylesheet" href="https://design.ubec.network/v1/ubec-design-system.css">
+  <style>
+    body { padding-top: 68px; background: var(--color-bg, #faf8f4); }
+    .legal-wrap { max-width: 780px; margin: 0 auto; padding: 3rem 1.5rem 5rem; }
+    .legal-wrap h1 { font-family: 'DM Serif Display', serif; font-size: 2rem; color: var(--color-earth, #5d4e37); margin-bottom: 0.5rem; }
+    .legal-wrap .subtitle { color: var(--color-muted, #8b7355); margin-bottom: 2.5rem; font-size: 0.95rem; }
+    .legal-wrap h2 { font-family: 'DM Serif Display', serif; font-size: 1.2rem; color: var(--color-earth, #5d4e37); margin: 2rem 0 0.75rem; border-bottom: 1px solid var(--color-border, #e8e0d5); padding-bottom: 0.4rem; }
+    .legal-wrap h3 { font-size: 1rem; font-weight: 600; color: #5d4e37; margin: 1.25rem 0 0.5rem; }
+    .legal-wrap p, .legal-wrap li { font-size: 0.97rem; line-height: 1.75; color: #3a3228; }
+    .legal-wrap ul { padding-left: 1.4rem; margin: 0.5rem 0 1rem; }
+    .legal-wrap a { color: var(--color-sage, #6b8f3e); }
+    .lang-links { display: flex; gap: 1rem; margin-bottom: 2.5rem; }
+    .lang-links a { font-size: 0.88rem; color: var(--color-sage, #6b8f3e); text-decoration: none; padding: 0.25rem 0.6rem; border: 1px solid currentColor; border-radius: 3px; }
+    .lang-links a.active { background: var(--color-sage, #6b8f3e); color: #fff; border-color: transparent; }
+    .highlight-box { background: #f0ece4; border-left: 3px solid #6b8f3e; padding: 0.85rem 1rem; border-radius: 0 4px 4px 0; margin: 1rem 0; font-size: 0.92rem; color: #4a3d2e; }
+    table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.92rem; }
+    th { background: #f0ece4; text-align: left; padding: 0.5rem 0.75rem; color: #5d4e37; font-weight: 600; }
+    td { padding: 0.5rem 0.75rem; border-bottom: 1px solid #e8e0d5; color: #3a3228; vertical-align: top; }
+  </style>
+</head>
+<body>
+  <nav id="ubec-nav"></nav>
+
+  <main class="legal-wrap">
+    <div class="lang-links">
+      <a href="/en/datenschutz.html">EN</a>
+      <a href="/de/datenschutz.html" class="active">DE</a>
+      <a href="/pl/datenschutz.html">PL</a>
+    </div>
+
+    <h1>Datenschutzerklärung</h1>
+    <p class="subtitle">Stand: März 2026 · Gemäß DSGVO (EU 2016/679)</p>
+
+    <h2>1. Verantwortlicher</h2>
+    <p>
+      Michel Garand<br>
+      Schiffbauerstr. 3, 15299 Müllrose, Deutschland<br>
+      E-Mail: <a href="mailto:stewardship@ubec.network">stewardship@ubec.network</a>
+    </p>
+    <p>Ein Datenschutzbeauftragter ist für diesen Betrieb nicht erforderlich. Bei allen datenschutzrechtlichen Fragen wenden Sie sich bitte direkt an den Verantwortlichen.</p>
+
+    <h2>2. Erhobene Daten und Zwecke</h2>
+
+    <h3>2.1 Kontoregistrierung</h3>
+    <p>Bei der Registrierung als Steward erheben wir:</p>
+    <table>
+      <tr><th>Daten</th><th>Zweck</th><th>Rechtsgrundlage</th></tr>
+      <tr><td>E-Mail-Adresse</td><td>Kontoidentifikation, Login, transaktionale E-Mails</td><td>Art. 6 Abs. 1 lit. b DSGVO — Vertragserfüllung</td></tr>
+      <tr><td>Passwort (gespeichert als bcrypt-Hash — niemals im Klartext)</td><td>Authentifizierung</td><td>Art. 6 Abs. 1 lit. b DSGVO</td></tr>
+      <tr><td>DSGVO-Einwilligungsnachweis (Checkbox + Zeitstempel)</td><td>Compliance-Dokumentation</td><td>Art. 6 Abs. 1 lit. c DSGVO — rechtliche Verpflichtung</td></tr>
+      <tr><td>Vollständiger Name (optional)</td><td>Personalisierung</td><td>Art. 6 Abs. 1 lit. a DSGVO — Einwilligung</td></tr>
+      <tr><td>Anzeigename (optional)</td><td>Community-Identität</td><td>Art. 6 Abs. 1 lit. a DSGVO — Einwilligung</td></tr>
+      <tr><td>Bevorzugte Sprache</td><td>Lokalisierung der Oberfläche</td><td>Art. 6 Abs. 1 lit. b DSGVO</td></tr>
+      <tr><td>Stellar-Public-Key (optional)</td><td>Token-Belohnungsverteilung über das Stellar-Netzwerk</td><td>Art. 6 Abs. 1 lit. a DSGVO — Einwilligung</td></tr>
+    </table>
+
+    <h3>2.2 Sitzungsdaten</h3>
+    <p>Bei der Anmeldung speichern wir einen gehashten Sitzungstoken, Ihre IP-Adresse und den User-Agent-String für die Dauer der Sitzung. Diese Daten werden beim Abmelden oder nach Ablauf der Sitzung gelöscht.</p>
+
+    <h3>2.3 Analysedaten</h3>
+    <div class="highlight-box">
+      Diese Website verwendet <strong>Plausible Analytics</strong> (selbst gehostet unter <code>analytics.ubec.network</code>). Plausible ist cookielos — es werden keine personenbezogenen Daten erhoben, keine Cookies gesetzt und keine Seitenübergreifende Nachverfolgung durchgeführt. Eine Einwilligung ist nicht erforderlich. Weitere Informationen: <a href="https://plausible.io/privacy-focused-web-analytics" target="_blank" rel="noopener">Datenschutzdokumentation von Plausible</a>.
+    </div>
+
+    <h3>2.4 Schriften</h3>
+    <div class="highlight-box">
+      Diese Website verwendet <strong>Bunny Fonts</strong> (<code>fonts.bunny.net</code>), betrieben von BunnyWay d.o.o., Slowenien (EU). Bunny Fonts ist eine DSGVO-konforme Alternative zu Google Fonts. Es werden keine IP-Adressen an Server außerhalb der EU übertragen. Eine Einwilligung ist nicht erforderlich.
+    </div>
+
+    <h2>3. Datenspeicherung und Hosting</h2>
+    <p>Alle Daten werden ausschließlich auf EU-basierter Infrastruktur gespeichert:</p>
+    <p>
+      Hetzner Online GmbH · Industriestr. 25 · 91710 Gunzenhausen · Deutschland<br>
+      Serverstandort: Nürnberg, Deutschland (EU)
+    </p>
+
+    <h2>4. Speicherdauer</h2>
+    <ul>
+      <li>Kontodaten: für die Dauer der Registrierung. Löschung innerhalb von 30 Tagen nach einer Löschanfrage.</li>
+      <li>Sitzungstoken: beim Abmelden oder nach Ablauf (maximal 7 Tage).</li>
+      <li>Analysedaten: 24-monatiges rollierendes Fenster, aggregiert und anonymisiert.</li>
+    </ul>
+
+    <h2>5. Ihre Rechte</h2>
+    <p>Gemäß DSGVO haben Sie das Recht auf:</p>
+    <ul>
+      <li><strong>Auskunft</strong> — Kopie Ihrer personenbezogenen Daten (Art. 15)</li>
+      <li><strong>Berichtigung</strong> — Korrektur unrichtiger Daten (Art. 16)</li>
+      <li><strong>Löschung</strong> — Löschung Ihrer Daten (Art. 17)</li>
+      <li><strong>Einschränkung der Verarbeitung</strong> — unter bestimmten Umständen (Art. 18)</li>
+      <li><strong>Datenübertragbarkeit</strong> — strukturiertes, maschinenlesbares Format (Art. 20)</li>
+      <li><strong>Widerspruch</strong> — gegen Verarbeitung auf Basis berechtigter Interessen (Art. 21)</li>
+      <li><strong>Widerruf der Einwilligung</strong> — soweit die Verarbeitung auf Einwilligung beruht, jederzeit mit Wirkung für die Zukunft</li>
+    </ul>
+    <p>Zur Ausübung dieser Rechte: <a href="mailto:stewardship@ubec.network">stewardship@ubec.network</a></p>
+
+    <h2>6. Beschwerderecht</h2>
+    <p>Sie haben das Recht, sich bei einer Aufsichtsbehörde zu beschweren. Die zuständige Behörde für Brandenburg ist:</p>
+    <p>
+      Die Landesbeauftragte für den Datenschutz und für das Recht auf Akteneinsicht Brandenburg<br>
+      Stahnsdorfer Damm 77 · 14532 Kleinmachnow<br>
+      <a href="https://www.lda.brandenburg.de" target="_blank" rel="noopener">www.lda.brandenburg.de</a>
+    </p>
+
+    <h2>7. Drittanbieter</h2>
+    <p>Wir verwenden kein Google Analytics, keine Google Fonts, keinen Facebook Pixel und keine sonstigen Tracking- oder Werbedienste Dritter. Es werden keine Daten für kommerzielle Zwecke verkauft oder weitergegeben.</p>
+
+    <h2>8. Änderungen dieser Erklärung</h2>
+    <p>Diese Erklärung kann bei der Weiterentwicklung der Plattform aktualisiert werden. Das Datum oben auf dieser Seite gibt den Stand der letzten Überarbeitung an. Registrierte Stewards werden über wesentliche Änderungen per E-Mail informiert.</p>
+  </main>
+
+  <script src="https://design.ubec.network/v1/ubec-nav.js"></script>
+</body>
+</html>

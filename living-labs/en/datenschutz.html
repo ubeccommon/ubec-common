@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" data-ubec-service="living-labs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy — UBEC Living Labs</title>
+  <link rel="preconnect" href="https://fonts.bunny.net">
+  <link href="https://fonts.bunny.net/css?family=dm-serif-display:400|dm-sans:400,500,600|jetbrains-mono:400" rel="stylesheet">
+  <link rel="stylesheet" href="https://design.ubec.network/v1/ubec-design-system.css">
+  <style>
+    body { padding-top: 68px; background: var(--color-bg, #faf8f4); }
+    .legal-wrap { max-width: 780px; margin: 0 auto; padding: 3rem 1.5rem 5rem; }
+    .legal-wrap h1 { font-family: 'DM Serif Display', serif; font-size: 2rem; color: var(--color-earth, #5d4e37); margin-bottom: 0.5rem; }
+    .legal-wrap .subtitle { color: var(--color-muted, #8b7355); margin-bottom: 2.5rem; font-size: 0.95rem; }
+    .legal-wrap h2 { font-family: 'DM Serif Display', serif; font-size: 1.2rem; color: var(--color-earth, #5d4e37); margin: 2rem 0 0.75rem; border-bottom: 1px solid var(--color-border, #e8e0d5); padding-bottom: 0.4rem; }
+    .legal-wrap h3 { font-size: 1rem; font-weight: 600; color: #5d4e37; margin: 1.25rem 0 0.5rem; }
+    .legal-wrap p, .legal-wrap li { font-size: 0.97rem; line-height: 1.75; color: #3a3228; }
+    .legal-wrap ul { padding-left: 1.4rem; margin: 0.5rem 0 1rem; }
+    .legal-wrap a { color: var(--color-sage, #6b8f3e); }
+    .lang-links { display: flex; gap: 1rem; margin-bottom: 2.5rem; }
+    .lang-links a { font-size: 0.88rem; color: var(--color-sage, #6b8f3e); text-decoration: none; padding: 0.25rem 0.6rem; border: 1px solid currentColor; border-radius: 3px; }
+    .lang-links a.active { background: var(--color-sage, #6b8f3e); color: #fff; border-color: transparent; }
+    .highlight-box { background: #f0ece4; border-left: 3px solid #6b8f3e; padding: 0.85rem 1rem; border-radius: 0 4px 4px 0; margin: 1rem 0; font-size: 0.92rem; color: #4a3d2e; }
+    table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.92rem; }
+    th { background: #f0ece4; text-align: left; padding: 0.5rem 0.75rem; color: #5d4e37; font-weight: 600; }
+    td { padding: 0.5rem 0.75rem; border-bottom: 1px solid #e8e0d5; color: #3a3228; vertical-align: top; }
+  </style>
+</head>
+<body>
+  <nav id="ubec-nav"></nav>
+
+  <main class="legal-wrap">
+    <div class="lang-links">
+      <a href="/en/datenschutz.html" class="active">EN</a>
+      <a href="/de/datenschutz.html">DE</a>
+      <a href="/pl/datenschutz.html">PL</a>
+    </div>
+
+    <h1>Privacy Policy</h1>
+    <p class="subtitle">Last updated: March 2026 · Pursuant to GDPR (EU 2016/679)</p>
+
+    <h2>1. Controller</h2>
+    <p>
+      Michel Garand<br>
+      Schiffbauerstr. 3, 15299 Müllrose, Germany<br>
+      Email: <a href="mailto:stewardship@ubec.network">stewardship@ubec.network</a>
+    </p>
+    <p>No Data Protection Officer is required for this operation. For all privacy matters, contact the controller directly at the address above.</p>
+
+    <h2>2. What data we collect and why</h2>
+
+    <h3>2.1 Account registration</h3>
+    <p>When you register as a steward, we collect:</p>
+    <table>
+      <tr><th>Data</th><th>Purpose</th><th>Legal basis</th></tr>
+      <tr><td>Email address</td><td>Account identity, login, transactional emails</td><td>Art. 6(1)(b) GDPR — contract performance</td></tr>
+      <tr><td>Password (stored as bcrypt hash — never in plain text)</td><td>Authentication</td><td>Art. 6(1)(b) GDPR</td></tr>
+      <tr><td>GDPR consent record (checkbox + timestamp)</td><td>Compliance documentation</td><td>Art. 6(1)(c) GDPR — legal obligation</td></tr>
+      <tr><td>Full name (optional)</td><td>Personalisation</td><td>Art. 6(1)(a) GDPR — consent</td></tr>
+      <tr><td>Display name (optional)</td><td>Community identity</td><td>Art. 6(1)(a) GDPR — consent</td></tr>
+      <tr><td>Preferred language</td><td>Interface localisation</td><td>Art. 6(1)(b) GDPR</td></tr>
+      <tr><td>Stellar public key (optional)</td><td>Token reward distribution on Stellar blockchain</td><td>Art. 6(1)(a) GDPR — consent</td></tr>
+    </table>
+
+    <h3>2.2 Session data</h3>
+    <p>When you log in, we store a hashed session token, your IP address, and user agent string for the duration of the session. This data is deleted on logout or expiry.</p>
+
+    <h3>2.3 Analytics</h3>
+    <div class="highlight-box">
+      This site uses <strong>Plausible Analytics</strong> (self-hosted at <code>analytics.ubec.network</code>). Plausible is cookieless — it collects no personally identifiable information, sets no cookies, and does not track you across sites. No consent is required. See <a href="https://plausible.io/privacy-focused-web-analytics" target="_blank" rel="noopener">Plausible's privacy documentation</a>.
+    </div>
+
+    <h3>2.4 Fonts</h3>
+    <div class="highlight-box">
+      This site uses <strong>Bunny Fonts</strong> (<code>fonts.bunny.net</code>), operated by BunnyWay d.o.o., Slovenia (EU). Bunny Fonts is a GDPR-compliant alternative to Google Fonts. No IP address is transmitted to non-EU servers. No consent is required.
+    </div>
+
+    <h2>3. Data storage and hosting</h2>
+    <p>All data is stored exclusively on EU-based infrastructure:</p>
+    <p>
+      Hetzner Online GmbH · Industriestr. 25 · 91710 Gunzenhausen · Germany<br>
+      Server location: Nuremberg, Germany (EU)
+    </p>
+
+    <h2>4. Data retention</h2>
+    <ul>
+      <li>Account data: retained for the duration of your registration. Deleted within 30 days of a deletion request.</li>
+      <li>Session tokens: deleted on logout or after expiry (maximum 7 days).</li>
+      <li>Analytics data: 24-month rolling window, aggregated and anonymised.</li>
+    </ul>
+
+    <h2>5. Your rights</h2>
+    <p>Under GDPR you have the right to:</p>
+    <ul>
+      <li><strong>Access</strong> — request a copy of your personal data (Art. 15)</li>
+      <li><strong>Rectification</strong> — correct inaccurate data (Art. 16)</li>
+      <li><strong>Erasure</strong> — request deletion of your data (Art. 17)</li>
+      <li><strong>Restriction</strong> — limit processing in certain circumstances (Art. 18)</li>
+      <li><strong>Portability</strong> — receive your data in a structured, machine-readable format (Art. 20)</li>
+      <li><strong>Object</strong> — object to processing based on legitimate interest (Art. 21)</li>
+      <li><strong>Withdraw consent</strong> — where processing is based on consent, you may withdraw at any time without affecting prior processing</li>
+    </ul>
+    <p>To exercise any of these rights, contact: <a href="mailto:stewardship@ubec.network">stewardship@ubec.network</a></p>
+
+    <h2>6. Right to lodge a complaint</h2>
+    <p>You have the right to lodge a complaint with a supervisory authority. The competent authority for Brandenburg, Germany is:</p>
+    <p>
+      Die Landesbeauftragte für den Datenschutz und für das Recht auf Akteneinsicht Brandenburg<br>
+      Stahnsdorfer Damm 77 · 14532 Kleinmachnow<br>
+      <a href="https://www.lda.brandenburg.de" target="_blank" rel="noopener">www.lda.brandenburg.de</a>
+    </p>
+
+    <h2>7. Third-party services</h2>
+    <p>We do not use Google Analytics, Google Fonts, Facebook Pixel, or any other third-party tracking or advertising service. No data is sold or shared with third parties for commercial purposes.</p>
+
+    <h2>8. Changes to this policy</h2>
+    <p>This policy may be updated as the platform develops. The date at the top of this page indicates the last revision. Registered stewards will be notified of material changes by email.</p>
+  </main>
+
+  <script src="https://design.ubec.network/v1/ubec-nav.js"></script>
+</body>
+</html>
