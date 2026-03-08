@@ -269,13 +269,13 @@ code, pre, kbd {
 .ubec-nav__logo-name {
   font-family: var(--font-display);
   font-style: normal;
-  font-size: 0.95rem;
+  font-size: 1.05rem;
   color: var(--color-bark);
   line-height: 1.2;
   white-space: nowrap;
 }
 .ubec-nav__logo-sub {
-  font-size: 0.63rem;
+  font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -299,7 +299,7 @@ code, pre, kbd {
   align-items: center;
   gap: 0.25rem;
   padding: 0.3rem 0.55rem;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   font-weight: 500;
   color: var(--color-clay);
   text-decoration: none;
@@ -332,7 +332,7 @@ code, pre, kbd {
 .ubec-nav__lang {
   display: inline-block;
   padding: 0.25rem 0.5rem;
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   font-weight: 600;
   letter-spacing: 0.04em;
   color: var(--color-clay);
@@ -395,7 +395,7 @@ code, pre, kbd {
   display: inline-block;
   margin-left: 0.75rem;
   padding: 0.3rem 0.9rem;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   font-weight: 600;
   color: var(--color-bark);
   background: var(--color-fire);

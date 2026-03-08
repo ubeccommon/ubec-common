@@ -9,7 +9,7 @@
   'use strict';
 
   const SERVICES = [
-    { id: 'portal',      label: 'UBEC Commons',  icon: '🌍', url: 'https://ubec.network' },
+    { id: 'portal',      label: 'UBEC DAO',  icon: '🌍', url: 'https://ubec.network' },
     { id: 'protocol',    label: 'UBEC Protocol', icon: '🔗', url: 'https://bioregional.ubec.network' },
     { id: 'maps',        label: 'UBEC Maps',     icon: '🗺️', url: 'https://mapservice.ubec.network' },
     { id: 'living-labs', label: 'Living Labs',   icon: '📡', url: 'https://living-labs.ubec.network' },
@@ -80,7 +80,7 @@
           '</span>' +
         '</a>'
       : '<a href="https://ubec.network" class="ubec-nav__logo">' +
-          '<span class="ubec-nav__logo-name">UBEC\u00a0Commons</span>' +
+          '<span class="ubec-nav__logo-name">UBEC\u00a0DAO</span>' +
         '</a>';
 
     // Service links (exclude active service)
