@@ -1,93 +1,152 @@
+## Changes in v2.0 (March 2026)
+
+### Brand rename: UBEC Commons → UBEC DAO
+
+**Decision:** The platform name reverts to **UBEC DAO** (short form) and
+**Ubuntu Bioregional Economic Commons DAO** (full form). "UBEC Commons" is
+retired as a brand name.
+
+**Rationale:** UBEC DAO is the established name. UBEC Commons was a proposed
+rebrand that was not adopted.
+
+**Applied across:**
+- `design-cdn/v1/ubec-nav.js` — fallback logo + portal service label
+- All portal HTML pages (EN/DE/PL)
+- All legal HTML pages (EN/DE/PL × 4 pages)
+- Footer brand name: `UBEC DAO`
+- Footer brand description: `Ubuntu Bioregional Economic Commons DAO — a Web 4.0...`
+
+**Copyright line** (all footers, all pages):
+```
+© 2024–2026 Michel Garand · GNU AGPL v3.0 (code) · CC BY-SA 4.0 (docs) · living-labs@ubec.network
+```
+Rationale: UBEC DAO has no legal standing. Copyright must be held by a natural
+person. Michel Garand is the sole legal copyright holder.
+
+**Locked terminology update:**
+
+| EN | DE | PL |
+|---|---|---|
+| UBEC DAO (short) | UBEC DAO | UBEC DAO |
+| Ubuntu Bioregional Economic Commons DAO (full) | Ubuntu Bioregional Economic Commons DAO | Ubuntu Bioregional Economic Commons DAO |
+
+All other locked terminology unchanged (Steward/Hüter:in/Opiekun etc.).
+
+**Code comments and README files** retain "UBEC Commons" — these are
+internal metadata, not public-facing text, and do not require updating.
+
 ---
 
-## Changes in v1.9 (March 2026)
+### Nav font sizes — subtle increase (~12%)
 
-### ubec.network portal — multilingual redesign decision
+Applied to `design-cdn/v1/ubec-design-system.css`:
 
-**Context:** The portal at `ubec.network` has been a single-language (English only)
-bespoke static page with its own hand-rolled nav, styles inlined in `<head>`, and no
-language switching. It is the public face of the entire ecosystem. As of v1.8 every
-other service either uses ubec-nav.js v3 or is the CDN itself.
+| Selector | Before | After |
+|---|---|---|
+| `.ubec-nav__logo-name` | `0.95rem` | `1.05rem` |
+| `.ubec-nav__logo-sub` | `0.63rem` | `0.70rem` |
+| `.ubec-nav__link` | `0.80rem` | `0.90rem` |
+| `.ubec-nav__lang` | `0.75rem` | `0.85rem` |
+| `.ubec-nav__login` | `0.80rem` | `0.90rem` |
 
-**Decision:** Replace the existing `portal/index.html` with a multilingual structure
-matching the pattern used by `living-labs.ubec.network`:
+Change is live on all services via CDN — no per-service deploy required.
+
+---
+
+### Legal pages — multilingual EN/DE/PL deployed
+
+**Structure on server:**
+```
+/srv/ubec/legal/
+  en/legal.html   en/privacy.html   en/terms.html   en/contact.html
+  de/legal.html   de/privacy.html   de/terms.html   de/contact.html
+  pl/legal.html   pl/privacy.html   pl/terms.html   pl/contact.html
+```
+
+**nginx location blocks** in `ubec.network` vhost (and all other vhosts):
+```nginx
+location ^~ /en/legal    { alias /srv/ubec/legal/en/legal.html;    default_type text/html; ... }
+location ^~ /en/privacy  { alias /srv/ubec/legal/en/privacy.html;  default_type text/html; ... }
+location ^~ /en/terms    { alias /srv/ubec/legal/en/terms.html;    default_type text/html; ... }
+location ^~ /en/contact  { alias /srv/ubec/legal/en/contact.html;  default_type text/html; ... }
+# (same for /de/ and /pl/)
+```
+
+**Footer links** in portal pages use language-prefixed paths:
+- `portal/en/index.html` → `/en/legal`, `/en/privacy`, `/en/terms`, `/en/contact`
+- `portal/de/index.html` → `/de/legal`, `/de/privacy`, `/de/terms`, `/de/contact`
+- `portal/pl/index.html` → `/pl/legal`, `/pl/privacy`, `/pl/terms`, `/pl/contact`
+
+Internal links within legal pages also use language-prefixed paths.
+
+**Root stubs** (`/legal`, `/privacy`, `/terms`, `/contact`) — these do NOT
+exist as files. Do not rely on them. All links must use language-prefixed paths.
+
+**TMG §5 compliance:** Impressum is complete with Michel Garand's full address,
+VAT number DE415395232, and contact details. No cease-and-desist risk.
+
+---
+
+### Portal — multilingual EN/DE/PL deployed
+
+**Status:** Fully operational at `ubec.network`.
 
 ```
 /srv/ubec/portal/
-  index.html          ← redirect to /en/ (or browser-language detection)
-  en/index.html       ← English landing page
-  de/index.html       ← German landing page
-  pl/index.html       ← Polish landing page
+  index.html        ← language-detect redirect (navigator.language → /en|de|pl/)
+  en/index.html     ← English landing page
+  de/index.html     ← German landing page
+  pl/index.html     ← Polish landing page
 ```
 
-**Nav:** Retire the bespoke portal nav. The portal will use ubec-nav.js v3 with
-`data-ubec-service="portal"` on `<html>`, `<nav id="ubec-nav">` in body, and
-`body { padding-top: 68px; }`. The bespoke `.nav`, `.nav__links`, `.nav__hamburger`,
-`.nav__mobile` CSS and JS can be removed entirely from the portal once migrated.
+All three pages use `ubec-nav.js v3` with `data-ubec-service="portal"`.
+Bespoke nav HTML/CSS/JS fully retired.
 
-**Root redirect (`index.html`):** A minimal HTML file with a `<meta http-equiv="refresh">`
-and a JS `navigator.language` fallback. Redirects to `/en/`, `/de/`, or `/pl/` based
-on browser language. If language cannot be determined, defaults to `/en/`.
+**Sections on each page:** Hero · Philosophy strip (Buckminster Fuller) ·
+Eight service cards · Four-element token economy · Six philosophy pillars · Footer
 
-**Content:** All existing content sections are preserved and translated:
-- Hero (title, tagline, description, two CTA buttons)
-- Buckminster Fuller philosophy strip
-- Ecosystem section (eight service cards)
-- Four-element token economy section
-- Philosophy pillars section (five pillars)
-- Footer (three-column: brand + Services + Legal)
-
-All copy is translated into German and Polish. The English version is the canonical
-source. German and Polish translations are factually accurate renderings — not
-machine-translated paraphrases. Key terminology is locked:
-  - "Steward" → DE: "Hüter:in", PL: "Opiekun/Opiekunka"
-  - "Bioregional" (one word) → DE: "bioregional", PL: "bioregionalny"
-  - "Regenerative" → DE: "regenerativ", PL: "regeneratywny"
-  - "Commons" → DE: "Gemeingut" or "Commons" (context-dependent), PL: "dobra wspólne" or "Commons"
-
-**Legal pages:** The portal already has `/srv/ubec/legal/` with canonical legal pages.
-The per-language footers link to these pages. The footer legal links use the canonical
-paths (not per-language duplicates).
-
-**File size constraint:** Each language page should be a single self-contained HTML
-file. Service-local styles go in `<style>` in `<head>`. The CDN provides the design
-tokens and nav. No external JS beyond ubec-nav.js.
+**Attribution text** (footer, all three pages — exact wording locked):
+- EN: "This project is being developed with assistance from Claude (Anthropic PBC).
+  All strategic decisions, philosophical positions, and project commitments are
+  those of the author."
+- DE: "Dieses Projekt wird mit Unterstützung von Claude (Anthropic PBC) entwickelt.
+  Alle strategischen Entscheidungen, philosophischen Positionen und
+  Projektverpflichtungen liegen beim Autor."
+- PL: "Projekt jest rozwijany przy wsparciu Claude (Anthropic PBC). Wszystkie
+  decyzje strategiczne, stanowiska filozoficzne i zobowiązania projektowe należą
+  do autora."
 
 ---
 
-### Service deployment status on ubec-common (v1.9)
+### Service deployment status on ubec-common (v2.0)
 
-| Service | nginx vhost | App/files | Nav status | Legal |
-|---|---|---|---|---|
-| `ubec.network` | ✅ | Static HTML `/srv/ubec/portal/` | 🔄 Bespoke → ubec-nav.js v3 migration pending | ✅ |
-| `iot.ubec.network` | ✅ | FastAPI `/srv/ubec/hub/` + static landing | ✅ ubec-nav.js v3 | ✅ |
-| `learn.ubec.network` | ✅ | Static HTML `/srv/ubec/learn/` | ✅ Previously fixed | ✅ |
-| `living-labs.ubec.network` | ✅ | Static HTML `/srv/ubec/living-labs/` EN/DE/PL | ✅ ubec-nav.js v3 | ✅ |
-| `design.ubec.network` | ✅ | CDN `/srv/ubec/design-cdn/` | N/A | N/A |
-| `analytics.ubec.network` | ✅ | Plausible | N/A | N/A |
-| `auth.ubec.network` | ✅ | Placeholder | N/A | N/A |
-| `erdpuls.ubec.network` | ❌ no vhost | Python app `/srv/ubec/erdpuls/` — templates empty | ❌ | ❌ |
-| `bioregional.ubec.network` | ❌ no vhost | Not migrated | ❌ | ❌ |
-| `mapservice.ubec.network` | ❌ no vhost | Only config/README/static present | ❌ | ❌ |
+| Service | nginx | App/files | Nav | Legal | Notes |
+|---|---|---|---|---|---|
+| `ubec.network` | ✅ | ✅ EN/DE/PL portal | ✅ ubec-nav.js v3 | ✅ /en/de/pl | Fully operational |
+| `iot.ubec.network` | ✅ | ✅ FastAPI | ✅ ubec-nav.js v3 | ✅ | Fully operational |
+| `learn.ubec.network` | ✅ | ✅ Static | ✅ | ✅ | Fully operational |
+| `living-labs.ubec.network` | ✅ | ✅ EN/DE/PL | ✅ ubec-nav.js v3 | ✅ | Fully operational |
+| `design.ubec.network` | ✅ | ✅ CDN | N/A | N/A | Fully operational |
+| `erdpuls.ubec.network` | ❌ no vhost | templates empty | ❌ | ❌ | Needs landing page |
+| `bioregional.ubec.network` | ❌ no vhost | Not migrated | ❌ | ❌ | Not started |
+| `mapservice.ubec.network` | ❌ no vhost | config/README only | ❌ | ❌ | Not started |
 
 ---
 
-### Completed this session (v1.9)
+### Priority queue (next sessions)
 
-- **Steward registration pages** deployed: `living-labs.ubec.network/{en,de,pl}/register.html`
-  - POST to `https://iot.ubec.network/api/v1/auth/register`
-  - Fields: email, password (8–128), gdpr_consent (required), full_name (optional),
-    display_name (optional), preferred_language (auto-set per page)
-  - On success: redirect to `/{lang}/welcome.html`
-  - 409 Conflict → localised "email already exists" message
-  - Password strength bar (5-step visual, colour-coded)
-- **Welcome stubs** deployed: `living-labs.ubec.network/{en,de,pl}/welcome.html`
-  - Placeholder onboarding pages — direct steward to Hub login
-  - Marked as "coming in a future release"
+1. **Sign-in page** — `iot.ubec.network/login` (POST `/api/v1/auth/login`),
+   multilingual EN/DE/PL, consistent with register page UX
+2. **`erdpuls.ubec.network`** — nginx vhost + static landing page,
+   `data-ubec-service="erdpuls"`
+3. **Git sync** — commit all server-side changes to `ubec_dao_platform` repo:
+   - `design-cdn/v1/ubec-design-system.css` (font sizes)
+   - `design-cdn/v1/ubec-nav.js` (brand rename)
+   - `portal/en/`, `portal/de/`, `portal/pl/` (multilingual pages)
+   - `legal/en/`, `legal/de/`, `legal/pl/` (multilingual legal pages)
 
 ---
 
-*This project uses the services of Claude and Anthropic PBC to inform our decisions and recommendations. This project was made possible with the assistance of Claude and Anthropic PBC.*
 *Document maintained under CC BY-SA 4.0 · Code under GNU AGPL v3.0*
-*Last updated: March 2026 · Version 1.9*
+*Last updated: March 2026 · Version 2.0*
 *Primary contact: living-labs@ubec.network*
