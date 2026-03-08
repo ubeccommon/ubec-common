@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en" data-ubec-service="hub">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Steward Dashboard — UBEC Hub</title>
+
+  <link rel="preconnect" href="https://fonts.bunny.net">
+  <link href="https://fonts.bunny.net/css?family=dm-serif-display:400,400i|dm-sans:400,500,600|jetbrains-mono:400,500" rel="stylesheet">
+  <link rel="stylesheet" href="https://design.ubec.network/v1/ubec-design-system.css">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --color-bark:         #3d2b1f;
+      --color-clay:         #7a5c48;
+      --color-sand:         #d9c8b0;
+      --color-linen:        #f5f0e8;
+      --color-parchment:    #faf7f2;
+      --color-ochre:        #c8893a;
+      --color-ochre-light:  #f5e8d0;
+      --color-water:        #4a7c9e;
+      --color-water-light:  #dceaf3;
+      --color-sage:         #7a9e7e;
+      --color-sage-light:   #e0ede1;
+      --color-peach:        #d4826a;
+      --color-peach-light:  #f5e0d8;
+      --color-commons:      #5c7a3e;
+      --color-commons-light:#e8f0e0;
+      --font-serif:  'DM Serif Display', Georgia, serif;
+      --font-sans:   'DM Sans', system-ui, sans-serif;
+      --font-mono:   'JetBrains Mono', monospace;
+      --radius:      10px;
+      --shadow-sm:   0 2px 8px rgba(61,43,31,0.08);
+      --shadow-md:   0 4px 20px rgba(61,43,31,0.12);
+      --max-width:   1200px;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-parchment);
+      color: var(--color-bark);
+      padding-top: 68px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Dashboard layout ── */
+    .dashboard {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 4rem;
+      flex: 1;
+      width: 100%;
+    }
+
+    /* ── Page header ── */
+    .page-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--color-sand);
+      flex-wrap: wrap;
+    }
+    .page-header__greeting {
+      font-family: var(--font-serif);
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      color: var(--color-bark);
+      line-height: 1.2;
+    }
+    .page-header__greeting span { color: var(--color-ochre); }
+    .page-header__meta {
+      font-size: 0.825rem;
+      color: var(--color-clay);
+      text-align: right;
+      line-height: 1.8;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.25rem;
+    }
+
+    /* ── Status strip ── */
+    .status-strip {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .status-card {
+      background: white;
+      border: 1px solid var(--color-sand);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow 0.2s;
+    }
+    .status-card:hover { box-shadow: var(--shadow-md); }
+    .status-card__label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--color-clay);
+    }
+    .status-card__value {
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      color: var(--color-bark);
+      line-height: 1;
+    }
+    .status-card__sub { font-size: 0.775rem; color: var(--color-clay); }
+    .status-card--verified .status-card__value { color: var(--color-commons); }
+    .status-card--water    .status-card__value { color: var(--color-water); }
+    .status-card--ochre    .status-card__value { color: var(--color-ochre); }
+
+    /* ── Main grid ── */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+    @media (max-width: 800px) { .main-grid { grid-template-columns: 1fr; } }
+    .panel--wide { grid-column: 1 / -1; }
+
+    /* ── Panel ── */
+    .panel {
+      background: white;
+      border: 1px solid var(--color-sand);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+    .panel__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.1rem 1.5rem;
+      border-bottom: 1px solid var(--color-sand);
+      background: var(--color-linen);
+    }
+    .panel__title {
+      font-family: var(--font-serif);
+      font-size: 1.05rem;
+      color: var(--color-bark);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .panel__badge {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 500;
+      padding: 0.2rem 0.55rem;
+      border-radius: 20px;
+      background: var(--color-ochre-light);
+      color: var(--color-ochre);
+    }
+    .panel__body { padding: 1.25rem 1.5rem; }
+
+    /* ── Observations ── */
+    .obs-list { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; }
+    .obs-item {
+      padding: 0.9rem 1rem;
+      background: var(--color-linen);
+      border-radius: 8px;
+      border-left: 3px solid var(--color-ochre);
+      transition: border-color 0.2s;
+    }
+    .obs-item:hover { border-color: var(--color-water); }
+    .obs-item__top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 0.5rem;
+      margin-bottom: 0.3rem;
+    }
+    .obs-item__date { font-family: var(--font-mono); font-size: 0.7rem; color: var(--color-clay); white-space: nowrap; }
+    .obs-item__zone {
+      font-size: 0.65rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 0.15rem 0.45rem; border-radius: 4px;
+      background: var(--color-water-light); color: var(--color-water);
+    }
+    .obs-item__note {
+      font-size: 0.85rem; color: var(--color-bark); line-height: 1.5;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .obs-item__validated {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      font-size: 0.7rem; color: var(--color-commons); margin-top: 0.3rem;
+    }
+
+    /* ── Permissions ── */
+    .perm-section { margin-bottom: 1.25rem; }
+    .perm-section__heading {
+      font-size: 0.7rem; font-weight: 600; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--color-clay); margin-bottom: 0.6rem;
+    }
+    .perm-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .perm-tag {
+      font-family: var(--font-mono); font-size: 0.7rem; padding: 0.25rem 0.6rem;
+      border-radius: 4px; background: var(--color-sage-light);
+      color: var(--color-commons); border: 1px solid #c8dfc8;
+    }
+    .role-tag {
+      font-family: var(--font-mono); font-size: 0.7rem; padding: 0.25rem 0.6rem;
+      border-radius: 4px; background: var(--color-ochre-light);
+      color: var(--color-ochre); border: 1px solid #e8d0a8; font-weight: 600;
+    }
+
+    /* ── Profile ── */
+    .profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem 1.5rem; }
+    @media (max-width: 500px) { .profile-grid { grid-template-columns: 1fr; } }
+    .profile-field__label {
+      font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--color-clay); margin-bottom: 0.2rem;
+    }
+    .profile-field__value { font-size: 0.9rem; color: var(--color-bark); word-break: break-all; }
+    .profile-field__value--mono { font-family: var(--font-mono); font-size: 0.78rem; color: var(--color-water); }
+
+    /* ── Token cards ── */
+    .token-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+    @media (max-width: 500px) { .token-grid { grid-template-columns: 1fr; } }
+    .token-card { border-radius: 8px; padding: 1rem 1.1rem; border: 1px solid transparent; }
+    .token-card--air   { background: var(--color-linen);       border-color: var(--color-sand); }
+    .token-card--water { background: var(--color-water-light);  border-color: #b8d5e8; }
+    .token-card--earth { background: var(--color-sage-light);   border-color: #c0d8c0; }
+    .token-card--fire  { background: var(--color-peach-light);  border-color: #e8c8b8; }
+    .token-card__symbol { font-family: var(--font-mono); font-size: 0.65rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.7; margin-bottom: 0.25rem; }
+    .token-card__name  { font-family: var(--font-serif); font-size: 0.95rem; margin-bottom: 0.4rem; }
+    .token-card__balance { font-family: var(--font-mono); font-size: 1.2rem; font-weight: 500; }
+    .token-card__phase { font-size: 0.7rem; opacity: 0.6; margin-top: 0.2rem; }
+
+    /* ── Device placeholder ── */
+    .placeholder-notice {
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; gap: 0.75rem; padding: 2.5rem 1.5rem;
+      text-align: center; color: var(--color-clay);
+    }
+    .placeholder-notice__icon { font-size: 2rem; opacity: 0.5; }
+    .placeholder-notice__text { font-size: 0.875rem; line-height: 1.6; max-width: 28ch; }
+    .placeholder-notice__phase {
+      font-family: var(--font-mono); font-size: 0.65rem; font-weight: 600;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      padding: 0.25rem 0.75rem; border-radius: 20px;
+      background: var(--color-linen); border: 1px solid var(--color-sand); color: var(--color-clay);
+    }
+
+    /* ── States ── */
+    .loading-row {
+      display: flex; align-items: center; gap: 0.6rem;
+      color: var(--color-clay); font-size: 0.875rem; padding: 1rem 0;
+    }
+    .spinner {
+      width: 16px; height: 16px;
+      border: 2px solid var(--color-sand); border-top-color: var(--color-ochre);
+      border-radius: 50%; animation: spin 0.8s linear infinite; flex-shrink: 0;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .error-row { display: flex; align-items: center; gap: 0.5rem; color: var(--color-peach); font-size: 0.825rem; padding: 0.75rem 0; }
+    .empty-row { color: var(--color-clay); font-size: 0.825rem; padding: 1rem 0; font-style: italic; }
+    .divider { height: 1px; background: var(--color-sand); margin: 1rem 0; }
+
+    /* ── Buttons ── */
+    .btn-logout {
+      font-family: var(--font-sans); font-size: 0.825rem; font-weight: 500;
+      color: var(--color-clay); background: white; border: 1px solid var(--color-sand);
+      border-radius: 6px; padding: 0.45rem 1rem; cursor: pointer;
+      transition: border-color 0.2s, color 0.2s; text-decoration: none;
+    }
+    .btn-logout:hover { border-color: var(--color-peach); color: var(--color-peach); }
+
+    /* ── Lang switcher ── */
+    .lang-switch {
+      font-size: 0.775rem; color: var(--color-clay); letter-spacing: 0.05em;
+    }
+    .lang-switch a {
+      color: var(--color-clay); text-decoration: none;
+      transition: color 0.15s;
+    }
+    .lang-switch a:hover { color: var(--color-bark); }
+    .lang-switch a[aria-current="true"] {
+      color: var(--color-bark); font-weight: 600; text-decoration: underline;
+      text-decoration-color: var(--color-ochre);
+    }
+
+    /* ── Footer ── */
+    .footer {
+      background: var(--color-bark);
+      color: var(--color-sand);
+      padding: 3rem 2rem 2rem;
+      margin-top: auto;
+    }
+    .footer__inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 2rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid rgba(229,217,204,0.15);
+    }
+    @media (max-width: 700px) {
+      .footer__inner { grid-template-columns: 1fr; }
+    }
+    .footer__brand-name {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 1.15rem;
+      color: var(--color-parchment);
+      margin-bottom: 0.5rem;
+    }
+    .footer__brand-desc {
+      font-size: 0.85rem; line-height: 1.6; color: var(--color-clay); max-width: 36ch;
+    }
+    .footer__col-title {
+      font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--color-clay); margin-bottom: 1rem;
+    }
+    .footer__links { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+    .footer__links a { font-size: 0.875rem; color: var(--color-sand); text-decoration: none; transition: color 0.15s; }
+    .footer__links a:hover { color: var(--color-parchment); }
+    .footer__bottom {
+      max-width: var(--max-width); margin: 1.5rem auto 0;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 0.5rem; font-size: 0.8rem; color: var(--color-clay);
+    }
+    .footer__bottom a { color: var(--color-clay); }
+    .footer__bottom a:hover { color: var(--color-sand); }
+
+    /* ── Fade-in ── */
+    .fade-in { animation: fadeIn 0.4s ease both; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+  </style>
+</head>
+<body>
+  <nav id="ubec-nav" aria-label="UBEC DAO navigation"></nav>
+
+  <script src="https://design.ubec.network/v1/ubec-nav.js" defer></script>
+
+  <main class="dashboard" id="dashboard" style="display:none;">
+
+    <header class="page-header">
+      <h1 class="page-header__greeting">
+        Welcome back, <span id="greeting-name">Steward</span>
+      </h1>
+      <div class="page-header__meta">
+        <div id="header-email"></div>
+        <div id="header-since"></div>
+        <button class="btn-logout" id="btn-logout">Sign out</button>
+      </div>
+    </header>
+
+    <div class="status-strip">
+      <div class="status-card status-card--verified">
+        <div class="status-card__label">Account status</div>
+        <div class="status-card__value" id="stat-status">—</div>
+        <div class="status-card__sub" id="stat-verified">…</div>
+      </div>
+      <div class="status-card status-card--water">
+        <div class="status-card__label">Roles</div>
+        <div class="status-card__value" id="stat-roles">—</div>
+        <div class="status-card__sub">Assigned roles</div>
+      </div>
+      <div class="status-card status-card--ochre">
+        <div class="status-card__label">Observations</div>
+        <div class="status-card__value" id="stat-obs">—</div>
+        <div class="status-card__sub">Total submitted</div>
+      </div>
+      <div class="status-card">
+        <div class="status-card__label">Preferred language</div>
+        <div class="status-card__value" id="stat-lang">—</div>
+        <div class="status-card__sub">Interface language</div>
+      </div>
+    </div>
+
+    <div class="main-grid">
+
+      <!-- Recent observations -->
+      <div class="panel">
+        <div class="panel__header">
+          <div class="panel__title"><span>🔬</span> Recent Observations</div>
+          <span class="panel__badge" id="obs-badge">…</span>
+        </div>
+        <div class="panel__body">
+          <div class="loading-row" id="obs-loading"><div class="spinner"></div> Loading observations…</div>
+          <ul class="obs-list" id="obs-list" style="display:none;"></ul>
+          <div class="error-row"  id="obs-error"  style="display:none;">⚠ Could not load observations.</div>
+          <div class="empty-row"  id="obs-empty"  style="display:none;">No observations submitted yet.</div>
+        </div>
+      </div>
+
+      <!-- Permissions -->
+      <div class="panel">
+        <div class="panel__header">
+          <div class="panel__title"><span>🔑</span> Permissions</div>
+          <span class="panel__badge" id="perm-badge">…</span>
+        </div>
+        <div class="panel__body">
+          <div class="loading-row" id="perm-loading"><div class="spinner"></div> Loading permissions…</div>
+          <div id="perm-content" style="display:none;"></div>
+          <div class="error-row" id="perm-error" style="display:none;">⚠ Could not load permissions.</div>
+        </div>
+      </div>
+
+      <!-- Token balances -->
+      <div class="panel">
+        <div class="panel__header">
+          <div class="panel__title"><span>🪙</span> Token Balances</div>
+          <span class="panel__badge">Phase 2</span>
+        </div>
+        <div class="panel__body">
+          <div class="token-grid">
+            <div class="token-card token-card--air">
+              <div class="token-card__symbol">UBEC · Air</div>
+              <div class="token-card__name">Universal Access</div>
+              <div class="token-card__balance">—</div>
+              <div class="token-card__phase">Stellar · not yet linked</div>
+            </div>
+            <div class="token-card token-card--water">
+              <div class="token-card__symbol">UBECrc · Water</div>
+              <div class="token-card__name">Reciprocity</div>
+              <div class="token-card__balance">—</div>
+              <div class="token-card__phase">Earned via observations</div>
+            </div>
+            <div class="token-card token-card--earth">
+              <div class="token-card__symbol">UBECgpi · Earth</div>
+              <div class="token-card__name">Stewardship</div>
+              <div class="token-card__balance">—</div>
+              <div class="token-card__phase">Place-based knowledge</div>
+            </div>
+            <div class="token-card token-card--fire">
+              <div class="token-card__symbol">UBECtt · Fire</div>
+              <div class="token-card__name">Governance</div>
+              <div class="token-card__balance">—</div>
+              <div class="token-card__phase">DAO participation</div>
+            </div>
+          </div>
+          <p style="font-size:0.775rem;color:var(--color-clay);margin-top:1rem;line-height:1.5;">
+            Stellar public key required to link token balances. Connect your Stellar wallet in profile settings (Phase 2).
+          </p>
+        </div>
+      </div>
+
+      <!-- Connected devices -->
+      <div class="panel">
+        <div class="panel__header">
+          <div class="panel__title"><span>📡</span> Connected Devices</div>
+          <span class="panel__badge">Phase 2</span>
+        </div>
+        <div class="panel__body">
+          <div class="placeholder-notice">
+            <div class="placeholder-notice__icon">📡</div>
+            <div class="placeholder-notice__text">Device registration for senseBox and other IoT sensors will be available in Phase 2.</div>
+            <span class="placeholder-notice__phase">Phase 2</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Profile -->
+      <div class="panel panel--wide">
+        <div class="panel__header">
+          <div class="panel__title"><span>🌱</span> Steward Profile</div>
+        </div>
+        <div class="panel__body">
+          <div class="loading-row" id="profile-loading"><div class="spinner"></div> Loading profile…</div>
+          <div class="profile-grid fade-in" id="profile-grid" style="display:none;"></div>
+          <div class="error-row" id="profile-error" style="display:none;">⚠ Could not load profile.</div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <div class="footer__inner">
+      <div>
+        <div class="footer__brand-name">UBEC Hub</div>
+        <p class="footer__brand-desc">Central REST API and IoT integration layer for the UBEC DAO bioregional protocol network. Anchored in the Schlaubetal, Brandenburg, Germany.</p>
+      </div>
+      <div>
+        <div class="footer__col-title">Services</div>
+        <ul class="footer__links">
+          <li><a href="https://ubec.network">UBEC DAO</a></li>
+          <li><a href="https://bioregional.ubec.network">UBEC Protocol</a></li>
+          <li><a href="https://living-labs.ubec.network">Living Labs</a></li>
+          <li><a href="https://mapservice.ubec.network">UBEC Maps</a></li>
+          <li><a href="https://erdpuls.ubec.network">Erdpuls</a></li>
+          <li><a href="https://learn.ubec.network">UBEC Learn</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer__col-title">Hub</div>
+        <ul class="footer__links">
+          <li><a href="/docs">API Documentation</a></li>
+          <li><a href="/health">Health Status</a></li>
+          <li><a href="/en/legal">Impressum</a></li>
+          <li><a href="/en/privacy">Privacy Policy</a></li>
+          <li><a href="/en/terms">Terms of Service</a></li>
+          <li><a href="mailto:living-labs@ubec.network">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <p>© 2024–2026 Michel Garand · <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> · Code: <a href="https://www.gnu.org/licenses/agpl-3.0.html">GNU AGPL v3.0</a></p>
+      <p>Made with the assistance of <a href="https://anthropic.com">Claude (Anthropic)</a> · <em>"I am because we are"</em></p>
+    </div>
+  </footer>
+
+  <script>
+    const API = 'https://iot.ubec.network/api/v1';
+    const LOGIN_URL = '/login';
+    const LANG = 'en';
+
+    // ── Auth guard ──────────────────────────────────────────────────
+    const token = localStorage.getItem('ubec_access_token')
+                || sessionStorage.getItem('ubec_access_token');
+    if (!token) window.location.href = LOGIN_URL;
+
+    const authHeaders = {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type':  'application/json',
+    };
+
+    // ── i18n ────────────────────────────────────────────────────────
+    const T = {
+      memberSince:  'Member since',
+      statActive:   'Active',
+      statInactive: 'Inactive',
+      verified:     'Email verified ✓',
+      unverified:   'Email not verified',
+      rolesHeading: 'Roles',
+      emptyPerms:   'No roles or permissions assigned.',
+      fieldLabels: [
+        'Email', 'Display name', 'Full name',
+        'Language', 'Member since', 'Last updated',
+        'Email verified', 'Stellar key',
+      ],
+      fieldYes:       'Yes ✓',
+      fieldNo:        'No',
+      fieldNotLinked: 'Not linked',
+      obsTotal:       'total',
+    };
+
+    function permsLabel(n) {
+      // Simple pluralisation embedded per language
+      const labels = { en: n => `${n} permission${n !== 1 ? 's' : ''}`, de: n => `${n} Berechtigung${n !== 1 ? 'en' : ''}`, pl: n => `${n} uprawnienie${n !== 1 ? 'ń' : ''}` };
+      return (labels[LANG] || labels.en)(n);
+    }
+
+    // ── Helpers ──────────────────────────────────────────────────────
+    function fmtDate(iso) {
+      if (!iso) return '—';
+      return new Date(iso).toLocaleDateString(LANG === 'en' ? 'en-GB' : LANG, { day:'2-digit', month:'short', year:'numeric' });
+    }
+    function fmtDateShort(iso) {
+      if (!iso) return '—';
+      const d = new Date(iso);
+      return d.toLocaleDateString(LANG === 'en' ? 'en-GB' : LANG, { day:'2-digit', month:'short' })
+           + ' ' + d.toLocaleTimeString(LANG === 'en' ? 'en-GB' : LANG, { hour:'2-digit', minute:'2-digit' });
+    }
+    function show(id) { document.getElementById(id).style.display = ''; }
+    function hide(id) { document.getElementById(id).style.display = 'none'; }
+    function setText(id, v) { document.getElementById(id).textContent = v; }
+    function clearAuth() {
+      localStorage.removeItem('ubec_access_token');
+      sessionStorage.removeItem('ubec_access_token');
+    }
+
+    // ── Logout ───────────────────────────────────────────────────────
+    document.getElementById('btn-logout').addEventListener('click', async () => {
+      try { await fetch(`${API}/auth/logout`, { method:'POST', headers:authHeaders }); } catch(_) {}
+      clearAuth();
+      window.location.href = LOGIN_URL;
+    });
+
+    // ── Fetch helpers ────────────────────────────────────────────────
+    async function apiFetch(path) {
+      const res = await fetch(`${API}${path}`, { headers: authHeaders });
+      if (res.status === 401) { clearAuth(); window.location.href = LOGIN_URL; throw new Error('401'); }
+      if (!res.ok) throw new Error(res.status);
+      return res.json();
+    }
+
+    // ── Render profile ───────────────────────────────────────────────
+    function renderProfile(p) {
+      hide('profile-loading');
+      const grid = document.getElementById('profile-grid');
+      const fields = [
+        [T.fieldLabels[0], p.email,                                           false],
+        [T.fieldLabels[1], p.display_name || '—',                             false],
+        [T.fieldLabels[2], p.full_name    || '—',                             false],
+        [T.fieldLabels[3], p.preferred_language?.toUpperCase() || '—',        false],
+        [T.fieldLabels[4], fmtDate(p.created_at),                             false],
+        [T.fieldLabels[5], fmtDate(p.updated_at),                             false],
+        [T.fieldLabels[6], p.email_verified ? T.fieldYes : T.fieldNo,         false],
+        [T.fieldLabels[7], p.stellar_public_key || T.fieldNotLinked,          !!p.stellar_public_key],
+      ];
+      grid.innerHTML = fields.map(([label, value, mono]) => `
+        <div class="profile-field">
+          <div class="profile-field__label">${label}</div>
+          <div class="profile-field__value ${mono ? 'profile-field__value--mono' : ''}">${value}</div>
+        </div>`).join('');
+      show('profile-grid');
+
+      const name = p.display_name || p.full_name || p.email.split('@')[0];
+      document.getElementById('greeting-name').textContent = name;
+      document.getElementById('header-email').textContent  = p.email;
+      document.getElementById('header-since').textContent  = T.memberSince + ' ' + fmtDate(p.created_at);
+      setText('stat-status',   p.is_active ? T.statActive : T.statInactive);
+      setText('stat-roles',    p.roles?.length || 0);
+      setText('stat-lang',     p.preferred_language?.toUpperCase() || '—');
+      setText('stat-verified', p.email_verified ? T.verified : T.unverified);
+    }
+
+    // ── Render permissions ───────────────────────────────────────────
+    function renderPermissions(data) {
+      hide('perm-loading');
+      const container = document.getElementById('perm-content');
+      const roles = data.roles || [];
+      const permissions = data.permissions || [];
+      const grouped = {};
+      permissions.forEach(p => {
+        const cat = p.includes(':') ? p.split(':')[0] : 'other';
+        if (!grouped[cat]) grouped[cat] = [];
+        grouped[cat].push(p);
+      });
+      let html = '';
+      if (roles.length) {
+        html += `<div class="perm-section"><div class="perm-section__heading">${T.rolesHeading}</div>
+          <div class="perm-tags">${roles.map(r => `<span class="role-tag">${r}</span>`).join('')}</div></div>`;
+      }
+      if (Object.keys(grouped).length) {
+        html += '<div class="divider"></div>';
+        for (const [cat, perms] of Object.entries(grouped)) {
+          html += `<div class="perm-section"><div class="perm-section__heading">${cat}</div>
+            <div class="perm-tags">${perms.map(p => `<span class="perm-tag">${p.split(':')[1] || p}</span>`).join('')}</div></div>`;
+        }
+      }
+      if (!roles.length && !permissions.length) html = `<div class="empty-row">${T.emptyPerms}</div>`;
+      container.innerHTML = html;
+      show('perm-content');
+      setText('perm-badge', permsLabel(permissions.length));
+    }
+
+    // ── Render observations ──────────────────────────────────────────
+    function renderObservations(data) {
+      hide('obs-loading');
+      setText('stat-obs',  data.total);
+      setText('obs-badge', `${data.total} ${T.obsTotal}`);
+      if (!data.observations?.length) { show('obs-empty'); return; }
+      const list = document.getElementById('obs-list');
+      list.innerHTML = data.observations.map(o => `
+        <li class="obs-item">
+          <div class="obs-item__top">
+            <span class="obs-item__date">${fmtDateShort(o.observed_at)}</span>
+            <span class="obs-item__zone">${o.proxemic_zone || ''}</span>
+          </div>
+          <div class="obs-item__note">${o.qualitative_notes || ''}</div>
+          ${o.is_validated ? '<div class="obs-item__validated">✓ Validated</div>' : ''}
+        </li>`).join('');
+      show('obs-list');
+    }
+
+    // ── Bootstrap ────────────────────────────────────────────────────
+    async function init() {
+      try {
+        const [profile, perms] = await Promise.all([
+          apiFetch('/auth/me'),
+          apiFetch('/auth/me/permissions'),
+        ]);
+        renderProfile(profile);
+        renderPermissions(perms);
+        try {
+          const obs = await apiFetch(`/observations?steward_id=${profile.id}&per_page=5&page=1`);
+          renderObservations(obs);
+        } catch(_) { hide('obs-loading'); show('obs-error'); }
+      } catch(e) {
+        if (e.message !== '401') {
+          hide('profile-loading');
+          show('profile-error');
+        }
+        return;
+      }
+      document.getElementById('dashboard').style.display = '';
+    }
+
+    init();
+
+    // Hide nav login button — steward is authenticated
+    // Poll until ubec-nav.js has rendered the button
+    (function hideNavLogin() {
+      var navLogin = document.querySelector('.ubec-nav__login');
+      if (navLogin) { navLogin.style.display = 'none'; }
+      else { setTimeout(hideNavLogin, 50); }
+    })();
+  </script>
+
+</body>
+</html>

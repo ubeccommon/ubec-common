@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en" data-ubec-service="hub">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign in — UBEC Hub</title>
+  <meta name="description" content="Sign in to your UBEC DAO steward account.">
+  <link rel="preconnect" href="https://fonts.bunny.net">
+  <link href="https://fonts.bunny.net/css?family=dm-serif-display:400|dm-sans:400,500,600|jetbrains-mono:400,500" rel="stylesheet">
+  <link rel="stylesheet" href="https://design.ubec.network/v1/ubec-design-system.css">
+  <style>
+    body {
+      padding-top: 68px;
+      background-color: var(--color-parchment);
+      color: var(--color-text);
+      font-family: var(--font-body);
+      min-height: 100vh;
+    }
+
+    /* ── Page layout ───────────────────────────────── */
+    .login-wrapper {
+      min-height: calc(100vh - 68px);
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 3rem 1.5rem 5rem;
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 440px;
+    }
+
+    /* ── Header ────────────────────────────────────── */
+    .login-header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .login-header__icon {
+      font-size: 2.25rem;
+      display: block;
+      margin-bottom: 0.75rem;
+    }
+
+    .login-header h1 {
+      font-family: var(--font-display);
+      font-size: var(--text-3xl);
+      color: var(--color-bark);
+      margin-bottom: 0.5rem;
+      line-height: var(--leading-tight);
+    }
+
+    .login-header p {
+      color: var(--color-clay);
+      font-size: var(--text-base);
+      line-height: 1.6;
+    }
+
+    /* ── Form card ─────────────────────────────────── */
+    .form-surface {
+      background: #fff;
+      border: 1px solid var(--color-sand);
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 2px 12px rgba(58, 36, 24, 0.06);
+    }
+
+    /* ── Field groups ──────────────────────────────── */
+    .field-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .field-group label {
+      display: block;
+      font-size: var(--text-sm);
+      font-weight: 600;
+      color: var(--color-humus);
+      margin-bottom: 0.4rem;
+    }
+
+    .field-group input[type="email"],
+    .field-group input[type="password"] {
+      width: 100%;
+      padding: 0.65rem 0.85rem;
+      border: 1.5px solid var(--color-sand);
+      border-radius: 7px;
+      font-family: var(--font-body);
+      font-size: var(--text-base);
+      color: var(--color-bark);
+      background: var(--color-parchment);
+      transition: border-color 0.15s, box-shadow 0.15s;
+      outline: none;
+      box-sizing: border-box;
+    }
+
+    .field-group input:focus {
+      border-color: var(--color-commons);
+      box-shadow: 0 0 0 3px rgba(90, 138, 106, 0.15);
+    }
+
+    .field-group input.input-error {
+      border-color: var(--color-status-error);
+    }
+
+    .field-error {
+      font-size: var(--text-xs);
+      color: var(--color-status-error);
+      margin-top: 0.3rem;
+      display: none;
+    }
+
+    .field-error.visible {
+      display: block;
+    }
+
+    /* ── Password row with toggle ──────────────────── */
+    .password-field-wrap {
+      position: relative;
+    }
+
+    .password-field-wrap input {
+      padding-right: 2.8rem;
+    }
+
+    .pw-toggle {
+      position: absolute;
+      right: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--color-clay);
+      font-size: 1rem;
+      line-height: 1;
+      padding: 0.2rem;
+      transition: color 0.15s;
+    }
+
+    .pw-toggle:hover {
+      color: var(--color-bark);
+    }
+
+    /* ── Remember me + forgot ──────────────────────── */
+    .form-row-aux {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      gap: 1rem;
+    }
+
+    .remember-label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      font-size: var(--text-sm);
+      color: var(--color-humus);
+    }
+
+    .remember-label input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--color-commons);
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .forgot-link {
+      font-size: var(--text-sm);
+      color: var(--color-commons);
+      text-decoration: underline;
+      white-space: nowrap;
+      transition: color 0.15s;
+    }
+
+    .forgot-link:hover {
+      color: var(--color-commons-dark);
+    }
+
+    /* ── API error banner ──────────────────────────── */
+    .api-error {
+      background: rgba(180, 60, 60, 0.08);
+      border: 1px solid rgba(180, 60, 60, 0.3);
+      border-radius: 7px;
+      padding: 0.75rem 1rem;
+      font-size: var(--text-sm);
+      color: var(--color-status-error);
+      margin-bottom: 1.25rem;
+      display: none;
+      line-height: 1.5;
+    }
+
+    .api-error.visible {
+      display: block;
+    }
+
+    /* ── Submit button ─────────────────────────────── */
+    .btn-signin {
+      width: 100%;
+      padding: 0.8rem 1.5rem;
+      background: var(--color-commons);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-family: var(--font-body);
+      font-size: var(--text-base);
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s, opacity 0.15s;
+    }
+
+    .btn-signin:hover:not(:disabled) {
+      background: var(--color-commons-dark);
+      transform: translateY(-1px);
+    }
+
+    .btn-signin:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    .btn-signin:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .btn-signin.loading::after {
+      content: ' …';
+    }
+
+    /* ── Below-card links ──────────────────────────── */
+    .login-footer-links {
+      margin-top: 1.5rem;
+      text-align: center;
+      font-size: var(--text-sm);
+      color: var(--color-clay);
+      line-height: 1.8;
+    }
+
+    .login-footer-links a {
+      color: var(--color-commons);
+      text-decoration: underline;
+      transition: color 0.15s;
+    }
+
+    .login-footer-links a:hover {
+      color: var(--color-commons-dark);
+    }
+
+    /* ── Language switcher below card ──────────────── */
+    .lang-row {
+      margin-top: 1.25rem;
+      text-align: center;
+      font-size: var(--text-xs);
+      color: var(--color-clay);
+    }
+
+    .lang-row a {
+      color: var(--color-clay);
+      text-decoration: none;
+      margin: 0 0.4rem;
+      transition: color 0.15s;
+    }
+
+    .lang-row a:hover {
+      color: var(--color-commons);
+    }
+
+    .lang-row a.active {
+      font-weight: 600;
+      color: var(--color-bark);
+    }
+  </style>
+</head>
+<body>
+  <script src="https://design.ubec.network/v1/ubec-nav.js" defer></script>
+
+  <main class="login-wrapper" role="main">
+    <div class="login-card">
+
+      <header class="login-header">
+        <span class="login-header__icon" aria-hidden="true">🌿</span>
+        <h1>Welcome back</h1>
+        <p>Sign in to your UBEC DAO steward account<br>to access the commons.</p>
+      </header>
+
+      <div class="form-surface">
+
+        <!-- API error -->
+        <div class="api-error" id="api-error" role="alert" aria-live="polite"></div>
+
+        <!-- Email -->
+        <div class="field-group">
+          <label for="email">Email address</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            autocomplete="email"
+            autocapitalize="off"
+            spellcheck="false"
+            placeholder="you@example.org"
+            required
+          >
+          <div class="field-error" id="email-error"></div>
+        </div>
+
+        <!-- Password -->
+        <div class="field-group">
+          <label for="password">Password</label>
+          <div class="password-field-wrap">
+            <input
+              type="password"
+              id="password"
+              name="password"
+              autocomplete="current-password"
+              placeholder="Your password"
+              required
+            >
+            <button type="button" class="pw-toggle" id="pw-toggle" aria-label="Show password">👁</button>
+          </div>
+          <div class="field-error" id="password-error"></div>
+        </div>
+
+        <!-- Remember me + forgot -->
+        <div class="form-row-aux">
+          <label class="remember-label">
+            <input type="checkbox" id="remember-me"> Stay signed in
+          </label>
+          <a href="/password-reset" class="forgot-link">Forgot password?</a>
+        </div>
+
+        <!-- Submit -->
+        <button type="button" class="btn-signin" id="submit-btn">Sign in</button>
+
+      </div><!-- /form-surface -->
+
+      <!-- Below-card links -->
+      <div class="login-footer-links">
+        <div>No account yet?
+          <a href="https://living-labs.ubec.network/en/register.html">Become a steward</a>
+        </div>
+        <div>
+          <a href="https://ubec.network/en/">← Back to UBEC DAO</a>
+        </div>
+      </div>
+
+      <!-- Language row -->
+      <div class="lang-row" aria-label="Language">
+        <a href="/login" class="active" hreflang="en" aria-current="true">EN</a>·
+        <a href="/de/login" hreflang="de">DE</a>·
+        <a href="/pl/login" hreflang="pl">PL</a>
+      </div>
+
+    </div><!-- /login-card -->
+  </main>
+
+  <script>
+    // ── Config ──────────────────────────────────────────────────────
+    const LOGIN_URL    = 'https://iot.ubec.network/api/v1/auth/login';
+    const REDIRECT_URL = 'https://iot.ubec.network/en/dashboard';
+
+    // ── Elements ────────────────────────────────────────────────────
+    const emailInput  = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const rememberMe  = document.getElementById('remember-me');
+    const submitBtn   = document.getElementById('submit-btn');
+    const apiError    = document.getElementById('api-error');
+    const pwToggle    = document.getElementById('pw-toggle');
+
+    // ── Password visibility toggle ──────────────────────────────────
+    pwToggle.addEventListener('click', function () {
+      const isText = passwordInput.type === 'text';
+      passwordInput.type = isText ? 'password' : 'text';
+      this.setAttribute('aria-label', isText ? 'Show password' : 'Hide password');
+    });
+
+    // ── Inline validation ───────────────────────────────────────────
+    function showFieldError(id, msg) {
+      const el = document.getElementById(id);
+      el.textContent = msg;
+      el.classList.add('visible');
+      const input = el.previousElementSibling?.tagName === 'INPUT'
+        ? el.previousElementSibling
+        : el.closest('.field-group')?.querySelector('input');
+      if (input) input.classList.add('input-error');
+    }
+
+    function clearFieldError(id) {
+      const el = document.getElementById(id);
+      el.textContent = '';
+      el.classList.remove('visible');
+      const input = el.closest('.field-group')?.querySelector('input');
+      if (input) input.classList.remove('input-error');
+    }
+
+    emailInput.addEventListener('blur', function () {
+      if (this.value && !this.validity.valid) {
+        showFieldError('email-error', 'Please enter a valid email address.');
+      } else {
+        clearFieldError('email-error');
+      }
+    });
+
+    // ── Validate ────────────────────────────────────────────────────
+    function validate() {
+      let valid = true;
+      clearFieldError('email-error');
+      clearFieldError('password-error');
+
+      if (!emailInput.value || !emailInput.validity.valid) {
+        showFieldError('email-error', 'Please enter a valid email address.');
+        valid = false;
+      }
+      if (!passwordInput.value) {
+        showFieldError('password-error', 'Please enter your password.');
+        valid = false;
+      }
+      return valid;
+    }
+
+    // ── Submit ──────────────────────────────────────────────────────
+    submitBtn.addEventListener('click', async function () {
+      apiError.textContent = '';
+      apiError.classList.remove('visible');
+
+      if (!validate()) return;
+
+      submitBtn.disabled = true;
+      submitBtn.classList.add('loading');
+
+      const payload = {
+        email:       emailInput.value.trim(),
+        password:    passwordInput.value,
+        remember_me: rememberMe.checked
+      };
+
+      try {
+        const res = await fetch(LOGIN_URL, {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify(payload)
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          // Store token for use by Hub dashboard / other services
+          sessionStorage.setItem('ubec_access_token', data.access_token);
+          if (rememberMe.checked) {
+            localStorage.setItem('ubec_access_token', data.access_token);
+          }
+          window.location.href = REDIRECT_URL;
+          return;
+        }
+
+        let message = 'Sign in failed. Please try again.';
+        try {
+          const data = await res.json();
+          if (res.status === 401) {
+            message = 'Incorrect email or password. Please try again.';
+          } else if (data.detail) {
+            message = typeof data.detail === 'string'
+              ? data.detail
+              : 'Please check your details and try again.';
+          }
+        } catch (_) { /* use default message */ }
+
+        apiError.textContent = message;
+        apiError.classList.add('visible');
+
+      } catch (err) {
+        apiError.textContent = 'Unable to connect to the Hub. Please check your connection and try again.';
+        apiError.classList.add('visible');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('loading');
+      }
+    });
+
+    // ── Allow Enter key ─────────────────────────────────────────────
+    [emailInput, passwordInput].forEach(el => {
+      el.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') submitBtn.click();
+      });
+    });
+  </script>
+</body>
+</html>

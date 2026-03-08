@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="pl" data-ubec-service="hub">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zaloguj się — UBEC Hub</title>
+  <meta name="description" content="Zaloguj się na swoje konto opiekuna/opiekunki UBEC DAO.">
+  <link rel="preconnect" href="https://fonts.bunny.net">
+  <link href="https://fonts.bunny.net/css?family=dm-serif-display:400|dm-sans:400,500,600|jetbrains-mono:400,500" rel="stylesheet">
+  <link rel="stylesheet" href="https://design.ubec.network/v1/ubec-design-system.css">
+  <style>
+    body {
+      padding-top: 68px;
+      background-color: var(--color-parchment);
+      color: var(--color-text);
+      font-family: var(--font-body);
+      min-height: 100vh;
+    }
+    .login-wrapper {
+      min-height: calc(100vh - 68px);
+      display: flex; align-items: flex-start; justify-content: center;
+      padding: 3rem 1.5rem 5rem;
+    }
+    .login-card { width: 100%; max-width: 440px; }
+    .login-header { text-align: center; margin-bottom: 2.5rem; }
+    .login-header__icon { font-size: 2.25rem; display: block; margin-bottom: 0.75rem; }
+    .login-header h1 {
+      font-family: var(--font-display); font-size: var(--text-3xl);
+      color: var(--color-bark); margin-bottom: 0.5rem; line-height: var(--leading-tight);
+    }
+    .login-header p { color: var(--color-clay); font-size: var(--text-base); line-height: 1.6; }
+    .form-surface {
+      background: #fff; border: 1px solid var(--color-sand); border-radius: 12px;
+      padding: 2rem; box-shadow: 0 2px 12px rgba(58, 36, 24, 0.06);
+    }
+    .field-group { margin-bottom: 1.25rem; }
+    .field-group label {
+      display: block; font-size: var(--text-sm); font-weight: 600;
+      color: var(--color-humus); margin-bottom: 0.4rem;
+    }
+    .field-group input[type="email"],
+    .field-group input[type="password"] {
+      width: 100%; padding: 0.65rem 0.85rem; border: 1.5px solid var(--color-sand);
+      border-radius: 7px; font-family: var(--font-body); font-size: var(--text-base);
+      color: var(--color-bark); background: var(--color-parchment);
+      transition: border-color 0.15s, box-shadow 0.15s; outline: none; box-sizing: border-box;
+    }
+    .field-group input:focus {
+      border-color: var(--color-commons); box-shadow: 0 0 0 3px rgba(90, 138, 106, 0.15);
+    }
+    .field-group input.input-error { border-color: var(--color-status-error); }
+    .field-error {
+      font-size: var(--text-xs); color: var(--color-status-error);
+      margin-top: 0.3rem; display: none;
+    }
+    .field-error.visible { display: block; }
+    .password-field-wrap { position: relative; }
+    .password-field-wrap input { padding-right: 2.8rem; }
+    .pw-toggle {
+      position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%);
+      background: none; border: none; cursor: pointer; color: var(--color-clay);
+      font-size: 1rem; line-height: 1; padding: 0.2rem; transition: color 0.15s;
+    }
+    .pw-toggle:hover { color: var(--color-bark); }
+    .form-row-aux {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 1.5rem; gap: 1rem;
+    }
+    .remember-label {
+      display: flex; align-items: center; gap: 0.5rem; cursor: pointer;
+      font-size: var(--text-sm); color: var(--color-humus);
+    }
+    .remember-label input[type="checkbox"] {
+      width: 16px; height: 16px; accent-color: var(--color-commons); cursor: pointer; flex-shrink: 0;
+    }
+    .forgot-link {
+      font-size: var(--text-sm); color: var(--color-commons); text-decoration: underline;
+      white-space: nowrap; transition: color 0.15s;
+    }
+    .forgot-link:hover { color: var(--color-commons-dark); }
+    .api-error {
+      background: rgba(180, 60, 60, 0.08); border: 1px solid rgba(180, 60, 60, 0.3);
+      border-radius: 7px; padding: 0.75rem 1rem; font-size: var(--text-sm);
+      color: var(--color-status-error); margin-bottom: 1.25rem; display: none; line-height: 1.5;
+    }
+    .api-error.visible { display: block; }
+    .btn-signin {
+      width: 100%; padding: 0.8rem 1.5rem; background: var(--color-commons); color: #fff;
+      border: none; border-radius: 8px; font-family: var(--font-body); font-size: var(--text-base);
+      font-weight: 600; cursor: pointer; transition: background 0.15s, transform 0.1s, opacity 0.15s;
+    }
+    .btn-signin:hover:not(:disabled) { background: var(--color-commons-dark); transform: translateY(-1px); }
+    .btn-signin:active:not(:disabled) { transform: translateY(0); }
+    .btn-signin:disabled { opacity: 0.6; cursor: not-allowed; }
+    .btn-signin.loading::after { content: ' …'; }
+    .login-footer-links {
+      margin-top: 1.5rem; text-align: center; font-size: var(--text-sm);
+      color: var(--color-clay); line-height: 1.8;
+    }
+    .login-footer-links a {
+      color: var(--color-commons); text-decoration: underline; transition: color 0.15s;
+    }
+    .login-footer-links a:hover { color: var(--color-commons-dark); }
+    .lang-row { margin-top: 1.25rem; text-align: center; font-size: var(--text-xs); color: var(--color-clay); }
+    .lang-row a { color: var(--color-clay); text-decoration: none; margin: 0 0.4rem; transition: color 0.15s; }
+    .lang-row a:hover { color: var(--color-commons); }
+    .lang-row a.active { font-weight: 600; color: var(--color-bark); }
+  </style>
+</head>
+<body>
+  <script src="https://design.ubec.network/v1/ubec-nav.js" defer></script>
+
+  <main class="login-wrapper" role="main">
+    <div class="login-card">
+
+      <header class="login-header">
+        <span class="login-header__icon" aria-hidden="true">🌿</span>
+        <h1>Witaj ponownie</h1>
+        <p>Zaloguj się na swoje konto opiekuna/opiekunki UBEC DAO,<br>aby uzyskać dostęp do commons.</p>
+      </header>
+
+      <div class="form-surface">
+
+        <div class="api-error" id="api-error" role="alert" aria-live="polite"></div>
+
+        <div class="field-group">
+          <label for="email">Adres e-mail</label>
+          <input
+            type="email" id="email" name="email"
+            autocomplete="email" autocapitalize="off" spellcheck="false"
+            placeholder="ty@przyklad.pl" required
+          >
+          <div class="field-error" id="email-error"></div>
+        </div>
+
+        <div class="field-group">
+          <label for="password">Hasło</label>
+          <div class="password-field-wrap">
+            <input
+              type="password" id="password" name="password"
+              autocomplete="current-password" placeholder="Twoje hasło" required
+            >
+            <button type="button" class="pw-toggle" id="pw-toggle" aria-label="Pokaż hasło">👁</button>
+          </div>
+          <div class="field-error" id="password-error"></div>
+        </div>
+
+        <div class="form-row-aux">
+          <label class="remember-label">
+            <input type="checkbox" id="remember-me"> Pozostań zalogowany/a
+          </label>
+          <a href="/pl/password-reset" class="forgot-link">Nie pamiętasz hasła?</a>
+        </div>
+
+        <button type="button" class="btn-signin" id="submit-btn">Zaloguj się</button>
+
+      </div>
+
+      <div class="login-footer-links">
+        <div>Nie masz jeszcze konta?
+          <a href="https://living-labs.ubec.network/pl/register.html">Zostań opiekunem/opiekunką</a>
+        </div>
+        <div>
+          <a href="https://ubec.network/pl/">← Powrót do UBEC DAO</a>
+        </div>
+      </div>
+
+      <div class="lang-row" aria-label="Język">
+        <a href="/login" hreflang="en">EN</a>·
+        <a href="/de/login" hreflang="de">DE</a>·
+        <a href="/pl/login" class="active" hreflang="pl" aria-current="true">PL</a>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    const LOGIN_URL    = 'https://iot.ubec.network/api/v1/auth/login';
+    const REDIRECT_URL = 'https://iot.ubec.network/pl/dashboard';
+
+    const emailInput    = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const rememberMe    = document.getElementById('remember-me');
+    const submitBtn     = document.getElementById('submit-btn');
+    const apiError      = document.getElementById('api-error');
+    const pwToggle      = document.getElementById('pw-toggle');
+
+    pwToggle.addEventListener('click', function () {
+      const isText = passwordInput.type === 'text';
+      passwordInput.type = isText ? 'password' : 'text';
+      this.setAttribute('aria-label', isText ? 'Pokaż hasło' : 'Ukryj hasło');
+    });
+
+    function showFieldError(id, msg) {
+      const el = document.getElementById(id);
+      el.textContent = msg; el.classList.add('visible');
+      const input = el.closest('.field-group')?.querySelector('input');
+      if (input) input.classList.add('input-error');
+    }
+
+    function clearFieldError(id) {
+      const el = document.getElementById(id);
+      el.textContent = ''; el.classList.remove('visible');
+      const input = el.closest('.field-group')?.querySelector('input');
+      if (input) input.classList.remove('input-error');
+    }
+
+    emailInput.addEventListener('blur', function () {
+      if (this.value && !this.validity.valid) {
+        showFieldError('email-error', 'Wprowadź prawidłowy adres e-mail.');
+      } else { clearFieldError('email-error'); }
+    });
+
+    function validate() {
+      let valid = true;
+      clearFieldError('email-error'); clearFieldError('password-error');
+      if (!emailInput.value || !emailInput.validity.valid) {
+        showFieldError('email-error', 'Wprowadź prawidłowy adres e-mail.');
+        valid = false;
+      }
+      if (!passwordInput.value) {
+        showFieldError('password-error', 'Wprowadź swoje hasło.');
+        valid = false;
+      }
+      return valid;
+    }
+
+    submitBtn.addEventListener('click', async function () {
+      apiError.textContent = ''; apiError.classList.remove('visible');
+      if (!validate()) return;
+      submitBtn.disabled = true; submitBtn.classList.add('loading');
+
+      const payload = {
+        email:       emailInput.value.trim(),
+        password:    passwordInput.value,
+        remember_me: rememberMe.checked
+      };
+
+      try {
+        const res = await fetch(LOGIN_URL, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          sessionStorage.setItem('ubec_access_token', data.access_token);
+          if (rememberMe.checked) localStorage.setItem('ubec_access_token', data.access_token);
+          window.location.href = REDIRECT_URL;
+          return;
+        }
+
+        let message = 'Logowanie nie powiodło się. Spróbuj ponownie.';
+        try {
+          const data = await res.json();
+          if (res.status === 401) {
+            message = 'Nieprawidłowy adres e-mail lub hasło. Spróbuj ponownie.';
+          } else if (data.detail) {
+            message = typeof data.detail === 'string' ? data.detail : 'Sprawdź swoje dane i spróbuj ponownie.';
+          }
+        } catch (_) { /* use default */ }
+
+        apiError.textContent = message; apiError.classList.add('visible');
+
+      } catch (err) {
+        apiError.textContent = 'Nie można połączyć się z Hubem. Sprawdź swoje połączenie i spróbuj ponownie.';
+        apiError.classList.add('visible');
+      } finally {
+        submitBtn.disabled = false; submitBtn.classList.remove('loading');
+      }
+    });
+
+    [emailInput, passwordInput].forEach(el => {
+      el.addEventListener('keydown', function (e) { if (e.key === 'Enter') submitBtn.click(); });
+    });
+  </script>
+</body>
+</html>

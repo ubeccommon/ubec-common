@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<!-- License: CC BY-SA 4.0 · This project uses the services of Claude and Anthropic PBC. -->
+<html lang="pl" data-ubec-service="hub">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UBEC Hub — Centralne API i warstwa integracji IoT</title>
+  <meta name="description" content="UBEC Hub to centralne REST API i warstwa integracji IoT dla bioregionalnej sieci protokołów UBEC DAO. Dane sensorów, obserwacje i nagrody tokenowe przepływają tędy.">
+  <meta name="robots" content="index, follow">
+
+  <link rel="preconnect" href="https://fonts.bunny.net">
+  <link href="https://fonts.bunny.net/css?family=dm-serif-display:400,400i|dm-sans:300,400,500,600,300i,400i|jetbrains-mono:400,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://design.ubec.network/v1/ubec-design-system.css">
+  <script defer src="https://design.ubec.network/v1/ubec-nav.js"></script>
+  <script defer data-domain="iot.ubec.network" src="https://analytics.ubec.network/js/script.js"></script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --color-air:            #A8D5E8;
+      --color-water:          #5B9E9E;
+      --color-earth:          #C4974A;
+      --color-fire:           #E8834A;
+      --color-commons:        #5A8A6A;
+      --color-commons-dark:   #3D6B52;
+      --color-commons-light:  #EAF4EE;
+      --color-peach:          #F2C9B0;
+      --color-peach-deep:     #D4956A;
+      --color-peach-light:    #FBF0E8;
+      --color-devotion:       #7A9FBA;
+      --color-devotion-dark:  #4A6B8A;
+      --color-devotion-light: #EBF1F7;
+      --color-ochre:          #D4A84B;
+      --color-ochre-light:    #FBF3E0;
+      --color-parchment:      #FBF6EE;
+      --color-linen:          #F2EBE0;
+      --color-sand:           #E5D9CC;
+      --color-clay:           #9E8070;
+      --color-humus:          #5C3D2A;
+      --color-bark:           #3A2418;
+      --color-status-ok:      #40916C;
+      --font-display: 'DM Serif Display', Georgia, serif;
+      --font-body:    'DM Sans', 'Helvetica Neue', sans-serif;
+      --font-mono:    'JetBrains Mono', 'Fira Code', monospace;
+      --nav-height:    64px;
+      --max-width:     1200px;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { background: var(--color-parchment); color: var(--color-humus); font-family: var(--font-body); font-size: 1rem; line-height: 1.6; padding-top: var(--nav-height); }
+    h1, h2, h3 { font-family: var(--font-display); color: var(--color-bark); line-height: 1.2; }
+    a { color: var(--color-commons); text-decoration: none; }
+    a:hover { color: var(--color-commons-dark); }
+
+    .hero {
+      position: relative; min-height: 480px; display: flex; align-items: center; overflow: hidden;
+      background: radial-gradient(ellipse 80% 60% at 70% 40%, rgba(91,158,158,0.18) 0%, transparent 60%),
+                  radial-gradient(ellipse 60% 80% at 20% 80%, rgba(168,213,232,0.14) 0%, transparent 55%),
+                  linear-gradient(160deg, var(--color-linen) 0%, var(--color-parchment) 55%, var(--color-devotion-light) 100%);
+    }
+    .hero::before {
+      content: ''; position: absolute; inset: 0; opacity: 0.06; pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    }
+    .hero__inner { position: relative; max-width: var(--max-width); margin: 0 auto; padding: 5rem 2rem 4rem; }
+    .hero__eyebrow { font-family: var(--font-body); font-size: 0.7rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-water); margin-bottom: 1rem; }
+    .hero__title { font-family: var(--font-display); font-size: clamp(2.2rem, 5vw, 3.6rem); color: var(--color-bark); max-width: 14ch; margin-bottom: 1.5rem; line-height: 1.1; }
+    .hero__title em { font-style: italic; color: var(--color-water); }
+    .hero__desc { font-size: 1.1rem; color: var(--color-clay); max-width: 52ch; margin-bottom: 2.5rem; line-height: 1.7; }
+    .hero__actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .hero__lang { margin-top: 2rem; font-size: 0.825rem; color: var(--color-clay); }
+    .hero__lang a { color: var(--color-clay); margin: 0 0.2rem; }
+    .hero__lang a:hover { color: var(--color-bark); }
+    .hero__lang a[aria-current="true"] { color: var(--color-bark); font-weight: 600; text-decoration: underline; text-decoration-color: var(--color-ochre); }
+
+    .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.7rem 1.5rem; border-radius: 6px; font-family: var(--font-body); font-size: 0.9rem; font-weight: 600; cursor: pointer; border: none; text-decoration: none; transition: background 0.15s, color 0.15s, box-shadow 0.15s; }
+    .btn--primary { background: var(--color-fire); color: var(--color-bark); }
+    .btn--primary:hover { background: var(--color-peach-deep); color: var(--color-bark); box-shadow: 0 4px 16px rgba(232,131,74,0.3); }
+    .btn--secondary { background: transparent; color: var(--color-commons-dark); border: 1.5px solid var(--color-sand); }
+    .btn--secondary:hover { background: var(--color-commons-light); border-color: var(--color-commons); color: var(--color-commons-dark); }
+
+    .status-banner { background: var(--color-commons-light); border-bottom: 1px solid rgba(90,138,106,0.2); padding: 0.6rem 2rem; display: flex; align-items: center; justify-content: center; gap: 0.75rem; font-size: 0.825rem; font-weight: 500; color: var(--color-commons-dark); }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--color-status-ok); box-shadow: 0 0 0 3px rgba(64,145,108,0.2); animation: pulse 2.4s ease-in-out infinite; flex-shrink: 0; }
+    @keyframes pulse { 0%, 100% { box-shadow: 0 0 0 3px rgba(64,145,108,0.2); } 50% { box-shadow: 0 0 0 6px rgba(64,145,108,0.08); } }
+
+    .section { max-width: var(--max-width); margin: 0 auto; padding: 5rem 2rem; }
+    .section__label { display: inline-block; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-water); margin-bottom: 0.75rem; }
+    .section__title { font-size: clamp(1.6rem, 3vw, 2.2rem); color: var(--color-bark); margin-bottom: 1rem; }
+    .section__subtitle { font-size: 1.05rem; color: var(--color-clay); max-width: 60ch; line-height: 1.7; margin-bottom: 3rem; }
+
+    .endpoints-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.25rem; }
+    .endpoint-card { background: var(--color-linen); border: 1px solid var(--color-sand); border-radius: 10px; padding: 1.5rem; transition: box-shadow 0.2s, border-color 0.2s; }
+    .endpoint-card:hover { box-shadow: 0 4px 20px rgba(90,56,32,0.1); border-color: var(--color-clay); }
+    .endpoint-card__header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; }
+    .method-badge { font-family: var(--font-mono); font-size: 0.7rem; font-weight: 500; padding: 0.2rem 0.55rem; border-radius: 4px; flex-shrink: 0; }
+    .method-badge--get  { background: var(--color-devotion-light); color: var(--color-devotion-dark); }
+    .method-badge--post { background: var(--color-commons-light);  color: var(--color-commons-dark); }
+    .endpoint-path { font-family: var(--font-mono); font-size: 0.85rem; color: var(--color-bark); }
+    .endpoint-card__desc { font-size: 0.875rem; color: var(--color-clay); line-height: 1.6; }
+
+    .flow-section { background: var(--color-linen); border-top: 1px solid var(--color-sand); border-bottom: 1px solid var(--color-sand); }
+    .flow-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0; }
+    .flow-node { padding: 2rem 1.5rem; border-right: 1px solid var(--color-sand); position: relative; }
+    .flow-node:last-child { border-right: none; }
+    .flow-node__icon { font-size: 1.75rem; margin-bottom: 0.75rem; display: block; }
+    .flow-node__label { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-clay); margin-bottom: 0.35rem; }
+    .flow-node__name { font-family: var(--font-display); font-size: 1.05rem; color: var(--color-bark); margin-bottom: 0.5rem; }
+    .flow-node__desc { font-size: 0.8rem; color: var(--color-clay); line-height: 1.55; }
+    @media (min-width: 768px) {
+      .flow-node:not(:last-child)::after { content: '→'; position: absolute; right: -0.65rem; top: 50%; transform: translateY(-50%); color: var(--color-clay); font-size: 1.1rem; background: var(--color-linen); padding: 0.1rem 0; z-index: 1; }
+    }
+
+    .tokens-strip { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .token-pill { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; border-radius: 9999px; font-size: 0.85rem; font-weight: 600; font-family: var(--font-mono); border: 1.5px solid transparent; }
+    .token-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .token-pill--air   { background: rgba(168,213,232,0.2); border-color: rgba(168,213,232,0.6); color: var(--color-devotion-dark); }
+    .token-pill--water { background: rgba(91,158,158,0.15);  border-color: rgba(91,158,158,0.5);  color: var(--color-water); }
+    .token-pill--earth { background: rgba(196,151,74,0.15);  border-color: rgba(196,151,74,0.5);  color: var(--color-humus); }
+    .token-pill--fire  { background: rgba(232,131,74,0.15);  border-color: rgba(232,131,74,0.5);  color: var(--color-peach-deep); }
+
+    .quick-links { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+    .quick-link { display: flex; align-items: center; gap: 0.75rem; padding: 1rem 1.25rem; background: var(--color-parchment); border: 1px solid var(--color-sand); border-radius: 8px; color: var(--color-humus); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: background 0.15s, border-color 0.15s, box-shadow 0.15s; }
+    .quick-link:hover { background: var(--color-commons-light); border-color: var(--color-commons); color: var(--color-commons-dark); box-shadow: 0 2px 12px rgba(90,56,32,0.08); }
+    .quick-link__icon { font-size: 1.25rem; flex-shrink: 0; }
+
+    .divider { width: 48px; height: 2px; background: var(--color-sand); margin: 0 0 2rem; border-radius: 2px; }
+
+    .footer { background: var(--color-bark); color: var(--color-sand); padding: 3rem 2rem 2rem; }
+    .footer__inner { max-width: var(--max-width); margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 2rem; padding-bottom: 2rem; border-bottom: 1px solid rgba(229,217,204,0.15); }
+    @media (max-width: 640px) { .footer__inner { grid-template-columns: 1fr; } }
+    .footer__brand-name { font-family: var(--font-display); font-style: italic; font-size: 1.15rem; color: var(--color-parchment); margin-bottom: 0.5rem; }
+    .footer__brand-desc { font-size: 0.85rem; line-height: 1.6; color: var(--color-clay); max-width: 36ch; }
+    .footer__col-title { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-clay); margin-bottom: 1rem; }
+    .footer__links { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+    .footer__links a { font-size: 0.875rem; color: var(--color-sand); text-decoration: none; transition: color 0.15s; }
+    .footer__links a:hover { color: var(--color-parchment); }
+    .footer__bottom { max-width: var(--max-width); margin: 1.5rem auto 0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; font-size: 0.8rem; color: var(--color-clay); }
+    .footer__bottom a { color: var(--color-clay); }
+    .footer__bottom a:hover { color: var(--color-sand); }
+
+    .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.55s ease, transform 0.55s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+  </style>
+</head>
+<body>
+
+  <nav id="ubec-nav" aria-label="UBEC DAO navigation"></nav>
+
+  <div class="status-banner" role="status" aria-live="polite">
+    <span class="status-dot" aria-hidden="true"></span>
+    Hub API działa · v2.0.0 · Hetzner EU ·
+    <a href="/health" style="color:var(--color-commons-dark);font-weight:600;">stan systemu</a>
+    &nbsp;·&nbsp;
+    <a href="/docs" style="color:var(--color-commons-dark);font-weight:600;">Docs API →</a>
+  </div>
+
+  <main id="main-content">
+
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero__inner">
+        <p class="hero__eyebrow">UBEC Hub · Centralne API &amp; Integracja IoT</p>
+        <h1 class="hero__title" id="hero-title"><em>Kręgosłup danych</em> bioregionalnych wspólnot</h1>
+        <p class="hero__desc">Obserwacje sensorów, uwierzytelnianie opiekunów, strumienie aktywności i logika nagród tokenowych przepływają przez Hub. Każde Living Lab, każdy pomiar zlewni, każdy akt nauki obywatelskiej jest tu rejestrowany.</p>
+        <div class="hero__actions">
+          <a href="/docs" class="btn btn--primary">Dokumentacja API →</a>
+          <a href="https://ubec.network/ecosystem" class="btn btn--secondary">Mapa ekosystemu</a>
+        </div>
+        <p class="hero__lang"><a href="/en/" hreflang="en">EN</a> · <a href="/de/" hreflang="de">DE</a> · <a href="/pl/" hreflang="pl" aria-current="true">PL</a></p>
+      </div>
+    </section>
+
+    <section class="flow-section" aria-label="Jak dane przepływają przez wspólnoty">
+      <div class="section" style="padding-top:3.5rem;padding-bottom:3.5rem;">
+        <p class="section__label">Przepływ danych</p>
+        <h2 class="section__title reveal">Jak dane przepływają przez wspólnoty</h2>
+        <div class="flow-grid reveal">
+          <div class="flow-node">
+            <span class="flow-node__icon">📡</span>
+            <div class="flow-node__label">Źródła</div>
+            <div class="flow-node__name">Living Labs &amp; Urządzenia</div>
+            <p class="flow-node__desc">Czujniki senseBox, obserwacje opiekunów, 13 pytań do gleby</p>
+          </div>
+          <div class="flow-node">
+            <span class="flow-node__icon">⚙️</span>
+            <div class="flow-node__label">Hub API</div>
+            <div class="flow-node__name">iot.ubec.network</div>
+            <p class="flow-node__desc">Uwierzytelnianie, walidacja, przechowywanie, obliczanie nagród tokenowych via REST</p>
+          </div>
+          <div class="flow-node">
+            <span class="flow-node__icon">🗺️</span>
+            <div class="flow-node__label">Odbiorcy</div>
+            <div class="flow-node__name">Mapy &amp; Protokół</div>
+            <p class="flow-node__desc">Mapy bioregionalne, inteligencja zlewni, zarządzanie DAO</p>
+          </div>
+          <div class="flow-node">
+            <span class="flow-node__icon">🔗</span>
+            <div class="flow-node__label">Blockchain</div>
+            <div class="flow-node__name">Sieć Stellar</div>
+            <p class="flow-node__desc">Nagrody tokenów UBECrc dystrybuowane za zweryfikowane obserwacje</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="api-title">
+      <p class="section__label">Moduły API</p>
+      <h2 class="section__title reveal" id="api-title">Trzy aktywne moduły</h2>
+      <p class="section__subtitle reveal">Moduły Fazy 1 są aktywne. Pełna dokumentacja API ze schematami żądań/odpowiedzi dostępna jest w interaktywnej dokumentacji.</p>
+      <div class="divider"></div>
+      <div class="endpoints-grid">
+        <div class="endpoint-card reveal">
+          <div class="endpoint-card__header">
+            <span class="method-badge method-badge--post">POST</span>
+            <span class="endpoint-path">/api/v1/auth/</span>
+          </div>
+          <p class="endpoint-card__desc">Rejestracja opiekuna, logowanie i zarządzanie sesjami. Uwierzytelnianie oparte na JWT dla wszystkich chronionych punktów końcowych. Kontrola dostępu oparta na rolach: opiekun, współtwórca, admin.</p>
+        </div>
+        <div class="endpoint-card reveal">
+          <div class="endpoint-card__header">
+            <span class="method-badge method-badge--get">GET</span>
+            <span class="endpoint-path">/api/v1/activities/</span>
+          </div>
+          <p class="endpoint-card__desc">Strumień aktywności — zapisy działań opiekunów w commons. Zasila zarządzanie warstwy protokołu i system nagród wzajemności UBECrc.</p>
+        </div>
+        <div class="endpoint-card reveal">
+          <div class="endpoint-card__header">
+            <span class="method-badge method-badge--post">POST</span>
+            <span class="endpoint-path">/api/v1/observations/</span>
+          </div>
+          <p class="endpoint-card__desc">Obserwacje fenomenologiczne z Living Labs. Przechowuje dane jakościowe i sensorowe razem — Nauka Goethańska w ustrukturyzowanej formie. Uzupełniona o 13 pytań do gleby.</p>
+        </div>
+        <div class="endpoint-card reveal" style="border-style:dashed;opacity:0.7;">
+          <div class="endpoint-card__header">
+            <span class="method-badge method-badge--get" style="opacity:0.6;">GET</span>
+            <span class="endpoint-path" style="color:var(--color-clay);">/api/v1/maps/ &nbsp;—&nbsp; Phase 2</span>
+          </div>
+          <p class="endpoint-card__desc">Bioregional GIS data pipeline connecting sensor observations to the UBEC Maps service. Watershed intelligence layer. Planned for Phase 2.</p>
+        </div>
+      </div>
+    </section>
+
+    <section style="background:var(--color-ochre-light);border-top:1px solid var(--color-sand);border-bottom:1px solid var(--color-sand);">
+      <div class="section" style="padding-top:3rem;padding-bottom:3rem;">
+        <p class="section__label">Ekonomia tokenów</p>
+        <h2 class="section__title reveal">Hub jako silnik nagród</h2>
+        <p class="section__subtitle reveal">Każda zweryfikowana obserwacja przesłana przez Hub uruchamia nagrody tokenów wzajemności UBECrc w sieci Stellar. Hub to miejsce, gdzie jakość danych staje się wartością ekonomiczną.</p>
+        <div class="tokens-strip reveal">
+          <span class="token-pill token-pill--air"><span class="token-dot" style="background:#A8D5E8;"></span>UBEC</span>
+          <span class="token-pill token-pill--water"><span class="token-dot" style="background:#5B9E9E;"></span>UBECrc</span>
+          <span class="token-pill token-pill--earth"><span class="token-dot" style="background:#C4974A;"></span>UBECgpi</span>
+          <span class="token-pill token-pill--fire"><span class="token-dot" style="background:#E8834A;"></span>UBECtt</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="links-title">
+      <p class="section__label">Nawigacja</p>
+      <h2 class="section__title reveal" id="links-title">Szybki dostęp</h2>
+      <div class="quick-links reveal">
+        <a href="/docs" class="quick-link">
+          <span class="quick-link__icon">📖</span>
+          Interaktywna dokumentacja API (Swagger)
+        </a>
+        <a href="/redoc" class="quick-link">
+          <span class="quick-link__icon">📋</span>
+          Dokumentacja API ReDoc
+        </a>
+        <a href="/health" class="quick-link">
+          <span class="quick-link__icon">💚</span>
+          Punkt końcowy sprawdzania stanu
+        </a>
+        <a href="https://ubec.network" class="quick-link">
+          <span class="quick-link__icon">🌍</span>
+          Portal UBEC DAO
+        </a>
+        <a href="https://living-labs.ubec.network" class="quick-link">
+          <span class="quick-link__icon">📡</span>
+          Living Labs — prześlij obserwacje
+        </a>
+        <a href="https://bioregional.ubec.network" class="quick-link">
+          <span class="quick-link__icon">🔗</span>
+          Protokół UBEC — ekonomia tokenów
+        </a>
+        <a href="https://github.com/ubeccommon/ubec_dao_platform" class="quick-link">
+          <span class="quick-link__icon">💻</span>
+          Kod źródłowy — GNU AGPL v3.0
+        </a>
+        <a href="https://ubec.network/ecosystem" class="quick-link">
+          <span class="quick-link__icon">🗺️</span>
+          Mapa ekosystemu — wszystkie osiem usług
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <div class="footer__inner">
+      <div>
+        <div class="footer__brand-name">UBEC Hub</div>
+        <p class="footer__brand-desc">Centralne REST API i warstwa integracji IoT dla bioregionalnej sieci protokołów UBEC DAO. Zakorzeniony w Schlaubetal, Brandenburgia, Niemcy.</p>
+      </div>
+      <div>
+        <div class="footer__col-title">Usługi</div>
+        <ul class="footer__links">
+          <li><a href="https://ubec.network">UBEC DAO</a></li>
+          <li><a href="https://bioregional.ubec.network">UBEC Protocol</a></li>
+          <li><a href="https://living-labs.ubec.network">Living Labs</a></li>
+          <li><a href="https://mapservice.ubec.network">UBEC Maps</a></li>
+          <li><a href="https://erdpuls.ubec.network">Erdpuls</a></li>
+          <li><a href="https://learn.ubec.network">UBEC Learn</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer__col-title">Hub</div>
+        <ul class="footer__links">
+          <li><a href="/docs">Dokumentacja API</a></li>
+          <li><a href="/health">Stan systemu</a></li>
+          <li><a href="/pl/legal">Impressum</a></li>
+          <li><a href="/pl/privacy">Polityka prywatności</a></li>
+          <li><a href="/pl/terms">Warunki korzystania</a></li>
+          <li><a href="mailto:living-labs@ubec.network">Kontakt</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <p>© 2024–2026 Michel Garand · <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> · Kod: <a href="https://www.gnu.org/licenses/agpl-3.0.html">GNU AGPL v3.0</a></p>
+      <p>Opracowane z pomocą <a href="https://anthropic.com">Claude (Anthropic)</a> · <em>„Jestem, bo jesteśmy"</em></p>
+    </div>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>
