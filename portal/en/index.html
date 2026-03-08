@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<!-- License: CC BY-SA 4.0
+     This project uses the services of Claude and Anthropic PBC. -->
+<html lang="en" data-ubec-service="portal">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UBEC Commons — Place. Protocol. Planet.</title>
+  <meta name="description" content="A Web 4.0 bioregional protocol network connecting people, place, and planet through regenerative economics, citizen science, and open governance. Rooted in Ubuntu philosophy.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://ubec.network/en/">
+  <link rel="alternate" hreflang="en" href="https://ubec.network/en/">
+  <link rel="alternate" hreflang="de" href="https://ubec.network/de/">
+  <link rel="alternate" hreflang="pl" href="https://ubec.network/pl/">
+  <link rel="alternate" hreflang="x-default" href="https://ubec.network/en/">
+
+  <!-- Bunny Fonts — GDPR compliant, EU-hosted. Never Google Fonts. -->
+  <link rel="preconnect" href="https://fonts.bunny.net">
+  <link href="https://fonts.bunny.net/css?family=dm-serif-display:400,400i|dm-sans:300,400,500,600,300i,400i|jetbrains-mono:400,500&display=swap" rel="stylesheet">
+
+  <!-- Shared design system -->
+  <link rel="stylesheet" href="https://design.ubec.network/v1/ubec-design-system.css">
+
+  <!-- Plausible analytics — cookieless, EU-hosted -->
+  <script defer data-domain="ubec.network" src="https://analytics.ubec.network/js/script.js"></script>
+
+  <style>
+    /* ── Reset & Base ────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --color-air:            #A8D5E8;
+      --color-water:          #5B9E9E;
+      --color-earth:          #C4974A;
+      --color-fire:           #E8834A;
+      --color-commons:        #5A8A6A;
+      --color-commons-dark:   #3D6B52;
+      --color-commons-light:  #EAF4EE;
+      --color-peach:          #F2C9B0;
+      --color-peach-deep:     #D4956A;
+      --color-peach-light:    #FBF0E8;
+      --color-devotion:       #7A9FBA;
+      --color-devotion-dark:  #4A6B8A;
+      --color-devotion-light: #EBF1F7;
+      --color-ochre:          #D4A84B;
+      --color-ochre-light:    #FBF3E0;
+      --color-parchment:      #FBF6EE;
+      --color-linen:          #F2EBE0;
+      --color-sand:           #E5D9CC;
+      --color-clay:           #9E8070;
+      --color-humus:          #5C3D2A;
+      --color-bark:           #3A2418;
+      --color-status-ok:      #40916C;
+      --font-display: 'DM Serif Display', Georgia, serif;
+      --font-body:    'DM Sans', 'Helvetica Neue', sans-serif;
+      --font-mono:    'JetBrains Mono', 'Fira Code', monospace;
+      --nav-height:    68px;
+      --max-width:     1200px;
+      --content-width: 720px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--color-parchment);
+      color: var(--color-humus);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      line-height: 1.6;
+      padding-top: 68px;
+    }
+
+    h1, h2, h3 { font-family: var(--font-display); color: var(--color-bark); line-height: 1.2; }
+    a { color: var(--color-commons); text-decoration: none; }
+    a:hover { color: var(--color-commons-dark); }
+    img { max-width: 100%; height: auto; }
+
+    /* ── Hero ───────────────────────────────────────────────── */
+    .hero {
+      background: linear-gradient(160deg, var(--color-peach-light) 0%, var(--color-ochre-light) 45%, var(--color-commons-light) 100%);
+      padding: clamp(4rem, 10vw, 8rem) 2rem clamp(3rem, 8vw, 6rem);
+      text-align: center;
+    }
+    .hero__label {
+      display: inline-block;
+      font-size: 0.7rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--color-clay); background: var(--color-linen);
+      border: 1px solid var(--color-sand); border-radius: 9999px;
+      padding: 0.3rem 1rem; margin-bottom: 1.5rem;
+      opacity: 0; animation: fadeUp 0.6s ease 0.1s forwards;
+    }
+    .hero__title {
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      color: var(--color-bark); margin-bottom: 1rem;
+      opacity: 0; animation: fadeUp 0.6s ease 0.25s forwards;
+    }
+    .hero__tagline {
+      font-family: var(--font-body); font-size: clamp(1rem, 2.5vw, 1.35rem);
+      font-weight: 300; color: var(--color-clay); letter-spacing: 0.01em;
+      margin-bottom: 1.75rem;
+      opacity: 0; animation: fadeUp 0.6s ease 0.4s forwards;
+    }
+    .hero__description {
+      font-size: 1.05rem; color: var(--color-humus);
+      max-width: 560px; margin: 0 auto 2.5rem;
+      opacity: 0; animation: fadeUp 0.6s ease 0.55s forwards;
+    }
+    .hero__actions {
+      display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+      opacity: 0; animation: fadeUp 0.6s ease 0.7s forwards;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Buttons ────────────────────────────────────────────── */
+    .btn-primary {
+      background: var(--color-fire); color: var(--color-bark);
+      font-family: var(--font-body); font-weight: 600; font-size: 0.95rem;
+      padding: 0.75rem 1.75rem; border-radius: 8px; border: none; cursor: pointer;
+      display: inline-block; transition: background 0.15s, transform 0.15s;
+    }
+    .btn-primary:hover { background: var(--color-peach-deep); color: var(--color-bark); transform: translateY(-1px); }
+    .btn-secondary {
+      background: transparent; color: var(--color-commons);
+      font-family: var(--font-body); font-weight: 600; font-size: 0.95rem;
+      padding: 0.75rem 1.75rem; border-radius: 8px; border: 2px solid var(--color-commons);
+      cursor: pointer; display: inline-block; transition: background 0.15s, color 0.15s, transform 0.15s;
+    }
+    .btn-secondary:hover { background: var(--color-commons-light); color: var(--color-commons-dark); transform: translateY(-1px); }
+
+    /* ── Philosophy strip ───────────────────────────────────── */
+    .philosophy {
+      background: var(--color-bark); color: var(--color-peach-light);
+      padding: 1.25rem 2rem; text-align: center;
+    }
+    .philosophy p {
+      font-family: var(--font-display); font-style: italic;
+      font-size: clamp(0.9rem, 2vw, 1.1rem); letter-spacing: 0.01em;
+      max-width: var(--content-width); margin: 0 auto;
+    }
+    .philosophy em { color: var(--color-peach); }
+
+    /* ── Sections ───────────────────────────────────────────── */
+    .section {
+      padding: 5rem 2rem; max-width: var(--max-width); margin: 0 auto;
+    }
+    .section__header { text-align: center; max-width: var(--content-width); margin: 0 auto 3.5rem; }
+    .section__label {
+      display: inline-block; font-size: 0.7rem; font-weight: 600;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--color-clay); margin-bottom: 0.75rem; display: block;
+    }
+    .section__title { font-size: clamp(1.75rem, 3.5vw, 2.5rem); margin-bottom: 1rem; }
+    .section__subtitle { color: var(--color-clay); font-size: 1.05rem; line-height: 1.65; }
+
+    /* ── Service cards ──────────────────────────────────────── */
+    .ecosystem { background: var(--color-linen); padding: 5rem 2rem; }
+    .ecosystem__inner { max-width: var(--max-width); margin: 0 auto; }
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem; margin-top: 0;
+    }
+    .service-card {
+      background: var(--color-parchment); border: 1px solid var(--color-sand);
+      border-radius: 12px; padding: 1.75rem; display: block;
+      transition: transform 0.2s, box-shadow 0.2s; color: inherit; text-decoration: none;
+    }
+    .service-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(58,36,24,0.1); }
+    .service-card__icon { font-size: 2rem; display: block; margin-bottom: 0.75rem; }
+    .service-card__role { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-clay); margin-bottom: 0.35rem; }
+    .service-card__name { font-family: var(--font-display); font-size: 1.2rem; color: var(--color-bark); margin-bottom: 0.6rem; }
+    .service-card__desc { font-size: 0.9rem; color: var(--color-clay); line-height: 1.6; margin-bottom: 1rem; }
+    .service-card__domain { font-family: var(--font-mono); font-size: 0.7rem; color: var(--color-devotion-dark); }
+
+    /* ── Token cards ────────────────────────────────────────── */
+    .tokens-section { background: var(--color-bark); padding: 5rem 2rem; }
+    .tokens-section .section__header { margin-bottom: 3rem; }
+    .tokens-section .section__label { color: var(--color-peach); }
+    .tokens-section .section__title { color: var(--color-peach-light); }
+    .tokens-section .section__subtitle { color: var(--color-sand); }
+    .tokens-grid {
+      max-width: var(--max-width); margin: 0 auto;
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1.5rem;
+    }
+    .token-card {
+      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 12px; padding: 1.75rem;
+    }
+    .token-card__dot {
+      width: 12px; height: 12px; border-radius: 50%;
+      background: var(--token-color, var(--color-air));
+      display: inline-block; margin-bottom: 1rem;
+      box-shadow: 0 0 8px var(--token-color, var(--color-air));
+    }
+    .token-card__element { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-sand); margin-bottom: 0.4rem; }
+    .token-card__name { font-family: var(--font-mono); font-size: 1.4rem; color: var(--color-peach-light); margin-bottom: 0.75rem; }
+    .token-card__desc { font-size: 0.9rem; color: var(--color-sand); line-height: 1.6; }
+
+    /* ── Pillar cards ───────────────────────────────────────── */
+    .pillars-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem; margin-top: 0;
+    }
+    .pillar {
+      background: var(--color-linen); border: 1px solid var(--color-sand);
+      border-radius: 12px; padding: 1.75rem;
+    }
+    .pillar__icon { font-size: 1.75rem; margin-bottom: 0.75rem; }
+    .pillar__name { font-family: var(--font-display); font-size: 1.1rem; color: var(--color-bark); margin-bottom: 0.3rem; }
+    .pillar__principle { font-size: 0.8rem; font-style: italic; color: var(--color-commons); margin-bottom: 0.75rem; }
+    .pillar__desc { font-size: 0.9rem; color: var(--color-clay); line-height: 1.6; }
+
+    /* ── Footer ─────────────────────────────────────────────── */
+    .footer { background: var(--color-bark); color: var(--color-sand); padding: 4rem 2rem 2rem; }
+    .footer__inner {
+      max-width: var(--max-width); margin: 0 auto;
+      display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 3rem;
+    }
+    .footer__brand-name { font-family: var(--font-display); font-size: 1.3rem; color: var(--color-peach-light); margin-bottom: 0.75rem; }
+    .footer__brand-desc { font-size: 0.9rem; color: var(--color-clay); line-height: 1.65; }
+    .footer__brand-tagline { font-family: var(--font-display); font-style: italic; font-size: 0.85rem; color: var(--color-peach); margin-top: 1rem; }
+    .footer__col-title { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-clay); margin-bottom: 1rem; }
+    .footer__links { list-style: none; }
+    .footer__links li { margin-bottom: 0.5rem; }
+    .footer__links a { color: var(--color-sand); font-size: 0.9rem; text-decoration: none; transition: color 0.15s; }
+    .footer__links a:hover { color: var(--color-peach-light); }
+    .footer__bottom {
+      max-width: var(--max-width); margin: 3rem auto 0;
+      padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.08);
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;
+    }
+    .footer__bottom p { font-size: 0.8rem; color: var(--color-clay); }
+    .footer__bottom a { color: var(--color-sand); }
+
+    /* ── Reveal animation ───────────────────────────────────── */
+    .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.5s ease, transform 0.5s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── Responsive ─────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      .footer__inner { grid-template-columns: 1fr; gap: 2rem; }
+      .footer__bottom { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav id="ubec-nav"></nav>
+
+  <!-- ── Hero ───────────────────────────────────────────────────── -->
+  <section class="hero" aria-labelledby="hero-title">
+    <span class="hero__label">Web 4.0 Bioregional Protocol Network</span>
+    <h1 class="hero__title" id="hero-title">Place. Protocol. Planet.</h1>
+    <p class="hero__tagline">Ubuntu · Bioregional · Regenerative</p>
+    <p class="hero__description">
+      A commons protocol network connecting small farms, citizen scientists,
+      educators, artists, and communities through regenerative economics,
+      IoT-backed observations, and open governance. Rooted in Müllrose,
+      Brandenburg — alive across bioregions.
+    </p>
+    <div class="hero__actions">
+      <a href="https://bioregional.ubec.network" class="btn-primary">Join the Protocol</a>
+      <a href="/en/#ecosystem" class="btn-secondary">Explore the Ecosystem</a>
+    </div>
+  </section>
+
+  <!-- ── Buckminster Fuller philosophy strip ────────────────────── -->
+  <div class="philosophy" role="complementary">
+    <p>
+      <em>"You never change things by fighting the existing reality.</em>
+      To change something, build a new model that makes the existing model obsolete."
+      — <cite>Buckminster Fuller</cite>
+    </p>
+  </div>
+
+  <!-- ── Ecosystem — eight service cards ───────────────────────── -->
+  <section class="ecosystem" id="ecosystem" aria-labelledby="ecosystem-title">
+    <div class="ecosystem__inner">
+      <div class="section__header reveal">
+        <span class="section__label">The Eight Services</span>
+        <h2 class="section__title" id="ecosystem-title">One Ecosystem, Eight Nodes</h2>
+        <p class="section__subtitle">
+          Each service is a living node in the bioregional protocol network.
+          Distinct roles, shared design, one commons identity.
+        </p>
+      </div>
+      <div class="services-grid" role="list">
+
+        <a href="https://bioregional.ubec.network" class="service-card reveal" role="listitem" aria-label="UBEC Protocol — DAO & Token Engine">
+          <span class="service-card__icon" aria-hidden="true">🔗</span>
+          <div class="service-card__role">DAO &amp; Token Engine</div>
+          <div class="service-card__name">UBEC Protocol</div>
+          <p class="service-card__desc">
+            The DAO governance layer and four-element token engine. Stewards
+            participate in bioregional decision-making through transparent,
+            on-chain coordination on the Stellar network.
+          </p>
+          <span class="service-card__domain">bioregional.ubec.network</span>
+        </a>
+
+        <a href="https://living-labs.ubec.network" class="service-card reveal" role="listitem" aria-label="Living Labs — Citizen Science Network">
+          <span class="service-card__icon" aria-hidden="true">📡</span>
+          <div class="service-card__role">Citizen Science Network</div>
+          <div class="service-card__name">Living Labs</div>
+          <p class="service-card__desc">
+            Steward-run observation networks embedded in place. Phenomenological
+            field work, IoT sensor data, and qualitative notes — all flowing
+            into the commons knowledge base.
+          </p>
+          <span class="service-card__domain">living-labs.ubec.network</span>
+        </a>
+
+        <a href="https://iot.ubec.network" class="service-card reveal" role="listitem" aria-label="UBEC Hub — Central API & IoT Integration">
+          <span class="service-card__icon" aria-hidden="true">⚙️</span>
+          <div class="service-card__role">Central API &amp; IoT Integration</div>
+          <div class="service-card__name">UBEC Hub</div>
+          <p class="service-card__desc">
+            The central REST API and IoT integration layer. All services
+            authenticate through the Hub. Sensor readings, steward identities,
+            and token rewards converge here.
+          </p>
+          <span class="service-card__domain">iot.ubec.network</span>
+        </a>
+
+        <a href="https://mapservice.ubec.network" class="service-card reveal" role="listitem" aria-label="UBEC Maps — Bioregional GIS">
+          <span class="service-card__icon" aria-hidden="true">🗺️</span>
+          <div class="service-card__role">Bioregional GIS</div>
+          <div class="service-card__name">UBEC Maps</div>
+          <p class="service-card__desc">
+            Watershed intelligence and bioregional cartography. The map is a
+            proxemic diagram — showing data at intimate, personal, social,
+            and public scales, following Hall's hidden dimension.
+          </p>
+          <span class="service-card__domain">mapservice.ubec.network</span>
+        </a>
+
+        <a href="https://erdpuls.ubec.network" class="service-card reveal" role="listitem" aria-label="Erdpuls — Flagship Living Lab, Müllrose">
+          <span class="service-card__icon" aria-hidden="true">🌱</span>
+          <div class="service-card__role">Flagship Living Lab · Müllrose</div>
+          <div class="service-card__name">Erdpuls</div>
+          <p class="service-card__desc">
+            The physical-digital home of the commons. A working farm and
+            bioregional hub in Müllrose, Brandenburg — where protocol meets
+            soil, and IoT meets the 13 Questions.
+          </p>
+          <span class="service-card__domain">erdpuls.ubec.network</span>
+        </a>
+
+        <a href="https://ubeccommon.github.io/Pattern_Language_of_Place/" class="service-card reveal" role="listitem" aria-label="UBEC Learn — Pattern Language of Place">
+          <span class="service-card__icon" aria-hidden="true">📚</span>
+          <div class="service-card__role">OER Repository</div>
+          <div class="service-card__name">UBEC Learn</div>
+          <p class="service-card__desc">
+            A genuine Pattern Language of Place — an open educational resource
+            structured after Christopher Alexander. Learning pathways,
+            field materials, and reports in English, German, and Polish.
+          </p>
+          <span class="service-card__domain">ubeccommon.github.io/Pattern_Language_of_Place</span>
+        </a>
+
+        <a href="https://ubeccommon.github.io" class="service-card reveal" role="listitem" aria-label="UBEC Open — Developer Commons">
+          <span class="service-card__icon" aria-hidden="true">💻</span>
+          <div class="service-card__role">Developer Commons</div>
+          <div class="service-card__name">UBEC Open</div>
+          <p class="service-card__desc">
+            Open-source repositories, SDK documentation, and contribution guides.
+            All platform code is licensed GNU AGPL v3.0. All documentation
+            and design under CC BY-SA 4.0.
+          </p>
+          <span class="service-card__domain">ubeccommon.github.io</span>
+        </a>
+
+        <a href="/en/" class="service-card reveal" role="listitem" aria-label="UBEC Commons Portal — This page">
+          <span class="service-card__icon" aria-hidden="true">🌍</span>
+          <div class="service-card__role">Commons Portal</div>
+          <div class="service-card__name">UBEC Commons</div>
+          <p class="service-card__desc">
+            The unified gateway to the UBEC ecosystem. Mission, philosophy,
+            and the origin story of a commons built not by fighting the
+            existing reality, but by building a new model.
+          </p>
+          <span class="service-card__domain">ubec.network</span>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Four-element token economy ────────────────────────────── -->
+  <section class="tokens-section" id="protocol" aria-labelledby="protocol-title">
+    <div class="section__header reveal" style="max-width: var(--content-width); margin: 0 auto 3rem;">
+      <span class="section__label">The Four-Element Token Economy</span>
+      <h2 class="section__title" id="protocol-title">A Living Economic System</h2>
+      <p class="section__subtitle">
+        Four tokens — four elements — one generative sequence from
+        universal access to collective transformation. Live on the Stellar network.
+      </p>
+    </div>
+    <div class="tokens-grid">
+      <div class="token-card reveal">
+        <div class="token-card__dot" style="--token-color: #A8D5E8;"></div>
+        <div class="token-card__element">Air · Universal Access</div>
+        <div class="token-card__name">UBEC</div>
+        <p class="token-card__desc">The primary circulation token. Gateway to the protocol network — open to all stewards entering the commons.</p>
+      </div>
+      <div class="token-card reveal">
+        <div class="token-card__dot" style="--token-color: #5B9E9E;"></div>
+        <div class="token-card__element">Water · Reciprocity</div>
+        <div class="token-card__name">UBECrc</div>
+        <p class="token-card__desc">Earned through phenomenological observations and citizen science contributions. Data flows generate reciprocity value.</p>
+      </div>
+      <div class="token-card reveal">
+        <div class="token-card__dot" style="--token-color: #C4974A;"></div>
+        <div class="token-card__element">Earth · Stability</div>
+        <div class="token-card__name">UBECgpi</div>
+        <p class="token-card__desc">The stable store and documentation anchor. Grounds the protocol in place — the soil beneath the digital commons.</p>
+      </div>
+      <div class="token-card reveal">
+        <div class="token-card__dot" style="--token-color: #E8834A;"></div>
+        <div class="token-card__element">Fire · Transformation</div>
+        <div class="token-card__name">UBECtt</div>
+        <p class="token-card__desc">Activates governance and collective transformation. The element of action — when commons decisions must become reality.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Philosophy pillars ─────────────────────────────────────── -->
+  <section class="section" id="philosophy" aria-labelledby="philosophy-title">
+    <div class="section__header reveal">
+      <span class="section__label">Intellectual Foundations</span>
+      <h2 class="section__title" id="philosophy-title">Built on Six Frameworks</h2>
+      <p class="section__subtitle">
+        These are not decorative references — they are operational design facilitators.
+        Every feature, data structure, and API decision is legible through at least one of these lenses.
+      </p>
+    </div>
+    <div class="pillars-grid">
+      <div class="pillar reveal">
+        <div class="pillar__icon">🤝</div>
+        <div class="pillar__name">Ubuntu Philosophy</div>
+        <div class="pillar__principle">"I am because we are"</div>
+        <p class="pillar__desc">The foundational ethics of the entire ecosystem. Personhood is constituted through relationship — collective governance over individual extraction.</p>
+      </div>
+      <div class="pillar reveal">
+        <div class="pillar__icon">🏛️</div>
+        <div class="pillar__name">Christopher Alexander</div>
+        <div class="pillar__principle">Pattern Language &amp; Living Structure</div>
+        <p class="pillar__desc">The OER repository is a genuine Pattern Language of Place. The platform evolves through unfolding wholeness — not imposed structure.</p>
+      </div>
+      <div class="pillar reveal">
+        <div class="pillar__icon">🗺️</div>
+        <div class="pillar__name">Edward T. Hall</div>
+        <div class="pillar__principle">Proxemics &amp; The Hidden Dimension</div>
+        <p class="pillar__desc">Data visibility follows proxemic zones — intimate, personal, social, public. Space communicates. The map is a proxemic diagram.</p>
+      </div>
+      <div class="pillar reveal">
+        <div class="pillar__icon">🌿</div>
+        <div class="pillar__name">Goethean Science</div>
+        <div class="pillar__principle">Phenomenological Observation</div>
+        <p class="pillar__desc">The 13 Questions to the Soil embody Goethe's delicate empiricism. Stewards observe phenomena first, interpret second. Quality of attention generates value.</p>
+      </div>
+      <div class="pillar reveal">
+        <div class="pillar__icon">🔮</div>
+        <div class="pillar__name">Buckminster Fuller</div>
+        <div class="pillar__principle">Synergetics &amp; Ephemeralization</div>
+        <p class="pillar__desc">The whole is more than the sum of parts. Doing more with less. The microservices architecture embodies the geodesic principle — each node bears its own load.</p>
+      </div>
+      <div class="pillar reveal">
+        <div class="pillar__icon">♻️</div>
+        <div class="pillar__name">Regenerative Design</div>
+        <div class="pillar__principle">Net-positive by design</div>
+        <p class="pillar__desc">Not sustainable — regenerative. Every intervention returns more vitality to living systems than it draws. The commons grows stronger through use.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Footer ─────────────────────────────────────────────────── -->
+  <footer class="footer" role="contentinfo">
+    <div class="footer__inner">
+      <div>
+        <div class="footer__brand-name">UBEC Commons</div>
+        <p class="footer__brand-desc">
+          A Web 4.0 bioregional protocol network connecting people, place,
+          and planet through regenerative economics, citizen science, and
+          open governance. Rooted in the Schlaubetal, Brandenburg, Germany.
+        </p>
+        <p class="footer__brand-tagline">"I am because we are. Place. Protocol. Planet."</p>
+      </div>
+      <div>
+        <div class="footer__col-title">Services</div>
+        <ul class="footer__links">
+          <li><a href="https://bioregional.ubec.network">UBEC Protocol</a></li>
+          <li><a href="https://living-labs.ubec.network">Living Labs</a></li>
+          <li><a href="https://iot.ubec.network">UBEC Hub</a></li>
+          <li><a href="https://mapservice.ubec.network">UBEC Maps</a></li>
+          <li><a href="https://erdpuls.ubec.network">Erdpuls</a></li>
+          <li><a href="https://ubeccommon.github.io/Pattern_Language_of_Place/">UBEC Learn</a></li>
+          <li><a href="https://ubeccommon.github.io">UBEC Open</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer__col-title">Legal</div>
+        <ul class="footer__links">
+          <li><a href="/legal">Impressum</a></li>
+          <li><a href="/privacy">Privacy Policy</a></li>
+          <li><a href="/terms">Terms of Service</a></li>
+          <li><a href="/contact">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <p>© 2024–2026 UBEC Commons · GNU AGPL v3.0 (code) · CC BY-SA 4.0 (docs) · <a href="mailto:living-labs@ubec.network">living-labs@ubec.network</a></p>
+      <p><em>This project is being developed with assistance from Claude (Anthropic PBC). All strategic decisions, philosophical positions, and project commitments are those of the author.</em></p>
+    </div>
+  </footer>
+
+  <script src="https://design.ubec.network/v1/ubec-nav.js"></script>
+  <script>
+    // Reveal on scroll
+    (function() {
+      var els = document.querySelectorAll('.reveal');
+      var io = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) {
+          if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+        });
+      }, { threshold: 0.1 });
+      els.forEach(function(el) { io.observe(el); });
+    })();
+  </script>
+
+</body>
+</html>
