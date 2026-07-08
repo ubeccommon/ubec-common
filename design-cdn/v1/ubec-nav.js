@@ -25,7 +25,7 @@
     'maps':        'Bioregional GIS',
     'living-labs': 'Citizen Science Network',
     'hub':         'Central API & IoT Integration',
-    'erdpuls':     'Flagship Living Lab · Müllrose',
+    'erdpuls':     'Open Living Lab Protocol',
     'open':        'Developer Commons',
     'learn':       'Pattern Language of Place',
   };
