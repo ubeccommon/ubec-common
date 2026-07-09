@@ -5,8 +5,8 @@
 > Read it at the start of every session involving infrastructure, code, or design.
 > Every decision recorded here supersedes memory, prior conversation, or inference.
 
-**Version:** 2.1  
-**Last updated:** March 2026  
+**Version:** 2.2  
+**Last updated:** July 2026  
 **License:** CC BY-SA 4.0 (documentation) · GNU AGPL v3.0 (code)  
 **Contact:** living-labs@ubec.network
 
@@ -852,7 +852,7 @@ Content-Type: `text/plain`
 | `design.ubec.network` | ✅ | ✅ CDN v1 | N/A | N/A | Fully operational |
 | `analytics.ubec.network` | ✅ | ✅ Plausible CE | N/A | N/A | Fully operational |
 | `auth.ubec.network` | ✅ | Placeholder | N/A | N/A | Placeholder only |
-| `erdpuls.ubec.network` | ❌ no vhost | Python app, templates empty | ❌ | ❌ | Needs landing page |
+| `erdpuls.ubec.network` | ✅ | ✅ app-rendered (network landing `/` + `/muellrose`) | ✅ consolidated design system | ⚠️ app-local (Hub SSO = Phase 2) | Backend LIVE on :8004 (ubec-erdpuls.service); DB erdpuls_threshold (9 tables); EN/DE/PL/UK |
 | `bioregional.ubec.network` | ❌ no vhost | Not migrated from old server | ❌ | ❌ | Not started |
 | `mapservice.ubec.network` | ❌ no vhost | config/README only | ❌ | ❌ | Not started |
 
@@ -916,13 +916,6 @@ location = /en/manage {
 }
 ```
 
-### 2. `erdpuls.ubec.network` Landing Page
-
-nginx vhost + EN/DE/PL static landing, `data-ubec-service="erdpuls"`.
-Python app is at `/srv/ubec/erdpuls/` — templates are empty.
-Landing page is static HTML only (same pattern as portal).
-Content: place-based (Müllrose, Schlaubetal), crowdfunding model, workshops.
-
 ### 3. `bioregional.ubec.network` Migration
 
 nginx vhost + migrate Python app from old server `3.121.60.104`.
@@ -953,8 +946,9 @@ Commit all server-side changes to `ubec_dao_platform` repo:
 | 1.9 | Mar 2026 | Nav font sizes, legal pages EN/DE/PL, portal multilingual, living-labs register/welcome pages |
 | 2.0 | Mar 2026 | Steward deployment status table, login pages, steward dashboard |
 | 2.1 | Mar 2026 | Hub multilingual landing pages (EN/DE/PL), nginx alias→root fix, management dashboard in priority queue, full INSTRUCTIONS.md rewrite as single canonical document |
+| 2.2 | Jul 2026 | Erdpuls backend LIVE — canonical app = ubeccommon/erdpuls_dashboard on :8004 (ubec-erdpuls.service); erdpuls_threshold schema reconstructed & verified (9 tables, db/schema_complete.sql); app consolidated onto UBEC design system (base.html: Bunny fonts, ubec-nav.js, no Google/Cloudflare, CC BY-SA); `/` = network landing + `/muellrose` = flagship reference; EN/DE/PL/UK supported |
 
 ---
 
 *Document maintained under CC BY-SA 4.0 · Code under GNU AGPL v3.0*
-*Version 2.1 · March 2026 · living-labs@ubec.network*
+*Version 2.2 · July 2026 · living-labs@ubec.network*
