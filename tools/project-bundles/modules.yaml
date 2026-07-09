@@ -1,0 +1,134 @@
+# ============================================================================
+# modules.yaml — UBEC module registry for generate_module_bundle.py
+# ----------------------------------------------------------------------------
+# Facts marked TODO_VERIFY were inferred, not confirmed this session — the
+# generator renders them as explicit "verify from live" markers so no spec
+# ever claims an unverified state. Confirm them from the live repo/server on
+# first session, then replace the marker with the real value here.
+# ============================================================================
+
+global:
+  project: "UBEC DAO · Ubuntu Bioregional Economic Commons DAO"
+  copyright: "© 2024–2026 Michel Garand · CC BY-SA 4.0 · GNU AGPL v3.0"
+  contact: "living-labs@ubec.network"
+  server:
+    host: "ubec-common"
+    ip: "49.13.167.206"
+    user: "ubec"
+    stack: "Ubuntu · nginx 1.24 · PostgreSQL 16 · FastAPI/uvicorn"
+    provider: "Hetzner CPX42"
+  monorepo:
+    path: "/srv/ubec"                       # /srv/ubec IS a git repo
+    remote: "github.com/ubeccommon/ubec-common"
+  design_cdn: "design.ubec.network/v1/ (ubec-design-system.css, nav-styles.css, ubec-nav.js)"
+  fonts: "Bunny Fonts — DM Serif Display, DM Sans, JetBrains Mono"
+  instructions_file: "/srv/ubec/INSTRUCTIONS.md"   # single source of truth (tracked in ubec-common)
+  # Global rules — apply to every module; edit here to change everywhere.
+  rules:
+    - "Reason from facts only. Never guess missing info; if unclear, stop and ask."
+    - "Coding is exact. Verify endpoints (/openapi.json) and files (ls/cat) before acting; render templates through the app's Jinja env before deploying."
+    - "All code Python unless the service requires otherwise (HTML/CSS/JS, nginx)."
+    - "EU-hosted only (Hetzner). No AWS/GCP/Azure/Cloudflare. Cloudflare is banned."
+    - "Bunny Fonts only (fonts.bunny.net) — never Google Fonts (GDPR)."
+    - "Locked terminology: stewards (not users), regenerative (not sustainable), bioregional (one word), commons."
+    - "Copyright/licence: © 2024–2026 Michel Garand · CC BY-SA 4.0 (docs) · GNU AGPL v3.0 (code)."
+    - "Deploy scripts run as ubec; only nginx -t / systemctl reload nginx need sudo; nginx writes via sudo tee."
+  # Deploy discipline — the deploy-by-pull model used across UBEC.
+  deploy_model:
+    - "Edit in the source-of-truth working copy → commit → git push."
+    - "Deploy to live via git pull on the server, then restart the service."
+    - ".env and venv/ are gitignored, so git pull never touches secrets or the venv."
+    - "Pattern: author + render-test in a clone → git format-patch → git am in source-of-truth → push → pull to live."
+  # Session ritual — start and end of every working session.
+  session_ritual:
+    - "Start: read the module spec + INSTRUCTIONS.md; verify live state before proposing."
+    - "Work: one focused thread per session."
+    - "End: update the module spec (current state + open threads) and commit; re-upload the spec to the Project knowledge base."
+  truth_hierarchy: "git repo > module spec > conversation. The repo is what runs; the spec is a decision log + navigation aid; the chat is scratch."
+
+modules:
+  - id: erdpuls
+    name: "UBEC Erdpuls"
+    subdomain: "erdpuls.ubec.network"
+    type: "app"                             # FastAPI + Jinja2 (dynamic)
+    repo: "github.com/ubeccommon/erdpuls_dashboard"
+    source_of_truth: "~/ubec_commons/ubec_erdpuls"
+    live_path: "/srv/ubec/erdpuls"
+    service: "ubec-erdpuls.service"
+    port: 8004
+    stack: "FastAPI + Jinja2"
+    db: "ubec_erdpuls / schema erdpuls_threshold / role ubec_erdpuls_app"
+    note: "A full hand-authored spec (ERDPULS_MODULE_SPEC.md) already exists and supersedes the generated skeleton for this module."
+    connections:
+      - "iot.ubec.network (Hub) — observations target; future SSO; nav Sign-in"
+      - "living-labs.ubec.network — steward registration (CTAs)"
+      - "design.ubec.network — shared CSS + ubec-nav.js"
+
+  - id: hub
+    name: "UBEC Hub"
+    subdomain: "iot.ubec.network"
+    type: "app"
+    repo: "github.com/ubeccommon/ubec_dao_platform"    # TODO_VERIFY exact repo
+    source_of_truth: "TODO_VERIFY (~/ubec_commons/... working copy)"
+    live_path: "/srv/ubec/hub"
+    service: "ubec-hub.service"
+    port: 8003                              # gunicorn
+    stack: "FastAPI"
+    db: "ubec core schema (~19 tables) — TODO_VERIFY current schema"
+    connections:
+      - "all services — central REST API & IoT integration; future SSO provider"
+
+  - id: living-labs
+    name: "UBEC Living Labs"
+    subdomain: "living-labs.ubec.network"
+    type: "static"                          # EN/DE/PL static + root redirect
+    repo: "part of ubec-common monorepo (/srv/ubec)"
+    source_of_truth: "/srv/ubec/living-labs (tracked in ubec-common)"
+    live_path: "/srv/ubec/living-labs"
+    service: "n/a (static, served by nginx)"
+    port: "n/a"
+    stack: "static HTML + design-cdn"
+    db: "n/a"
+    connections:
+      - "steward registration target for other services' CTAs"
+
+  - id: protocol
+    name: "UBEC Protocol (bioregional)"
+    subdomain: "bioregional.ubec.network"
+    type: "app"
+    repo: "TODO_VERIFY"
+    source_of_truth: "TODO_VERIFY"
+    live_path: "TODO_VERIFY (/srv/ubec/...)"
+    service: "ubec-protocol.service, ubec-interface.service"   # both seen running
+    port: "TODO_VERIFY"
+    stack: "TODO_VERIFY"
+    db: "TODO_VERIFY"
+    connections: []
+
+  - id: mapservice
+    name: "UBEC Maps"
+    subdomain: "mapservice.ubec.network"
+    type: "app (planned)"
+    repo: "TODO_VERIFY"
+    source_of_truth: "TODO_VERIFY"
+    live_path: "TODO_VERIFY"
+    service: "TODO_VERIFY (not started — config/README only)"
+    port: "TODO_VERIFY"
+    stack: "TODO_VERIFY"
+    db: "TODO_VERIFY"
+    connections: []
+
+  - id: design-cdn
+    name: "UBEC Design System / CDN"
+    subdomain: "design.ubec.network"
+    type: "static"
+    repo: "part of ubec-common monorepo (/srv/ubec)"
+    source_of_truth: "/srv/ubec/design-cdn (tracked in ubec-common)"
+    live_path: "/srv/ubec/design-cdn"
+    service: "n/a (static, served by nginx)"
+    port: "n/a"
+    stack: "CSS + JS (ubec-design-system.css, nav-styles.css, ubec-nav.js)"
+    db: "n/a"
+    note: "Shared by ALL services — changes here ripple ecosystem-wide; test siblings after edits."
+    connections:
+      - "every UBEC service consumes the design system + nav"
