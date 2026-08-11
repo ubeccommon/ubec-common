@@ -40,3 +40,4 @@ staging/
 
 # Loose scratch files
 *.html.bak
+/erdpuls/
