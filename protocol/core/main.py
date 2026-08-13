@@ -68,31 +68,9 @@ Usage:
     python main.py serve --host 0.0.0.0 --port 8000
 
 Author: UBEC Protocol Development Team
-Version: 3.8.5
-Updated: 2025-11-29
+Version: 3.8.3
+Updated: 2025-11-27
 
-
-CHANGELOG v3.8.5:
-    - 🔧 FIX: Fixed handle_visualize() to use correct method name
-    - FIXED: Changed visualizer.generate_report() to visualizer.generate_html_report()
-    - FIXED: Method signature now matches HolonicVisualizer.generate_html_report(output_dir, include_advanced)
-    - FIXED: Added output_dir parameter (default: './reports')
-    - FIXED: Added proper logging for report generation status
-    - ADDED: Warning when format other than 'html' is requested (only HTML supported)
-    - ADDED: Helpful message when report returns None (suggests running evaluate-holonic first)
-    - IMPACT: visualize --action report command now actually generates reports
-    - ROOT CAUSE: hasattr(visualizer, 'generate_report') was silently failing
-    - 🎯 COMPLIANCE: All 12 design principles verified and maintained
-
-CHANGELOG v3.8.4:
-    - ✅ ADDED: sync-operations command for network-wide token operation sync
-    - ✅ ADDED: handle_sync_operations() function
-    - ✅ FEATURE: Fetches ALL operations for UBEC tokens from Stellar network
-    - ✅ FEATURE: Captures transactions from ALL accounts, not just known ones
-    - ✅ CLI: python main.py sync-operations --token all --limit 1000
-    - ✅ USES: sync.sync_token_operations() method (v5.2.14)
-    - ✅ USES: sync.sync_all_token_operations() method (v5.2.14)
-    - 🎯 COMPLIANCE: All 12 design principles verified and maintained
 
 CHANGELOG v3.8.3:
     - ✅ ADDED: cleanup command for removing irrelevant accounts
@@ -990,14 +968,6 @@ async def handle_sync(
         sync_type: Type of sync (all, UBEC, UBECrc, UBECgpi, UBECtt)
         max_accounts: Maximum accounts to sync per token
         force: Force resync even if recently synced
-    
-    Uses sync service methods:
-        - sync_all() for full ecosystem sync
-        - sync_all_tokens() for token-specific sync
-        
-    Design Principles:
-        ✅ #5: Strict Async - All operations async
-        ✅ #12: Method Singularity - Uses actual synchronizer methods
     """
     logger.info("=" * 70)
     logger.info(f"BLOCKCHAIN SYNCHRONIZATION (type: {sync_type})")
@@ -1006,60 +976,31 @@ async def handle_sync(
     try:
         sync_service = await registry.get('sync')
         
-        # Determine max accounts (default 5000)
-        max_accts = max_accounts if max_accounts else 5000
+        tokens_to_sync = ['UBEC', 'UBECrc', 'UBECgpi', 'UBECtt'] if sync_type == 'all' else [sync_type]
         
-        if sync_type == 'all':
-            # Use sync_all() for full ecosystem sync
-            logger.info("Performing full ecosystem sync...")
-            logger.info(f"Max accounts per token: {max_accts}")
+        for token in tokens_to_sync:
+            logger.info(f"\n{'='*70}")
+            logger.info(f"Syncing {token}...")
+            logger.info(f"{'='*70}")
             
-            if hasattr(sync_service, 'sync_all'):
-                result = await sync_service.sync_all(max_accounts_per_token=max_accts)
+            if hasattr(sync_service, 'sync_token_data'):
+                result = await sync_service.sync_token_data(
+                    asset_code=token,
+                    max_accounts=max_accounts,
+                    force=force
+                )
                 
-                # Display results
-                logger.info(f"\n✓ Full sync complete:")
-                logger.info(f"  Status: {result.get('status', 'unknown')}")
-                logger.info(f"  Duration: {result.get('duration_seconds', 0):.2f}s")
-                
-                # Account results
-                accounts = result.get('accounts', {})
-                logger.info(f"  Total accounts: {accounts.get('total_accounts', 0)}")
-                
-                by_token = accounts.get('by_token', {})
-                for token, data in by_token.items():
-                    synced = data.get('accounts_synced', 0)
-                    status = data.get('status', 'unknown')
-                    logger.info(f"    {token}: {synced} accounts [{status}]")
-                
-                # Pool results
-                pools = result.get('liquidity_pools', {})
-                logger.info(f"  Liquidity pools: {pools.get('total_pools', 0)}")
-                
+                logger.info(f"\n✓ Sync complete for {token}:")
+                logger.info(f"  Accounts synced: {result.get('accounts_synced', 0)}")
+                logger.info(f"  Operations synced: {result.get('operations_synced', 0)}")
+                logger.info(f"  Duration: {result.get('duration', 0):.2f}s")
             else:
-                logger.error("Sync service doesn't have sync_all() method")
-                logger.error("Please ensure ubec_data_synchronizer.py is up to date")
-        else:
-            # Sync specific token
-            token = sync_type.upper()
-            logger.info(f"Syncing {token} accounts...")
-            
-            if hasattr(sync_service, 'sync_all_tokens'):
-                result = await sync_service.sync_all_tokens(max_accounts_per_token=max_accts)
-                
-                by_token = result.get('by_token', {})
-                if token in by_token:
-                    data = by_token[token]
-                    logger.info(f"\n✓ Sync complete for {token}:")
-                    logger.info(f"  Accounts synced: {data.get('accounts_synced', 0)}")
-                    logger.info(f"  Status: {data.get('status', 'unknown')}")
-                else:
-                    logger.warning(f"Token {token} not found in sync results")
-            else:
-                logger.error("Sync service doesn't have sync_all_tokens() method")
+                logger.warning(f"Sync service doesn't support token sync")
                 
     except Exception as e:
         logger.error(f"Sync failed: {e}", exc_info=True)
+
+
 async def handle_cleanup(
     registry: ServiceRegistry,
     dry_run: bool = True,
@@ -1150,89 +1091,6 @@ async def handle_cleanup(
         
     except Exception as e:
         logger.error(f"Cleanup failed: {e}", exc_info=True)
-        raise
-
-
-async def handle_sync_operations(
-    registry: ServiceRegistry,
-    token: str = 'all',
-    limit: int = 1000
-):
-    """
-    Sync ALL UBEC token operations network-wide.
-    
-    NEW in v3.8.4: This command fetches operations directly by asset,
-    capturing ALL network activity for UBEC tokens regardless of whether
-    we know about the accounts involved.
-    
-    This is the proper way to get complete transaction history - by watching
-    the assets themselves rather than individual accounts.
-    
-    Args:
-        registry: Service registry
-        token: Token to sync (all, UBEC, UBECrc, UBECgpi, UBECtt)
-        limit: Maximum operations per token (default: 1000)
-    
-    Design Principles:
-        ✅ #4: Database as single source of truth
-        ✅ #5: Strict async operations
-        ✅ #9: Rate limiting (built into sync service)
-        ✅ #10: Separation of concerns
-    """
-    logger.info("=" * 70)
-    logger.info("NETWORK-WIDE TOKEN OPERATIONS SYNC")
-    logger.info("=" * 70)
-    logger.info(f"Token: {token}")
-    logger.info(f"Limit per token: {limit}")
-    
-    try:
-        sync_service = await registry.get('sync')
-        
-        # Check if sync service has the new method
-        if not hasattr(sync_service, 'sync_token_operations'):
-            logger.error("Sync service does not have sync_token_operations method")
-            logger.error("Please update ubec_data_synchronizer.py to v5.2.14 or later")
-            return
-        
-        if token == 'all':
-            # Sync all tokens
-            if hasattr(sync_service, 'sync_all_token_operations'):
-                result = await sync_service.sync_all_token_operations(limit_per_token=limit)
-            else:
-                # Fallback: sync each token individually
-                result = {'total_operations_synced': 0, 'by_token': {}}
-                for tk in ['UBEC', 'UBECrc', 'UBECgpi', 'UBECtt']:
-                    logger.info(f"\nSyncing {tk}...")
-                    tk_result = await sync_service.sync_token_operations(tk, limit=limit)
-                    result['by_token'][tk] = tk_result
-                    result['total_operations_synced'] += tk_result.get('operations_synced', 0)
-        else:
-            # Sync specific token
-            if token not in ['UBEC', 'UBECrc', 'UBECgpi', 'UBECtt']:
-                logger.error(f"Invalid token: {token}. Must be: all, UBEC, UBECrc, UBECgpi, UBECtt")
-                return
-            result = await sync_service.sync_token_operations(token, limit=limit)
-            result = {
-                'total_operations_synced': result.get('operations_synced', 0),
-                'by_token': {token: result}
-            }
-        
-        # Display results
-        logger.info("\n" + "=" * 70)
-        logger.info("SYNC RESULTS")
-        logger.info("=" * 70)
-        logger.info(f"Total operations synced: {result['total_operations_synced']}")
-        
-        if result.get('by_token'):
-            logger.info("\nBy token:")
-            for tk, tk_result in result['by_token'].items():
-                ops = tk_result.get('operations_synced', 0)
-                logger.info(f"  {tk}: {ops} operations")
-        
-        logger.info("\n✓ Sync completed successfully")
-        
-    except Exception as e:
-        logger.error(f"Sync operations failed: {e}", exc_info=True)
         raise
 
 
@@ -1327,13 +1185,8 @@ async def handle_visualize(
     Args:
         registry: Service registry
         action: Action to perform (report)
-        format: Output format (html - only HTML currently supported)
+        format: Output format (html, json)
         include_advanced: Include advanced metrics
-    
-    Design Principles:
-        ✅ #5: Strict Async - All operations async
-        ✅ #10: Separation of concerns - Uses visualizer service
-        ✅ #12: Method Singularity - Uses actual HolonicVisualizer methods
     """
     logger.info("=" * 70)
     logger.info(f"VISUALIZATION: {action.upper()}")
@@ -1343,35 +1196,13 @@ async def handle_visualize(
         visualizer = await registry.get('visualizer')
         
         if action == 'report':
-            # Note: HolonicVisualizer uses generate_html_report method
-            # The format parameter is informational - only HTML is currently supported
-            if format != 'html':
-                logger.warning(f"Format '{format}' not supported. Using HTML format.")
-            
-            if hasattr(visualizer, 'generate_html_report'):
-                # Default output directory for reports
-                output_dir = './reports'
-                
-                logger.info(f"Generating HTML report to: {output_dir}")
-                logger.info(f"Include advanced metrics: {include_advanced}")
-                
-                result = await visualizer.generate_html_report(
-                    output_dir=output_dir,
+            if hasattr(visualizer, 'generate_report'):
+                result = await visualizer.generate_report(
+                    format=format,
                     include_advanced=include_advanced
                 )
                 
-                if result:
-                    logger.info(f"\n✓ Report generated: {result}")
-                else:
-                    logger.warning("\n⚠️  Report generation returned None")
-                    logger.warning("   This may indicate no evaluation data is available.")
-                    logger.warning("   Run 'evaluate-holonic --all' first to generate evaluation data.")
-            else:
-                logger.error("Visualizer service does not have generate_html_report method")
-                logger.error("This indicates a service version mismatch.")
-        else:
-            logger.warning(f"Unknown visualization action: {action}")
-            logger.info("Available actions: report")
+                logger.info(f"\n✓ Report generated: {result.get('file_path')}")
                 
     except Exception as e:
         logger.error(f"Visualization failed: {e}", exc_info=True)
@@ -1461,7 +1292,7 @@ async def handle_distribution(
         
         if action == 'status':
             logger.info("Getting distribution status...")
-            status = await distribution.get_current_distribution()
+            status = await distribution.get_current_state()
             
             logger.info(f"\n✓ Distribution Status:")
             logger.info(f"  Total Supply: {status.get('total_supply', 0):,.2f} UBEC")
@@ -1471,62 +1302,19 @@ async def handle_distribution(
             logger.info("Checking tokenomics compliance...")
             result = await distribution.check_compliance()
             
-            # Check for error response
-            if 'error' in result:
-                logger.error(f"Compliance check failed: {result['error']}")
-                return
+            dist_state = result.get('distribution_state', {})
+            logger.info(f"\n✓ Compliance Check:")
+            logger.info(f"  Status: {result.get('status', 'unknown')}")
+            logger.info(f"  General Distribution: {dist_state.get('general_pct', 0):.2f}%")
+            logger.info(f"  Stewardship: {dist_state.get('steward_pct', 0):.2f}%")
+            logger.info(f"  Administration: {dist_state.get('admin_pct', 0):.2f}%")
             
-            # Extract from check_compliance() return structure
-            distribution_data = result.get('distribution', {})
-            compliant = result.get('compliant', False)
-            
-            # Get percentages
-            admin_pct = float(distribution_data.get('administration', {}).get('percentage', 0))
-            steward_pct = float(distribution_data.get('stewardship', {}).get('percentage', 0))
-            general_pct = float(distribution_data.get('general', {}).get('percentage', 0))
-            
-            # Get targets
-            admin_target = float(distribution_data.get('administration', {}).get('target', 5))
-            steward_target = float(distribution_data.get('stewardship', {}).get('target', 30))
-            general_target = float(distribution_data.get('general', {}).get('target', 65))
-            
-            # Get total supply
-            total_supply = float(distribution_data.get('total_supply', 0))
-            
-            # Get compliance status
-            admin_ok = result.get('administration_compliant', False)
-            steward_ok = result.get('stewardship_compliant', False)
-            general_ok = result.get('general_compliant', False)
-            
-            # Display results
-            status = 'COMPLIANT' if compliant else 'NON-COMPLIANT'
-            icon = '✅' if compliant else '❌'
-            
-            logger.info(f"\n{icon} Compliance Check:")
-            logger.info(f"  Overall Status: {status}")
-            logger.info(f"  Total Supply: {total_supply:,.2f} UBEC")
-            logger.info(f"\n  Current Distribution:")
-            logger.info(f"    General:        {general_pct:6.2f}% (target: {general_target:.2f}%) {'✅' if general_ok else '❌'}")
-            logger.info(f"    Stewardship:    {steward_pct:6.2f}% (target: {steward_target:.2f}%) {'✅' if steward_ok else '❌'}")
-            logger.info(f"    Administration: {admin_pct:6.2f}% (target: {admin_target:.2f}%) {'✅' if admin_ok else '❌'}")
-            
-            # Show deviations if non-compliant
-            if not compliant:
-                deviations = result.get('deviations', {})
-                logger.warning(f"\n  Deviations from Target:")
-                logger.warning(f"    Administration: {deviations.get('administration', 0):+.2f}%")
-                logger.warning(f"    Stewardship:    {deviations.get('stewardship', 0):+.2f}%")
-                recommendations = result.get('recommendations', [])
-                if recommendations:
-                    logger.info(f"\n  Recommendations:")
-                    for rec in recommendations:
-                        logger.info(f"    → {rec}")
         elif action == 'rebalance-check':
             logger.info("Checking if rebalance is needed...")
-            result = await distribution.is_rebalance_needed()
+            result = await distribution.check_rebalance_needed()
             
             logger.info(f"\n✓ Rebalance Check:")
-            logger.info(f"  Rebalance needed: {result}")
+            logger.info(f"  Rebalance needed: {result.get('rebalance_needed', False)}")
             
         elif action == 'execute-rebalance':
             if dry_run:
@@ -1535,48 +1323,21 @@ async def handle_distribution(
                 logger.info("=" * 70 + "\n")
             
             logger.info("Executing rebalance...")
-            result = await distribution.execute_distribution(dry_run=dry_run)
+            result = await distribution.execute_rebalance(dry_run=dry_run)
             
-            # Extract from execute_distribution() return structure
-            success = result.get('success', False)
-            is_dry_run = result.get('dry_run', True)
-            transactions = result.get('transactions', [])
-            total_distributed = result.get('total_distributed', '0')
-            accounts_updated = result.get('accounts_updated', 0)
-            errors = result.get('errors', [])
+            logger.info(f"\n✓ Rebalance {'Simulation' if dry_run else 'Execution'}:")
+            logger.info(f"  Status: {result.get('status', 'unknown')}")
+            logger.info(f"  Transactions: {result.get('transaction_count', 0)}")
             
-            # Determine status
-            if is_dry_run:
-                status = 'SIMULATION COMPLETE' if success else 'SIMULATION FAILED'
-            else:
-                status = 'EXECUTION COMPLETE' if success else 'EXECUTION FAILED'
-            
-            icon = '✅' if success else '❌'
-            mode = "Simulation" if is_dry_run else "Execution"
-            
-            logger.info(f"\n{icon} Rebalance {mode}:")
-            logger.info(f"  Status: {status}")
-            logger.info(f"  Transactions: {len(transactions)}")
-            logger.info(f"  Total Distributed: {total_distributed} UBEC")
-            logger.info(f"  Accounts Updated: {accounts_updated}")
-            
-            if transactions:
+            if result.get('transactions'):
                 logger.info("\n  Transaction Details:")
-                for tx in transactions:
+                for tx in result['transactions']:
                     # Handle nested transaction structure
                     tx_data = tx.get('transaction', tx)
                     amount = tx_data.get('amount', 'N/A')
-                    source = tx_data.get('source', 'N/A')
                     dest = tx_data.get('destination', 'N/A')
-                    tx_status = tx.get('status', 'unknown')
-                    src_short = source[:8] if len(source) > 8 else source
-                    dst_short = dest[:8] if len(dest) > 8 else dest
-                    logger.info(f"    {src_short}... → {dst_short}...: {amount} UBEC [{tx_status}]")
+                    logger.info(f"    {amount} UBEC → {dest[:8]}...")
             
-            if errors:
-                logger.warning("\n  Errors:")
-                for err in errors:
-                    logger.warning(f"    ⚠️  {err}")
         else:
             logger.warning(f"Unknown action: {action}")
             
@@ -1713,16 +1474,6 @@ def create_argument_parser() -> argparse.ArgumentParser:
                             help='Force resync even if recently synced')
     
     # ════════════════════════════════════════════════════════════════════
-    # NEW v3.8.4: Sync operations command (network-wide)
-    # ════════════════════════════════════════════════════════════════════
-    sync_ops_parser = subparsers.add_parser('sync-operations', 
-                                            help='Sync ALL UBEC token operations network-wide')
-    sync_ops_parser.add_argument('--token', type=str, default='all',
-                                help='Token to sync: all, UBEC, UBECrc, UBECgpi, UBECtt')
-    sync_ops_parser.add_argument('--limit', type=int, default=1000,
-                                help='Maximum operations to fetch per token (default: 1000)')
-    
-    # ════════════════════════════════════════════════════════════════════
     # NEW v3.8.3: Cleanup command
     # ════════════════════════════════════════════════════════════════════
     cleanup_parser = subparsers.add_parser('cleanup', 
@@ -1830,16 +1581,6 @@ async def main():
                     sync_type=args.sync_type,
                     max_accounts=args.max_accounts,
                     force=args.force
-                )
-            
-            # ════════════════════════════════════════════════════════════════
-            # NEW v3.8.4: Sync operations command handler (network-wide)
-            # ════════════════════════════════════════════════════════════════
-            elif args.command == 'sync-operations':
-                await handle_sync_operations(
-                    registry,
-                    token=args.token,
-                    limit=args.limit
                 )
             
             # ════════════════════════════════════════════════════════════════

@@ -1,0 +1,31 @@
+# /etc/systemd/system/wampum-signer.service
+[Unit]
+Description=UBEC Encrypted Key Signing Service
+After=network.target
+
+[Service]
+Type=simple
+User=wampum_signer
+Group=wampum_signer
+WorkingDirectory=/opt/wampum-signer
+
+# Master password - set this securely!
+# Option 1: Environment file (more secure)
+EnvironmentFile=/etc/wampum-signer/password.env
+
+# Option 2: Direct (less secure, visible in process list)
+# Environment="wampum_signer_PASSWORD=your_secure_password"
+
+ExecStart=/opt/ubec/venv/bin/python /opt/wampum-signer/signer_service.py
+Restart=always
+RestartSec=10
+
+# Security hardening
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/wampum-signer /var/log/wampum-signer /var/run/wampum-signer
+
+[Install]
+WantedBy=multi-user.target

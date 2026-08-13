@@ -1,28 +1,14 @@
-# Python
-__pycache__/
-*.py[cod]
-*.pyo
-.venv/
-venv/
-*.egg-info/
-dist/
-build/
-
-# Environment — NEVER commit secrets
+# .gitignore
+# Ignore specific files
 .env
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Editor
-.vscode/
-.idea/
-
-# Logs
 *.log
-logs/
+*.pyc
+*.csv
+*.png
+*.html
+*.json
 
-# Uploads / media
-media/
-uploads/
+# Ignore entire directories
+__pycache__/
+reports
+backups

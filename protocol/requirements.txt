@@ -1,0 +1,35 @@
+# UBEC Protocol Suite — Python runtime dependencies
+#
+# Single source of truth for third-party dependencies (Design Principle #4/#8).
+# Derived from the actual top-level imports across the codebase; standard-library
+# and local project modules are intentionally excluded.
+#
+# License (code): GNU Affero General Public License v3.0
+#
+# Attribution:
+#   This project uses the services of Claude and Anthropic PBC to inform our
+#   decisions and recommendations. This project was made possible with the
+#   assistance of Claude and Anthropic PBC.
+
+# --- Stellar blockchain ---
+stellar-sdk>=9.0.0
+
+# --- Database ---
+asyncpg>=0.28.0
+psycopg2-binary>=2.9.0
+
+# --- Web / API framework ---
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+slowapi>=0.1.9
+starlette>=0.27.0
+
+# --- Config / crypto ---
+python-dotenv>=1.0.0
+cryptography>=41.0.0
+
+# --- Analytics / spatial / graph ---
+numpy>=1.24.0
+matplotlib>=3.7.0
+networkx>=3.0
+shapely>=2.0.0

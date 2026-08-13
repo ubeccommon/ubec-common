@@ -1,0 +1,267 @@
+# Phenomenological Data Model Architecture
+## Visual Reference Diagram
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                    PHENOMENOLOGICAL STELLAR BLOCKCHAIN                       │
+│                         DATA MODEL ARCHITECTURE                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+╔═════════════════════════════════════════════════════════════════════════════╗
+║                          LAYER 1: PHENOMENA                                  ║
+║                     (Things as they appear)                                  ║
+╚═════════════════════════════════════════════════════════════════════════════╝
+
+┌──────────────────────┐        ┌──────────────────────┐        ┌───────────────────┐
+│      ASSETS          │        │      ACCOUNTS        │        │   TRANSACTIONS    │
+│   (Phenomena)        │        │      (Dasein)        │        │     (Events)      │
+├──────────────────────┤        ├──────────────────────┤        ├───────────────────┤
+│ • asset_code         │        │ • account_address    │        │ • transaction_hash│
+│ • issuer_address     │        │ • dasein_type        │        │ • ledger_sequence │
+│ • phenomenal_mode    │        │ • comportment_pattern│        │ • event_type      │
+│ • existence_mode     │        │ • holonic_category   │        │ • operations      │
+│ • ubuntu_principle   │◄───────┤ • thrown_at          │◄───────┤ • effects         │
+│ • internal_horizon   │        │ • facticity          │        │ • successful      │
+│ • external_horizon   │        │ • network_position   │        │ • fee_charged     │
+│ • genesis_at         │        │ • primary_intentions │        │ • ledger_closed_at│
+│ • present_state      │        │ • ubuntu_scores      │        │ • network_impact  │
+│ • network_position   │        │ • present_state      │        │ • memo            │
+└──────────┬───────────┘        └──────────┬───────────┘        └───────────────────┘
+           │                               │
+           └───────────────┬───────────────┘
+                           │
+                           ▼
+╔═════════════════════════════════════════════════════════════════════════════╗
+║                    LAYER 2: INTENTIONALITY                                   ║
+║                   (Directedness & Relations)                                 ║
+╚═════════════════════════════════════════════════════════════════════════════╝
+
+                  ┌──────────────────────────────────┐
+                  │   INTENTIONAL_RELATIONS          │
+                  │   (Directed toward...)           │
+                  ├──────────────────────────────────┤
+                  │ • from_account_id ──────────────►│
+                  │ • to_account_id/asset_id         │
+                  │ • relation_type:                 │
+                  │   - trustline                    │
+                  │   - payment                      │
+                  │   - offer                        │
+                  │   - sponsorship                  │
+                  │ • noema (what is meant)          │
+                  │ • noesis (how it's meant)        │
+                  │ • relation_strength              │
+                  │ • reciprocity_factor             │
+                  │ • relation_line (geometry)       │
+                  │ • emerged_at                     │
+                  └────────┬─────────────────────────┘
+                           │
+                           │
+        ┌──────────────────┼──────────────────┐
+        │                  │                  │
+        ▼                  ▼                  ▼
+╔═══════════════╗  ╔═══════════════╗  ╔═══════════════╗
+║  TEMPORAL     ║  ║   SPATIAL     ║  ║   HOLONIC     ║
+║  DIMENSION    ║  ║   DIMENSION   ║  ║   STRUCTURE   ║
+╚═══════════════╝  ╚═══════════════╝  ╚═══════════════╝
+
+┌───────────────┐  ┌───────────────┐  ┌───────────────┐
+│  RETENTIONS   │  │   NETWORK     │  │    HOLONS     │
+│  (Past)       │  │  EMBEDDINGS   │  │ (Nested       │
+├───────────────┤  ├───────────────┤  │  Wholes)      │
+│ • entity_type │  │ • computed_at │  ├───────────────┤
+│ • entity_id   │  │ • method      │  │ • holon_name  │
+│ • retained_   │  │ • dimensions  │  │ • holon_type  │
+│   content     │  │ • parameters  │  │ • autonomy_   │
+│ • retention_  │  │ • quality_    │  │   score       │
+│   clarity     │  │   metrics     │  │ • integration_│
+│ • original_   │  └───────┬───────┘  │   score       │
+│   present     │          │          │ • constituent_│
+└───────────────┘          │          │   accounts    │
+                           │          │ • parent_     │
+┌───────────────┐          │          │   holons      │
+│  PROTENTIONS  │          ▼          │ • spatial_    │
+│  (Future)     │  ┌───────────────┐  │   region      │
+├───────────────┤  │   SPATIAL     │  │ • emergent_   │
+│ • entity_type │  │  POSITIONS    │  │   properties  │
+│ • entity_id   │  ├───────────────┤  └───────────────┘
+│ • protended_  │  │ • embedding_id│
+│   content     │  │ • entity_type │
+│ • expectation_│  │ • entity_id   │
+│   confidence  │  │ • position    │
+│ • expected_at │  │   (POINT)     │
+│ • fulfilled   │  │ • coordinates │
+│ • fulfillment_│  │ • local_      │
+│   degree      │  │   density     │
+└───────────────┘  │ • centrality_ │
+                   │   scores      │
+                   └───────┬───────┘
+                           │
+                           ▼
+                   ┌───────────────┐
+                   │   GEODESICS   │
+                   │ (Shortest     │
+                   │  Paths)       │
+                   ├───────────────┤
+                   │ • from_account│
+                   │ • to_account  │
+                   │ • path_length │
+                   │ • path_nodes  │
+                   │ • path_line   │
+                   │   (LINESTRING)│
+                   │ • weighted_   │
+                   │   distance    │
+                   └───────────────┘
+
+╔═════════════════════════════════════════════════════════════════════════════╗
+║                     LAYER 3: ANALYTICAL VIEWS                                ║
+╚═════════════════════════════════════════════════════════════════════════════╝
+
+┌──────────────────────┐  ┌──────────────────────┐  ┌──────────────────────┐
+│ CURRENT_NETWORK_     │  │ INTENTIONAL_         │  │ TEMPORAL_            │
+│ STATE                │  │ NETWORK              │  │ CONSCIOUSNESS        │
+├──────────────────────┤  ├──────────────────────┤  ├──────────────────────┤
+│ Present phenomenal   │  │ Graph of directed    │  │ Stream of retentions │
+│ field:               │  │ relations:           │  │ and protentions:     │
+│ • Asset states       │  │ • Active relations   │  │ • Past states        │
+│ • Holder counts      │  │ • Relation types     │  │ • Present states     │
+│ • Avg relation       │  │ • Strengths          │  │ • Future             │
+│   strength           │  │ • Geographic lines   │  │   anticipations      │
+│ • Distance from      │  │ • Temporal horizons  │  │ • Clarity/confidence │
+│   network center     │  └──────────────────────┘  └──────────────────────┘
+└──────────────────────┘
+
+╔═════════════════════════════════════════════════════════════════════════════╗
+║                     LAYER 4: ANALYTICAL FUNCTIONS                            ║
+╚═════════════════════════════════════════════════════════════════════════════╝
+
+┌──────────────────────┐  ┌──────────────────────┐  ┌──────────────────────┐
+│ COMPUTE_PHENOMENAL_  │  │ COMPUTE_SPATIAL_     │  │ ANALYZE_UBUNTU_      │
+│ PROMINENCE           │  │ PROXIMITY            │  │ BALANCE              │
+├──────────────────────┤  ├──────────────────────┤  ├──────────────────────┤
+│ Centrality measures: │  │ Distance between     │  │ Four principles:     │
+│ • Degree centrality  │  │ entities in network  │  │ • Diversity          │
+│ • Betweenness        │  │ space:               │  │ • Reciprocity        │
+│ • Closeness          │  │ • Euclidean distance │  │ • Mutualism          │
+│ • Eigenvector        │  │ • In proximity?      │  │ • Regeneration       │
+└──────────────────────┘  └──────────────────────┘  └──────────────────────┘
+
+═══════════════════════════════════════════════════════════════════════════════
+
+DATA FLOW: Stellar Network → Phenomena → Intentional Relations → 
+           Temporal/Spatial/Holonic Analysis → Insights
+
+UBUNTU MAPPING:
+    🜁 Air (UBEC)      = Diversity      → Universal access, variety
+    🜄 Water (UBECrc)  = Reciprocity    → Flow, exchange, balance
+    🜃 Earth (UBECgpi) = Mutualism      → Stability, relationships
+    🜂 Fire (UBECtt)   = Regeneration   → Transformation, growth
+
+PHENOMENOLOGICAL PRINCIPLES:
+    1. Intentionality: All relations are directedness toward objects
+    2. Horizons: Internal (properties) + External (context)
+    3. Temporality: Retention (past) + Present + Protention (future)
+    4. Spatiality: Network has geometric structure
+    5. Holonomy: Nested wholes with autonomy + integration
+
+SPATIAL CAPABILITIES (PostGIS):
+    ✓ Network embeddings in 2D/3D space
+    ✓ DBSCAN clustering for communities
+    ✓ Voronoi territories
+    ✓ Convex hulls of holder groups
+    ✓ Geodesic pathfinding
+    ✓ Distance queries (meters in network space)
+    ✓ Spatial indexes (GIST) for fast queries
+
+TEMPORAL CAPABILITIES:
+    ✓ Automatic retention creation on updates
+    ✓ Configurable memory fading (retention_clarity)
+    ✓ Protention tracking with confidence scores
+    ✓ Fulfillment analysis (predicted vs actual)
+    ✓ Temporal consciousness stream view
+
+TECHNOLOGY STACK:
+    • PostgreSQL 15+ (Database)
+    • PostGIS 3+ (Spatial extensions)
+    • asyncpg (Async Python driver)
+    • Python 3.10+ (Application layer)
+
+═══════════════════════════════════════════════════════════════════════════════
+                        LEGEND
+
+    ◄───── : References / Foreign Keys
+    ──────►: Directedness / Intentionality
+    │      : Hierarchical Relationship
+    ▼      : Data Flow
+    
+    ┌────┐ : Table
+    ╔════╗ : Conceptual Layer
+    
+═══════════════════════════════════════════════════════════════════════════════
+```
+
+## Key Relationships
+
+```
+ASSETS (1) ←──────── (N) INTENTIONAL_RELATIONS (N) ──────────► (1) ACCOUNTS
+                              │
+                              ├──► RETENTIONS (History)
+                              ├──► PROTENTIONS (Predictions)
+                              └──► SPATIAL_POSITIONS (Topology)
+
+ACCOUNTS (N) ←──────── (N) HOLONS (Nested Communities)
+                              │
+                              └──► SPATIAL_REGION (Geographic extent)
+
+SPATIAL_POSITIONS (N) ──────► (1) NETWORK_EMBEDDINGS (Version control)
+
+INTENTIONAL_RELATIONS (N) ──► (N) GEODESICS (Computed paths)
+```
+
+## Sample Queries by Layer
+
+### Phenomenal Layer
+```sql
+-- Get all assets in ready-to-hand mode
+SELECT * FROM phenomenal.assets 
+WHERE existence_mode = 'ready_to_hand';
+```
+
+### Intentional Layer
+```sql
+-- Find strongest trustlines
+SELECT * FROM phenomenal.intentional_network
+WHERE relation_type = 'trustline'
+ORDER BY relation_strength DESC;
+```
+
+### Temporal Layer
+```sql
+-- View temporal stream for an asset
+SELECT * FROM phenomenal.temporal_consciousness
+WHERE entity_type = 'asset' AND entity_id = 1;
+```
+
+### Spatial Layer
+```sql
+-- Find accounts within 5km of an asset
+SELECT account_address, distance_km
+FROM phenomenal.accounts a, phenomenal.assets ast
+WHERE ast.asset_code = 'UBEC'
+  AND ST_DWithin(a.network_position::geography, 
+                 ast.network_position::geography, 5000)
+ORDER BY distance_km;
+```
+
+### Holonic Layer
+```sql
+-- Get highly integrated holons
+SELECT * FROM phenomenal.holons
+WHERE integration_score > 0.7
+ORDER BY integration_score DESC;
+```
+
+---
+
+**Visual Architecture Version:** 1.0  
+**Last Updated:** October 12, 2025  
+**Compatible with Schema:** 1.0.0

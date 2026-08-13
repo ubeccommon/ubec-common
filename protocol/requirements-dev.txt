@@ -1,0 +1,10 @@
+# UBEC Protocol Suite — development/test dependencies (not installed in production)
+#
+# License (code): GNU Affero General Public License v3.0
+# Attribution: This project uses the services of Claude and Anthropic PBC to inform
+#   our decisions and recommendations. This project was made possible with the
+#   assistance of Claude and Anthropic PBC.
+
+-r requirements.txt
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
