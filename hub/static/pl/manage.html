@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="pl" data-ubec-service="hub">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zarządzanie — UBEC Hub</title>
+  <link rel="preconnect" href="https://fonts.bunny.net">
+  <link href="https://fonts.bunny.net/css?family=dm-serif-display:400|dm-sans:400,500,600|jetbrains-mono:400,500" rel="stylesheet">
+  <link rel="stylesheet" href="https://design.ubec.network/v1/ubec-design-system.css">
+  <script src="https://design.ubec.network/v1/ubec-nav.js" defer></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { padding-top: 68px; font-family: var(--font-body); background: var(--color-parchment); color: var(--color-bark); min-height: 100vh; display: flex; flex-direction: column; }
+    #loading-overlay { position: fixed; inset: 0; z-index: 9999; background: var(--color-parchment); display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 1rem; }
+    .loading-spinner { width: 40px; height: 40px; border: 3px solid var(--color-sand); border-top-color: var(--color-earth); border-radius: 50%; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-text { font-size: 0.85rem; color: var(--color-clay); }
+    .container { max-width: 1200px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; flex: 1; width: 100%; }
+    .page-header { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-sand); flex-wrap: wrap; }
+    .page-header__title { font-family: var(--font-display); font-size: clamp(1.6rem, 3vw, 2.2rem); color: var(--color-bark); line-height: 1.2; }
+    .page-header__title span { color: var(--color-ochre); }
+    .page-header__meta { font-size: 0.825rem; color: var(--color-clay); text-align: right; line-height: 1.8; display: flex; flex-direction: column; align-items: flex-end; gap: 0.1rem; }
+    .page-header__steward { font-size: 0.825rem; color: var(--color-clay); }
+    .btn-logout { background: none; border: 1px solid var(--color-sand); color: var(--color-clay); font-family: var(--font-body); font-size: 0.78rem; padding: 0.3rem 0.75rem; border-radius: 5px; cursor: pointer; transition: all 0.15s; margin-top: 0.25rem; }
+    .btn-logout:hover { border-color: var(--color-clay); color: var(--color-bark); }
+    .tab-nav { display: flex; gap: 0; flex-wrap: wrap; border-bottom: 2px solid var(--color-sand); margin-bottom: 2rem; }
+    .tab-btn { background: none; border: none; cursor: pointer; font-family: var(--font-body); font-size: 0.85rem; font-weight: 500; color: var(--color-clay); padding: 0.75rem 1.25rem; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all 0.15s; display: flex; align-items: center; gap: 0.45rem; }
+    .tab-btn:hover { color: var(--color-bark); }
+    .tab-btn.active { color: var(--color-earth); border-bottom-color: var(--color-earth); font-weight: 600; }
+    .tab-btn .tab-badge { font-family: var(--font-mono); font-size: 0.65rem; background: var(--color-fire); color: white; padding: 0.1rem 0.4rem; border-radius: 10px; display: none; }
+    .tab-btn .tab-badge.visible { display: inline; }
+    .tab-btn .tab-phase { font-size: 0.6rem; font-family: var(--font-mono); background: var(--color-sand); color: var(--color-clay); padding: 0.1rem 0.4rem; border-radius: 4px; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+    .panel { background: white; border: 1px solid var(--color-sand); border-radius: 10px; box-shadow: 0 1px 4px rgba(58,36,24,0.06); overflow: hidden; margin-bottom: 1.5rem; }
+    .panel__header { display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 1.5rem; border-bottom: 1px solid var(--color-sand); background: var(--color-linen); }
+    .panel__title { font-family: var(--font-display); font-size: 1rem; color: var(--color-bark); display: flex; align-items: center; gap: 0.5rem; }
+    .panel__count { font-family: var(--font-mono); font-size: 0.65rem; background: var(--color-ochre-light); color: var(--color-ochre); padding: 0.2rem 0.55rem; border-radius: 20px; font-weight: 500; }
+    .panel__body { padding: 1.25rem 1.5rem; }
+    .panel__actions { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+    .placeholder-panel { background: white; border: 1px dashed var(--color-sand); border-radius: 10px; padding: 2.5rem 2rem; text-align: center; margin-bottom: 1.5rem; }
+    .placeholder-panel__icon { font-size: 2rem; margin-bottom: 0.75rem; opacity: 0.4; }
+    .placeholder-panel__title { font-family: var(--font-display); font-size: 1.1rem; color: var(--color-bark); margin-bottom: 0.5rem; }
+    .placeholder-panel__reason { font-size: 0.82rem; color: var(--color-clay); line-height: 1.6; max-width: 480px; margin: 0 auto 1rem; }
+    .placeholder-panel__code { font-family: var(--font-mono); font-size: 0.72rem; background: var(--color-linen); border: 1px solid var(--color-sand); color: var(--color-clay); padding: 0.35rem 0.75rem; border-radius: 5px; display: inline-block; }
+    .obs-queue { list-style: none; display: flex; flex-direction: column; gap: 1rem; }
+    .obs-card { border: 1px solid var(--color-sand); border-radius: 8px; overflow: hidden; transition: box-shadow 0.2s; }
+    .obs-card:hover { box-shadow: 0 2px 8px rgba(58,36,24,0.1); }
+    .obs-card.validated { border-color: #c8dfc8; background: #f4faf4; opacity: 0.7; }
+    .obs-card__top { padding: 1rem 1.25rem; display: flex; gap: 1rem; align-items: flex-start; flex-wrap: wrap; }
+    .obs-card__meta { flex: 1; min-width: 200px; }
+    .obs-card__id { font-family: var(--font-mono); font-size: 0.65rem; color: var(--color-clay); margin-bottom: 0.3rem; }
+    .obs-card__note { font-size: 0.875rem; color: var(--color-bark); line-height: 1.55; margin-bottom: 0.5rem; }
+    .obs-card__tags { display: flex; gap: 0.4rem; flex-wrap: wrap; align-items: center; }
+    .obs-tag { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.18rem 0.5rem; border-radius: 4px; }
+    .obs-tag--zone { background: var(--color-devotion-light); color: var(--color-devotion-dark); }
+    .obs-tag--lang { background: var(--color-ochre-light); color: var(--color-ochre); }
+    .obs-tag--date { background: var(--color-linen); color: var(--color-clay); font-family: var(--font-mono); font-weight: 400; letter-spacing: 0; }
+    .obs-card__actions { display: flex; flex-direction: column; gap: 0.5rem; align-items: flex-end; justify-content: flex-start; min-width: 140px; }
+    .obs-card__footer { padding: 0.6rem 1.25rem; background: var(--color-linen); border-top: 1px solid var(--color-sand); display: none; }
+    .obs-card__footer.open { display: block; }
+    .obs-card__responses { list-style: none; }
+    .obs-response { font-size: 0.8rem; color: var(--color-bark); padding: 0.4rem 0; border-bottom: 1px solid var(--color-sand); }
+    .obs-response:last-child { border-bottom: none; }
+    .obs-response__field { font-family: var(--font-mono); font-size: 0.65rem; color: var(--color-clay); margin-bottom: 0.2rem; }
+    .obs-card__location { font-family: var(--font-mono); font-size: 0.7rem; color: var(--color-clay); margin-top: 0.4rem; }
+    .validate-notes { width: 100%; font-family: var(--font-body); font-size: 0.82rem; border: 1px solid var(--color-sand); border-radius: 6px; padding: 0.6rem 0.75rem; resize: vertical; min-height: 60px; color: var(--color-bark); background: white; margin-bottom: 0.5rem; }
+    .validate-notes:focus { outline: none; border-color: var(--color-commons); }
+    .btn { font-family: var(--font-body); font-size: 0.82rem; font-weight: 500; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; border: none; transition: all 0.15s; display: inline-flex; align-items: center; gap: 0.4rem; white-space: nowrap; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-validate { background: var(--color-commons); color: white; }
+    .btn-validate:hover:not(:disabled) { background: var(--color-commons-dark); }
+    .btn-detail { background: var(--color-linen); color: var(--color-clay); border: 1px solid var(--color-sand); font-size: 0.78rem; padding: 0.4rem 0.75rem; }
+    .btn-detail:hover { background: var(--color-sand); color: var(--color-bark); }
+    .btn-reload { background: var(--color-linen); color: var(--color-clay); border: 1px solid var(--color-sand); }
+    .btn-reload:hover { background: var(--color-sand); }
+    .roles-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem; }
+    .role-card { border: 1px solid var(--color-sand); border-radius: 8px; overflow: hidden; }
+    .role-card__head { padding: 0.9rem 1.1rem; background: var(--color-linen); border-bottom: 1px solid var(--color-sand); display: flex; align-items: center; gap: 0.6rem; }
+    .role-card__name { font-family: var(--font-mono); font-size: 0.82rem; font-weight: 600; color: var(--color-bark); }
+    .role-card__system { font-size: 0.6rem; font-family: var(--font-mono); background: var(--color-ochre-light); color: var(--color-ochre); padding: 0.1rem 0.4rem; border-radius: 3px; }
+    .role-card__desc { font-size: 0.78rem; color: var(--color-clay); padding: 0.6rem 1.1rem 0; line-height: 1.5; }
+    .role-card__perms { padding: 0.6rem 1.1rem 1rem; display: flex; flex-wrap: wrap; gap: 0.35rem; }
+    .perm-chip { font-family: var(--font-mono); font-size: 0.65rem; background: var(--color-commons-light); color: var(--color-commons-dark); border: 1px solid #c8dfc8; padding: 0.18rem 0.5rem; border-radius: 4px; }
+    .perm-empty { font-size: 0.75rem; color: var(--color-clay); font-style: italic; }
+    .alert { padding: 0.75rem 1rem; border-radius: 6px; font-size: 0.82rem; line-height: 1.5; margin-bottom: 1rem; display: flex; align-items: flex-start; gap: 0.5rem; }
+    .alert-info { background: var(--color-devotion-light); color: var(--color-devotion-dark); border: 1px solid #c0d4e8; }
+    .alert-error { background: #fdecea; color: #c62828; border: 1px solid #f5c6cb; }
+    .empty-state { text-align: center; padding: 3rem 1rem; color: var(--color-clay); }
+    .empty-state__icon { font-size: 2.5rem; margin-bottom: 0.75rem; opacity: 0.35; }
+    .empty-state__title { font-family: var(--font-display); font-size: 1.1rem; color: var(--color-bark); margin-bottom: 0.4rem; }
+    .empty-state__text { font-size: 0.85rem; }
+    #toast { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 8888; background: var(--color-bark); color: white; padding: 0.75rem 1.25rem; border-radius: 8px; font-size: 0.85rem; box-shadow: 0 4px 16px rgba(0,0,0,0.2); transform: translateY(100px); opacity: 0; transition: all 0.3s ease; max-width: 320px; }
+    #toast.show { transform: translateY(0); opacity: 1; }
+    #toast.toast-success { background: var(--color-commons-dark); }
+    #toast.toast-error { background: #c62828; }
+    .footer { background: var(--color-bark); color: var(--color-sand); padding: 3rem 2rem 2rem; margin-top: auto; }
+    .footer__inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 2rem; padding-bottom: 2rem; border-bottom: 1px solid rgba(229,217,204,0.15); }
+    @media (max-width: 700px) { .footer__inner { grid-template-columns: 1fr; } }
+    .footer__brand-name { font-family: var(--font-display); font-style: italic; font-size: 1.15rem; color: var(--color-parchment); margin-bottom: 0.5rem; }
+    .footer__brand-desc { font-size: 0.85rem; line-height: 1.6; color: var(--color-clay); max-width: 36ch; }
+    .footer__col-title { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-clay); margin-bottom: 1rem; }
+    .footer__links { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+    .footer__links a { font-size: 0.875rem; color: var(--color-sand); text-decoration: none; transition: color 0.15s; }
+    .footer__links a:hover { color: var(--color-parchment); }
+    .footer__bottom { max-width: 1200px; margin: 1.5rem auto 0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; font-size: 0.8rem; color: var(--color-clay); }
+    .footer__bottom a { color: var(--color-clay); }
+    .footer__bottom a:hover { color: var(--color-sand); }
+    @media (max-width: 640px) { .container { padding: 1rem; } .page-header { padding: 1.5rem 1rem 1.25rem; } .tab-btn { padding: 0.6rem 0.9rem; font-size: 0.8rem; } .obs-card__actions { flex-direction: row; min-width: unset; width: 100%; } }
+    /* ── Steward list ── */
+    .steward-list { display: flex; flex-direction: column; gap: 1rem; }
+    .steward-card {
+      background: white; border: 1px solid var(--color-sand);
+      border-radius: var(--radius); padding: 1.25rem 1.5rem;
+      display: flex; align-items: flex-start; gap: 1.25rem; flex-wrap: wrap;
+    }
+    .steward-card__avatar {
+      width: 2.5rem; height: 2.5rem; border-radius: 50%;
+      background: var(--color-ochre-light); color: var(--color-ochre);
+      font-family: var(--font-display); font-size: 1.1rem;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; font-weight: 600;
+    }
+    .steward-card__body { flex: 1; min-width: 0; }
+    .steward-card__name { font-weight: 600; color: var(--color-bark); font-size: 0.975rem; }
+    .steward-card__email { font-size: 0.8rem; color: var(--color-clay); margin-top: 0.1rem; }
+    .steward-card__meta { font-size: 0.775rem; color: var(--color-clay); margin-top: 0.35rem; }
+    .steward-card__roles { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.6rem; }
+    .role-badge {
+      font-size: 0.7rem; font-family: var(--font-mono);
+      padding: 0.15rem 0.5rem; border-radius: 4px;
+      background: var(--color-linen); color: var(--color-bark);
+      border: 1px solid var(--color-sand);
+    }
+    .role-badge--admin { background: var(--color-ochre-light); border-color: var(--color-ochre); color: var(--color-ochre); }
+    .role-badge--contributor { background: var(--color-sage-light); border-color: var(--color-sage); color: var(--color-commons); }
+    .role-badge--steward { background: var(--color-water-light); border-color: var(--color-water); color: var(--color-water); }
+    .steward-card__actions { display: flex; flex-direction: column; gap: 0.5rem; align-items: flex-end; }
+    .status-pill {
+      font-size: 0.7rem; font-weight: 600; padding: 0.2rem 0.6rem; border-radius: 99px;
+      letter-spacing: 0.04em; text-transform: uppercase;
+    }
+    .status-pill--active { background: var(--color-sage-light); color: var(--color-commons); }
+    .status-pill--inactive { background: var(--color-peach-light); color: var(--color-peach); }
+    .role-assign-form { display: flex; gap: 0.4rem; align-items: center; margin-top: 0.4rem; }
+    .role-assign-form select {
+      font-family: var(--font-body); font-size: 0.775rem;
+      border: 1px solid var(--color-sand); border-radius: 5px;
+      padding: 0.25rem 0.5rem; background: white; color: var(--color-bark);
+      cursor: pointer;
+    }
+    .btn-role-add, .btn-role-remove {
+      font-family: var(--font-body); font-size: 0.75rem; font-weight: 600;
+      border: none; border-radius: 5px; padding: 0.25rem 0.65rem;
+      cursor: pointer; transition: background 0.15s;
+    }
+    .btn-role-add { background: var(--color-sage-light); color: var(--color-commons); }
+    .btn-role-add:hover { background: var(--color-sage); color: white; }
+    .btn-role-remove {
+      font-size: 0.7rem; padding: 0.15rem 0.45rem;
+      background: var(--color-peach-light); color: var(--color-peach);
+    }
+    .btn-role-remove:hover { background: var(--color-peach); color: white; }
+    .steward-msg { font-size: 0.8rem; color: var(--color-clay); font-style: italic; min-height: 1.2rem; }
+    .loading-state { font-size: 0.875rem; color: var(--color-clay); padding: 1rem 0; }
+    .error-state { display: none; font-size: 0.875rem; color: var(--color-peach); padding: 1rem 0; }
+    .steward-list-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;
+    }
+    .steward-list-header h2 { font-family: var(--font-display); font-size: 1rem; color: var(--color-bark); }
+    .steward-count { font-size: 0.8rem; color: var(--color-clay); }
+  </style>
+</head>
+<body>
+  <nav id="ubec-nav" aria-label="Nawigacja UBEC DAO"></nav>
+
+  <div id="loading-overlay">
+    <div class="loading-spinner"></div>
+    <p class="loading-text">Sprawdzanie uprawnień…</p>
+  </div>
+
+  <main class="container" id="main-content" style="display:none">
+
+    <header class="page-header">
+      <div>
+        <h1 class="page-header__title">Konsola <span>zarządzania</span></h1>
+      </div>
+      <div class="page-header__meta">
+        <span class="page-header__steward" id="header-steward">—</span>
+        <a href="/pl/dashboard" class="btn-logout" style="margin-right:0.5rem;">← Mój panel</a>
+        <button class="btn-logout" id="btn-logout">Wyloguj</button>
+      </div>
+    </header>
+
+    <nav class="tab-nav" role="tablist" aria-label="Sekcje zarządzania">
+      <button class="tab-btn active" role="tab" aria-selected="true"
+              aria-controls="tab-validate" data-tab="validate">
+        ✓ Kolejka walidacji
+        <span class="tab-badge" id="badge-validate">0</span>
+      </button>
+      <button class="tab-btn" role="tab" aria-selected="false"
+              aria-controls="tab-roles" data-tab="roles">
+        ◈ Role — przegląd
+      </button>
+      <button class="tab-btn" role="tab" aria-selected="false"
+              aria-controls="tab-stewards" data-tab="stewards">
+        ⊞ Stewardzi
+        <span class="tab-phase">Faza 2</span>
+      </button>
+      <button class="tab-btn" role="tab" aria-selected="false"
+              aria-controls="tab-devices" data-tab="devices">
+        ⊡ Urządzenia
+        <span class="tab-phase">Faza 2</span>
+      </button>
+      <button class="tab-btn" role="tab" aria-selected="false"
+              aria-controls="tab-tokens" data-tab="tokens">
+        ◎ Nagrody tokenów
+        <span class="tab-phase">Faza 2</span>
+      </button>
+    </nav>
+
+    <section id="tab-validate" class="tab-panel active" role="tabpanel">
+      <div class="panel">
+        <div class="panel__header">
+          <h2 class="panel__title">
+            Kolejka walidacji obserwacji
+            <span class="panel__count" id="queue-count">—</span>
+          </h2>
+          <div class="panel__actions">
+            <button class="btn btn-reload" id="btn-reload-queue">↻ Odśwież</button>
+          </div>
+        </div>
+        <div class="panel__body" id="queue-body">
+          <div class="empty-state">
+            <div class="loading-spinner" style="margin:0 auto 1rem;"></div>
+            <p>Ładowanie obserwacji…</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-roles" class="tab-panel" role="tabpanel">
+      <div class="panel">
+        <div class="panel__header">
+          <h2 class="panel__title">Role i uprawnienia (tylko odczyt)</h2>
+        </div>
+        <div class="panel__body" id="roles-body">
+          <div class="empty-state">
+            <div class="loading-spinner" style="margin:0 auto 1rem;"></div>
+            <p>Ładowanie ról…</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-stewards" class="tab-panel" role="tabpanel">
+      <div class="steward-list-header">
+        <h2>⊞ Zarejestrowani opiekunowie</h2>
+        <span class="steward-count" id="steward-count"></span>
+      </div>
+      <div id="steward-loading" class="loading-state">Ładowanie opiekunów…</div>
+      <div id="steward-error" class="error-state" style="display:none;">⚠ Nie udało się załadować opiekunów.</div>
+      <div id="steward-empty" style="display:none; color:var(--color-clay); font-size:0.875rem; padding:2rem; text-align:center;">Brak zarejestrowanych opiekunów.</div>
+      <div class="steward-list" id="steward-list" style="display:none;"></div>
+
+    <section id="tab-devices" class="tab-panel" role="tabpanel">
+      <div class="placeholder-panel">
+        <div class="placeholder-panel__icon">⊡</div>
+        <h2 class="placeholder-panel__title">Rejestr urządzeń — Faza 2</h2>
+        <p class="placeholder-panel__reason">
+          <code>GET /api/v1/devices/</code> nie jest jeszcze zaimplementowane.
+        </p>
+        <code class="placeholder-panel__code">punkt końcowy: nie zaimplementowany</code>
+      </div>
+    </section>
+
+    <section id="tab-tokens" class="tab-panel" role="tabpanel">
+      <div class="placeholder-panel">
+        <div class="placeholder-panel__icon">◎</div>
+        <h2 class="placeholder-panel__title">Dziennik nagród tokenów — Faza 2</h2>
+        <p class="placeholder-panel__reason">
+          Tabela <code>token_rewards</code> i powiązane punkty końcowe są zaplanowane na Fazę 2.
+        </p>
+        <code class="placeholder-panel__code">punkt końcowy: nie zaimplementowany</code>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <div class="footer__inner">
+      <div>
+        <div class="footer__brand-name">UBEC Hub</div>
+        <p class="footer__brand-desc">Centralne REST API i warstwa integracji IoT dla bioregionalnej sieci protokołów UBEC Commons. Zakorzenione w Schlaubetal, Brandenburgia, Niemcy.</p>
+      </div>
+      <div>
+        <div class="footer__col-title">Usługi</div>
+        <ul class="footer__links">
+          <li><a href="https://ubec.network">UBEC DAO</a></li>
+          <li><a href="https://bioregional.ubec.network">UBEC Protocol</a></li>
+          <li><a href="https://living-labs.ubec.network">Living Labs</a></li>
+          <li><a href="https://mapservice.ubec.network">UBEC Maps</a></li>
+          <li><a href="https://erdpuls.ubec.network">Erdpuls</a></li>
+          <li><a href="https://learn.ubec.network">UBEC Learn</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer__col-title">Hub</div>
+        <ul class="footer__links">
+          <li><a href="/docs">Dokumentacja API</a></li>
+          <li><a href="/health">Stan systemu</a></li>
+          <li><a href="/pl/legal">Impressum</a></li>
+          <li><a href="/pl/privacy">Prywatność</a></li>
+          <li><a href="/pl/terms">Regulamin</a></li>
+          <li><a href="mailto:living-labs@ubec.network">Kontakt</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <p>© 2024–2026 Michel Garand · <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> · Kod: <a href="https://www.gnu.org/licenses/agpl-3.0.html">GNU AGPL v3.0</a></p>
+      <p>Stworzone z pomocą <a href="https://anthropic.com">Claude (Anthropic)</a> · <em>„Jestem, bo jesteśmy"</em></p>
+    </div>
+  </footer>
+
+  <div id="toast" role="alert" aria-live="polite"></div>
+
+  <script>
+  (function() {
+    'use strict';
+    var LANG = 'pl';
+    var API  = '/api/v1';
+    var token = localStorage.getItem('ubec_access_token') || sessionStorage.getItem('ubec_access_token')
+             || sessionStorage.getItem('ubec_access_token');
+    if (!token) { window.location.replace('/' + LANG + '/login'); return; }
+    function authFetch(path, opts) {
+      opts = opts || {};
+      opts.headers = Object.assign({ 'Authorization': 'Bearer ' + token }, opts.headers || {});
+      return fetch(API + path, opts);
+    }
+    (function hideNavLogin() {
+      var btn = document.querySelector('.ubec-nav__login');
+      if (btn) { btn.style.display = 'none'; }
+      else { setTimeout(hideNavLogin, 50); }
+    })();
+    authFetch('/auth/me/permissions')
+      .then(function(r) { if (r.status === 401) { clearToken(); return null; } return r.json(); })
+      .then(function(data) {
+        if (!data) return;
+        if ((data.roles || []).indexOf('admin') === -1) { window.location.replace('/' + LANG + '/dashboard'); return; }
+        document.getElementById('loading-overlay').style.display = 'none';
+        document.getElementById('main-content').style.display = '';
+        authFetch('/auth/me').then(function(r){ return r.json(); }).then(function(me) {
+          document.getElementById('header-steward').textContent =
+            (me.display_name || me.full_name || me.email || '') + ' · ' + (data.roles || []).join(', ');
+        });
+        document.getElementById('btn-logout').addEventListener('click', function() {
+          authFetch('/auth/logout', { method: 'POST' }).finally(clearToken);
+        });
+        loadQueue();
+        loadRoles();
+      })
+      .catch(clearToken);
+    function clearToken() {
+      localStorage.removeItem('ubec_access_token');
+      sessionStorage.removeItem('ubec_access_token');
+      window.location.replace('/' + LANG + '/login');
+    }
+    document.querySelectorAll('.tab-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var target = btn.dataset.tab;
+        document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); b.setAttribute('aria-selected','false'); });
+        document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
+        btn.classList.add('active'); btn.setAttribute('aria-selected','true');
+        document.getElementById('tab-' + target).classList.add('active');
+        if (target === 'stewards') loadStewards();
+      });
+    });
+    var toastTimer;
+    function showToast(msg, type) {
+      var el = document.getElementById('toast');
+      el.textContent = msg;
+      el.className = 'show toast-' + (type || 'success');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(function() { el.className = ''; }, 3500);
+    }
+    function loadQueue() {
+      var body = document.getElementById('queue-body');
+      body.innerHTML = '<div class="empty-state"><div class="loading-spinner" style="margin:0 auto 1rem;"></div><p>Ładowanie…</p></div>';
+      authFetch('/observations?is_validated=false&per_page=50&page=1')
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          var obs = data.observations || [];
+          renderQueue(obs);
+          var count = obs.length;
+          document.getElementById('queue-count').textContent = count;
+          var badge = document.getElementById('badge-validate');
+          badge.textContent = count;
+          if (count > 0) badge.classList.add('visible'); else badge.classList.remove('visible');
+        })
+        .catch(function() { document.getElementById('queue-body').innerHTML = '<div class="alert alert-error">Błąd ładowania obserwacji.</div>'; });
+    }
+    document.getElementById('btn-reload-queue').addEventListener('click', loadQueue);
+    function formatDate(iso) { return new Date(iso).toISOString().slice(0,10); }
+    function renderQueue(obs) {
+      var body = document.getElementById('queue-body');
+      if (!obs.length) {
+        body.innerHTML = '<div class="empty-state"><div class="empty-state__icon">✓</div><p class="empty-state__title">Kolejka jest pusta</p><p class="empty-state__text">Wszystkie obserwacje zostały zwalidowane.</p></div>';
+        return;
+      }
+      var html = '<ul class="obs-queue">';
+      obs.forEach(function(o) {
+        var responses = o.responses || [];
+        var responsesHtml = responses.length ? '<ul class="obs-card__responses">' + responses.map(function(r){ return '<li class="obs-response"><div class="obs-response__field">pole: ' + r.field_id.slice(0,8) + '…</div><div>' + escHtml(r.value_text || r.value_pattern || '—') + '</div></li>'; }).join('') + '</ul>' : '';
+        var locText = o.location ? '<div class="obs-card__location">📍 ' + (o.location_note ? escHtml(o.location_note) + ' · ' : '') + o.location.latitude.toFixed(4) + ', ' + o.location.longitude.toFixed(4) + '</div>' : '';
+        html += '<li class="obs-card" id="obs-' + o.id + '">' +
+          '<div class="obs-card__top"><div class="obs-card__meta">' +
+          '<div class="obs-card__id">' + o.id.slice(0,8) + '…</div>' +
+          '<p class="obs-card__note">' + escHtml(o.qualitative_notes || '—') + '</p>' +
+          '<div class="obs-card__tags"><span class="obs-tag obs-tag--zone">' + (o.proxemic_zone||'?') + '</span><span class="obs-tag obs-tag--lang">' + (o.language||'?') + '</span><span class="obs-tag obs-tag--date">' + formatDate(o.observed_at) + '</span></div>' +
+          locText + '</div>' +
+          '<div class="obs-card__actions">' +
+          (responses.length ? '<button class="btn btn-detail" onclick="toggleDetail(\'' + o.id + '\')">▸ ' + responses.length + ' odpow.</button>' : '') +
+          '<textarea class="validate-notes" id="notes-' + o.id + '" placeholder="Notatka walidacyjna (opcjonalnie)" rows="2"></textarea>' +
+          '<button class="btn btn-validate" id="vbtn-' + o.id + '" onclick="validateObs(\'' + o.id + '\')">✓ Zatwierdź</button>' +
+          '</div></div>' +
+          '<div class="obs-card__footer" id="detail-' + o.id + '">' + responsesHtml + '</div>' +
+          '</li>';
+      });
+      html += '</ul>';
+      body.innerHTML = html;
+    }
+    window.toggleDetail = function(id) {
+      var el = document.getElementById('detail-' + id);
+      var btn = el.previousElementSibling.querySelector('.btn-detail');
+      if (el.classList.contains('open')) { el.classList.remove('open'); btn.textContent = btn.textContent.replace('▾','▸'); }
+      else { el.classList.add('open'); btn.textContent = btn.textContent.replace('▸','▾'); }
+    };
+    window.validateObs = function(id) {
+      var btn = document.getElementById('vbtn-' + id);
+      var notes = document.getElementById('notes-' + id).value.trim() || null;
+      btn.disabled = true; btn.textContent = '…';
+      authFetch('/observations/' + id + '/validate', {
+        method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({notes:notes})
+      }).then(function(r) {
+        if (r.ok) return r.json();
+        return r.json().then(function(e){ throw new Error(e.detail||'Błąd'); });
+      }).then(function() {
+        document.getElementById('obs-' + id).classList.add('validated');
+        btn.textContent = '✓ Zatwierdzone';
+        var badge = document.getElementById('badge-validate');
+        var n = parseInt(badge.textContent||'0',10) - 1;
+        badge.textContent = n; document.getElementById('queue-count').textContent = n;
+        if (n <= 0) badge.classList.remove('visible');
+        showToast('Obserwacja zatwierdzona.', 'success');
+      }).catch(function(err) {
+        btn.disabled = false; btn.textContent = '✓ Zatwierdź';
+        showToast('Błąd: ' + err.message, 'error');
+      });
+    };
+    function loadRoles() {
+      authFetch('/auth/roles')
+        .then(function(r){ return r.json(); })
+        .then(function(roles) {
+          var body = document.getElementById('roles-body');
+          var html = '<div class="roles-grid">';
+          roles.forEach(function(role) {
+            var perms = role.permissions || [];
+            var permsHtml = perms.length ? perms.map(function(p){ return '<span class="perm-chip">'+escHtml(p)+'</span>'; }).join('') : '<span class="perm-empty">Brak przypisanych uprawnień</span>';
+            html += '<div class="role-card"><div class="role-card__head"><span class="role-card__name">'+escHtml(role.name)+'</span>'+(role.is_system?'<span class="role-card__system">system</span>':'')+'</div><p class="role-card__desc">'+escHtml(role.description||'')+'</p><div class="role-card__perms">'+permsHtml+'</div></div>';
+          });
+          html += '</div>';
+          body.innerHTML = html;
+        }).catch(function() { document.getElementById('roles-body').innerHTML='<div class="alert alert-error">Nie udało się załadować ról.</div>'; });
+    }
+    function escHtml(str) { return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  })();
+
+    // ── Stewards tab ─────────────────────────────────────────────────
+    const ALL_ROLES = ['member', 'contributor', 'steward', 'admin'];
+
+    function roleBadgeClass(role) {
+      if (role === 'admin') return 'role-badge role-badge--admin';
+      if (role === 'contributor') return 'role-badge role-badge--contributor';
+      if (role === 'steward') return 'role-badge role-badge--steward';
+      return 'role-badge';
+    }
+
+    function fmtDate(iso) {
+      return new Date(iso).toLocaleDateString(undefined, {year:'numeric', month:'short', day:'numeric'});
+    }
+
+    function renderStewardCard(s) {
+      const initial = (s.display_name || s.email || '?')[0].toUpperCase();
+      const statusClass = s.is_active ? 'status-pill--active' : 'status-pill--inactive';
+      const statusLabel = s.is_active ? 'Aktywny' : 'Nieaktywny';
+      const verified = s.email_verified ? 'zweryfikowany' : 'niezweryfikowany';
+      const roleBadges = (s.roles || []).map(r => {
+        const removeBtn = `<button class="btn-role-remove" onclick="removeRole('${s.id}','${r}',this)" title="Remove ${r}">×</button>`;
+        return `<span class="${roleBadgeClass(r)}">${r} ${removeBtn}</span>`;
+      }).join('');
+      const assignableRoles = ALL_ROLES.filter(r => !(s.roles || []).includes(r));
+      const roleOptions = assignableRoles.map(r => `<option value="${r}">${r}</option>`).join('');
+      const assignForm = assignableRoles.length > 0 ? `
+        <div class="role-assign-form">
+          <select id="role-select-${s.id}">
+            <option value="">Wybierz rolę…</option>
+            ${roleOptions}
+          </select>
+          <button class="btn-role-add" onclick="addRole('${s.id}', document.getElementById('role-select-${s.id}').value, this)">Dodaj rolę</button>
+        </div>` : '';
+
+      return `<div class="steward-card" id="steward-${s.id}">
+        <div class="steward-card__avatar">${initial}</div>
+        <div class="steward-card__body">
+          <div class="steward-card__name">${s.display_name || '—'}</div>
+          <div class="steward-card__email">${s.email}</div>
+          <div class="steward-card__meta">Członek od ${fmtDate(s.created_at)} · ${verified}</div>
+          <div class="steward-card__roles" id="roles-${s.id}">${roleBadges}</div>
+          ${assignForm}
+          <div class="steward-msg" id="msg-${s.id}"></div>
+        </div>
+        <div class="steward-card__actions">
+          <span class="status-pill ${statusClass}">${statusLabel}</span>
+        </div>
+      </div>`;
+    }
+
+    async function loadStewards() {
+      document.getElementById('steward-loading').style.display = '';
+      document.getElementById('steward-error').style.display = 'none';
+      document.getElementById('steward-list').style.display = 'none';
+      document.getElementById('steward-empty').style.display = 'none';
+      try {
+        const data = await authFetch('/auth/stewards').then(r => { if (!r.ok) throw new Error(r.status); return r.json(); });
+        document.getElementById('steward-loading').style.display = 'none';
+        document.getElementById('steward-error').style.display = 'none';
+        document.getElementById('steward-count').textContent = data.total + ' total';
+        if (!data.stewards || data.stewards.length === 0) {
+          document.getElementById('steward-empty').style.display = '';
+          return;
+        }
+        const list = document.getElementById('steward-list');
+        list.innerHTML = data.stewards.map(renderStewardCard).join('');
+        list.style.display = 'flex';
+      } catch(e) {
+        console.error('loadStewards error:', e);
+        document.getElementById('steward-loading').style.display = 'none';
+        document.getElementById('steward-error').style.display = '';
+      }
+    }
+
+    async function addRole(stewardId, roleName, btn) {
+      if (!roleName) return;
+      const msg = document.getElementById('msg-' + stewardId);
+      btn.disabled = true;
+      msg.textContent = '…';
+      try {
+        const ar = await authFetch('/auth/stewards/' + stewardId + '/roles', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({role_name: roleName})
+        });
+        if (!ar.ok) { const e = await ar.json(); throw new Error(e.detail || ar.status); }
+        msg.textContent = '';
+        loadStewards();
+      } catch(e) {
+        msg.textContent = '⚠ ' + (e.message || 'Error');
+        btn.disabled = false;
+      }
+    }
+
+    async function removeRole(stewardId, roleName, btn) {
+      const msg = document.getElementById('msg-' + stewardId);
+      btn.disabled = true;
+      msg.textContent = '…';
+      try {
+        const rr = await authFetch('/auth/stewards/' + stewardId + '/roles/' + roleName, {
+          method: 'DELETE'
+        });
+        if (!rr.ok) { const e = await rr.json(); throw new Error(e.detail || rr.status); }
+        msg.textContent = '';
+        loadStewards();
+      } catch(e) {
+        msg.textContent = '⚠ ' + (e.message || 'Error');
+        btn.disabled = false;
+      }
+    }
+
+
+  </script>
+</body>
+</html>

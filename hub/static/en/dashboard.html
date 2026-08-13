@@ -277,6 +277,16 @@
       transition: border-color 0.2s, color 0.2s; text-decoration: none;
     }
     .btn-logout:hover { border-color: var(--color-peach); color: var(--color-peach); }
+    .btn-manage {
+      font-family: var(--font-sans); font-size: 0.825rem; font-weight: 500;
+      color: var(--color-ochre); background: white;
+      border: 1px solid var(--color-ochre); border-radius: 6px;
+      padding: 0.45rem 1rem; cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      text-decoration: none; display: none;
+    }
+    .btn-manage:hover { background: var(--color-ochre); color: white; }
+
 
     /* ── Lang switcher ── */
     .lang-switch {
@@ -355,6 +365,7 @@
       <div class="page-header__meta">
         <div id="header-email"></div>
         <div id="header-since"></div>
+        <a href="/en/manage" id="btn-manage" class="btn-manage">⚙ Management console</a>
         <button class="btn-logout" id="btn-logout">Sign out</button>
       </div>
     </header>
@@ -617,6 +628,11 @@
       document.getElementById('header-since').textContent  = T.memberSince + ' ' + fmtDate(p.created_at);
       setText('stat-status',   p.is_active ? T.statActive : T.statInactive);
       setText('stat-roles',    p.roles?.length || 0);
+      // Show management console link for admin role
+      const manageBtn = document.getElementById('btn-manage');
+      if (manageBtn && p.roles && p.roles.includes('admin')) {
+        manageBtn.style.display = 'inline-block';
+      }
       setText('stat-lang',     p.preferred_language?.toUpperCase() || '—');
       setText('stat-verified', p.email_verified ? T.verified : T.unverified);
     }
