@@ -1,0 +1,249 @@
+╔══════════════════════════════════════════════════════════════════════════╗
+║           UBEC POPULATION MAPSERVER - QUICK REFERENCE                     ║
+╚══════════════════════════════════════════════════════════════════════════╝
+
+📁 FILES
+  Mapfile:     /opt/mapserver/maps/population.map
+  Test Script: /opt/mapserver/test_population_map.sh
+  Logs:        /var/log/mapserver/
+
+📊 AVAILABLE LAYERS (8 Total)
+
+  Raster Layers:
+  1. population_raster_raw              - Raw WorldPop data (grayscale)
+  2. population_raster_classified       - Classified density (green gradient)
+  3. population_heatmap                 - Heat map style (blue to red)
+
+  Vector Layers:
+  4. bioregion_population_boundaries    - Outlines only
+  5. bioregion_population_classified    - By total population (7 classes)
+  6. bioregion_density_classified       - By density per km² (7 classes)
+  7. bioregion_labels                   - Names + population labels
+  8. bioregion_population_points        - Centroid points (scaled circles)
+
+🌐 WMS ENDPOINTS
+
+  Base URL:
+  https://your-domain.com/cgi-bin/mapserv?map=/opt/mapserver/maps/population.map
+
+  GetCapabilities:
+  &SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities
+
+  GetMap (Single Layer):
+  &SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap
+  &LAYERS=population_raster_classified
+  &CRS=EPSG:4326&BBOX=-180,-90,180,90
+  &WIDTH=1200&HEIGHT=800&FORMAT=image/png
+
+  GetMap (Multiple Layers):
+  &LAYERS=population_heatmap,bioregion_labels
+
+  GetFeatureInfo:
+  &SERVICE=WMS&VERSION=1.3.0&REQUEST=GetFeatureInfo
+  &LAYERS=bioregion_population_classified
+  &QUERY_LAYERS=bioregion_population_classified
+  &CRS=EPSG:4326&BBOX=-180,-90,180,90&WIDTH=1200&HEIGHT=800
+  &INFO_FORMAT=text/html&I=600&J=400
+
+🧪 TESTING COMMANDS
+
+  Test GetCapabilities:
+  curl "http://localhost/cgi-bin/mapserv?map=/opt/mapserver/maps/population.map&SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities" | xmllint --format - | head -50
+
+  Test GetMap (Save to file):
+  curl "http://localhost/cgi-bin/mapserv?map=/opt/mapserver/maps/population.map&SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=population_raster_classified&CRS=EPSG:4326&BBOX=-180,-90,180,90&WIDTH=800&HEIGHT=600&FORMAT=image/png" -o test.png
+
+  Test Specific Region (Europe):
+  curl "...&BBOX=-10,35,40,70&WIDTH=800&HEIGHT=600..." -o europe.png
+
+  Run Full Test Suite:
+  /opt/mapserver/test_population_map.sh
+
+🔧 DEPLOYMENT
+
+  Deploy Mapfile:
+  sudo bash deploy_population_map.sh
+
+  Update Database Credentials:
+  sudo nano /opt/mapserver/maps/population.map
+  # Search for: user='ubec_admin' password='your_password'
+
+  Reload Web Server:
+  sudo systemctl reload nginx    # or apache2, or caddy
+
+  Check Permissions:
+  ls -la /opt/mapserver/maps/population.map
+  # Should be: -rw-r--r-- www-data www-data
+
+🐛 DEBUGGING
+
+  Enable MapServer Debug:
+  export MS_ERRORFILE="/tmp/mapserver.log"
+  export MS_DEBUGLEVEL=5
+
+  Check Logs:
+  tail -f /var/log/mapserver/mapserver.log
+  tail -f /var/log/nginx/error.log
+
+  Test Database Connection:
+  psql -U ubec_admin -d ubec -h localhost \
+    -c "SELECT COUNT(*) FROM phenomenal.population_raster_2025;"
+
+  Validate Mapfile Syntax:
+  mapserv -nh "QUERY_STRING=map=/opt/mapserver/maps/population.map&SERVICE=WMS&REQUEST=GetCapabilities"
+
+  Check Spatial Indexes:
+  psql -U ubec_admin -d ubec -h localhost -c \
+    "SELECT indexname FROM pg_indexes WHERE tablename='population_raster_2025';"
+
+⚙️ COMMON ISSUES
+
+  Issue: Blank images returned
+  Fix: Check BBOX matches data extent, verify CRS=EPSG:4326
+
+  Issue: Database connection error
+  Fix: Update credentials in mapfile, check pg_hba.conf
+
+  Issue: MapServer not found
+  Fix: sudo apt-get install cgi-mapserver mapserver-bin
+
+  Issue: Permission denied
+  Fix: sudo chown www-data:www-data /opt/mapserver/maps/population.map
+
+  Issue: Slow rendering
+  Fix: Add spatial indexes, enable tile caching, use overviews
+
+📈 PERFORMANCE OPTIMIZATION
+
+  Enable Tile Caching:
+  # See MapCache configuration in deployment guide
+
+  Add Raster Overviews:
+  psql -U ubec_admin -d ubec -c \
+    "SELECT AddOverviewConstraints('phenomenal', 'population_raster_2025', 'rast');"
+
+  Cluster Tables:
+  psql -U ubec_admin -d ubec -c \
+    "CLUSTER phenomenal.population_raster_2025 USING population_raster_2025_rast_gist_idx;"
+
+  Nginx Caching:
+  # Add proxy_cache directives (see deployment guide)
+
+🔗 INTEGRATION EXAMPLES
+
+  OpenLayers:
+  const layer = new TileLayer({
+    source: new TileWMS({
+      url: 'https://your-domain.com/cgi-bin/mapserv',
+      params: {
+        'map': '/opt/mapserver/maps/population.map',
+        'LAYERS': 'population_raster_classified'
+      }
+    })
+  });
+
+  Leaflet:
+  L.tileLayer.wms('https://your-domain.com/cgi-bin/mapserv', {
+    map: '/opt/mapserver/maps/population.map',
+    layers: 'population_raster_classified'
+  }).addTo(map);
+
+  QGIS:
+  Layer → Add WMS/WMTS Layer
+  URL: https://your-domain.com/cgi-bin/mapserv?map=/opt/mapserver/maps/population.map
+
+📊 LAYER COMBINATIONS (Recommended)
+
+  Basic Population View:
+  LAYERS=population_raster_classified,bioregion_population_boundaries
+
+  Detailed Analysis:
+  LAYERS=population_heatmap,bioregion_population_classified,bioregion_labels
+
+  Overview Map:
+  LAYERS=population_raster_classified,bioregion_population_points
+
+  Density Focus:
+  LAYERS=population_raster_raw,bioregion_density_classified
+
+🎨 STYLING TIPS
+
+  Adjust Transparency:
+  Add &TRANSPARENT=TRUE to GetMap request
+
+  Custom Formats:
+  &FORMAT=image/png   (with transparency)
+  &FORMAT=image/jpeg  (smaller file size)
+
+  Size Optimization:
+  &WIDTH=800&HEIGHT=600   (standard)
+  &WIDTH=1920&HEIGHT=1080 (HD)
+  &WIDTH=3840&HEIGHT=2160 (4K)
+
+📋 MAINTENANCE SCHEDULE
+
+  Daily:
+  - Monitor logs: tail -f /var/log/mapserver/mapserver.log
+  - Check disk space: df -h /var/cache/
+
+  Weekly:
+  - Clear old cache: find /var/cache/mapserver -mtime +7 -delete
+  - Review access patterns
+
+  Monthly:
+  - ANALYZE database tables
+  - Test all layers
+  - Update documentation
+
+  Quarterly:
+  - Review and optimize slow queries
+  - Update MapServer if needed
+  - Performance audit
+
+📞 SUPPORT RESOURCES
+
+  Documentation:
+  - Full Guide: UBEC_Population_MapServer_Deployment_Guide.md
+  - MapServer Docs: https://mapserver.org/documentation.html
+  - PostGIS Raster: https://postgis.net/docs/RT_reference.html
+
+  Diagnostic Commands:
+  - MapServer version: mapserv -v
+  - PostgreSQL version: psql --version
+  - Check service: systemctl status nginx
+
+  Common Paths:
+  - MapServer binary: /usr/lib/cgi-bin/mapserv
+  - Config files: /opt/mapserver/maps/
+  - Cache directory: /var/cache/mapserver/
+  - Log files: /var/log/mapserver/
+
+💡 QUICK TIPS
+
+  • Always test locally before deploying to production
+  • Use BBOX that matches your data extent
+  • Enable caching for frequently accessed areas
+  • Monitor database connection pool usage
+  • Keep spatial indexes up to date
+  • Use GetCapabilities to verify layer availability
+  • Test GetFeatureInfo for attribute queries
+  • Document any custom modifications
+
+🔐 SECURITY CHECKLIST
+
+  ☐ Database credentials secured (not world-readable)
+  ☐ MS_MAP_PATTERN set to restrict map access
+  ☐ File permissions: 644 for mapfile
+  ☐ CORS headers configured properly
+  ☐ Rate limiting enabled (if public)
+  ☐ SSL/TLS enabled for production
+  ☐ Firewall rules configured
+  ☐ Regular security updates applied
+
+═══════════════════════════════════════════════════════════════════════════
+
+Attribution: This project uses the services of Claude and Anthropic PBC
+to inform our decisions and recommendations. This project was made possible
+with the assistance of Claude and Anthropic PBC.
+
+Version: 1.0 | Last Updated: 2025-11-21

@@ -1,0 +1,948 @@
+/*
+UBEC Protocol Website - Ubuntu-Inspired Design System
+======================================================
+
+Philosophy: "I am because we are" - Ubuntu
+Design: Nature-inspired, community-centered, regenerative
+
+Attribution:
+    This project uses the services of Claude and Anthropic PBC to inform 
+    our decisions and recommendations. This project was made possible with 
+    the assistance of Claude and Anthropic PBC.
+
+Color Philosophy:
+    - Interdependence: Colors work together, not in hierarchy
+    - Natural harmony: Like ecosystems, each color has its role
+    - Community focus: Warm, welcoming, inclusive earth tones
+    - Regenerative spirit: Colors evoke growth and renewal
+
+Version: 2.0.0 (Ubuntu-Enhanced)
+Date: November 5, 2025
+*/
+
+/* ========================================================================
+   ROOT VARIABLES - Ubuntu Color Palette
+   ======================================================================== */
+
+:root {
+    /* Holonic Category Colors - Dynamic Earth Tones */
+    --ubuntu-exemplar: #B08BBB;      /* Soft Amethyst - Wisdom & Leadership */
+    --ubuntu-integrator: #8FBC8F;    /* Sage Green - Growth & Balance */
+    --ubuntu-contributor: #87CEEB;   /* Sky Blue - Cooperation & Clarity */
+    --ubuntu-participant: #E8A87C;   /* Terracotta - Community & Warmth */
+    --ubuntu-observer: #9CB4CC;      /* Soft Slate - Reflection & Neutrality */
+    
+    /* Four Element Colors */
+    --element-air: #B8D4E8;          /* Light Sky - Gateway & Openness */
+    --element-water: #7FC7C4;        /* Soft Teal - Flow & Reciprocity */
+    --element-earth: #8AA67E;        /* Moss Green - Stability & Mutualism */
+    --element-fire: #F4A896;         /* Soft Coral - Transformation & Regeneration */
+    
+    /* Functional Colors */
+    --primary-gradient-start: #667eea;
+    --primary-gradient-end: #764ba2;
+    --success: #4CAF50;
+    --warning: #FFC107;
+    --error: #f44336;
+    --info: #2196F3;
+    
+    /* Neutral Palette */
+    --text-primary: #2c3e50;
+    --text-secondary: #7f8c8d;
+    --text-light: #95a5a6;
+    --background: #ffffff;
+    --background-alt: #f8f9fa;
+    --background-dark: #2c3e50;
+    --border: #e0e0e0;
+    --border-light: #ecf0f1;
+    
+    /* Spacing System (8px base) */
+    --spacing-xs: 0.25rem;    /* 4px */
+    --spacing-sm: 0.5rem;     /* 8px */
+    --spacing-md: 1rem;       /* 16px */
+    --spacing-lg: 1.5rem;     /* 24px */
+    --spacing-xl: 2rem;       /* 32px */
+    --spacing-xxl: 3rem;      /* 48px */
+    --spacing-xxxl: 4rem;     /* 64px */
+    
+    /* Typography */
+    --font-primary: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    --font-monospace: 'Courier New', Courier, monospace;
+    --font-size-xs: 0.75rem;      /* 12px */
+    --font-size-sm: 0.875rem;     /* 14px */
+    --font-size-base: 1rem;       /* 16px */
+    --font-size-lg: 1.125rem;     /* 18px */
+    --font-size-xl: 1.25rem;      /* 20px */
+    --font-size-2xl: 1.5rem;      /* 24px */
+    --font-size-3xl: 2rem;        /* 32px */
+    --font-size-4xl: 2.5rem;      /* 40px */
+    --font-size-5xl: 3rem;        /* 48px */
+    
+    /* Border Radius */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+    --radius-full: 9999px;
+    
+    /* Shadows */
+    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.15);
+    --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.2);
+    
+    /* Transitions */
+    --transition-fast: 150ms ease;
+    --transition-base: 200ms ease;
+    --transition-slow: 300ms ease;
+    
+    /* Z-index Scale */
+    --z-dropdown: 1000;
+    --z-sticky: 1020;
+    --z-fixed: 1030;
+    --z-modal-backdrop: 1040;
+    --z-modal: 1050;
+    --z-popover: 1060;
+    --z-tooltip: 1070;
+}
+
+/* ========================================================================
+   RESET & BASE STYLES
+   ======================================================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    font-family: var(--font-primary);
+    font-size: var(--font-size-base);
+    line-height: 1.6;
+    color: var(--text-primary);
+    background-color: var(--background);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ========================================================================
+   TYPOGRAPHY
+   ======================================================================== */
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: var(--spacing-md);
+    color: var(--text-primary);
+}
+
+h1 { font-size: var(--font-size-5xl); }
+h2 { font-size: var(--font-size-4xl); }
+h3 { font-size: var(--font-size-3xl); }
+h4 { font-size: var(--font-size-2xl); }
+h5 { font-size: var(--font-size-xl); }
+h6 { font-size: var(--font-size-lg); }
+
+p {
+    margin-bottom: var(--spacing-md);
+    color: var(--text-primary);
+}
+
+a {
+    color: var(--primary-gradient-start);
+    text-decoration: none;
+    transition: color var(--transition-base);
+}
+
+a:hover {
+    color: var(--primary-gradient-end);
+}
+
+.lead {
+    font-size: var(--font-size-xl);
+    font-weight: 300;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.ubuntu-quote {
+    font-style: italic;
+    color: var(--text-secondary);
+    margin: var(--spacing-lg) 0;
+    padding-left: var(--spacing-lg);
+    border-left: 4px solid var(--element-earth);
+}
+
+/* ========================================================================
+   LAYOUT COMPONENTS
+   ======================================================================== */
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-lg);
+    width: 100%;
+}
+
+.main-content {
+    flex: 1;
+    margin-top: var(--spacing-xxl);
+    margin-bottom: var(--spacing-xxl);
+}
+
+.section {
+    padding: var(--spacing-xxxl) 0;
+}
+
+.section-title {
+    font-size: var(--font-size-4xl);
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: var(--spacing-lg);
+    color: var(--text-primary);
+}
+
+.section-description {
+    font-size: var(--font-size-lg);
+    text-align: center;
+    color: var(--text-secondary);
+    max-width: 800px;
+    margin: 0 auto var(--spacing-xxl);
+    line-height: 1.8;
+}
+
+/* ========================================================================
+   NAVIGATION
+   ======================================================================== */
+
+.navbar {
+    background: var(--background);
+    box-shadow: var(--shadow-sm);
+    position: sticky;
+    top: 0;
+    z-index: var(--z-sticky);
+    border-bottom: 1px solid var(--border-light);
+}
+
+.navbar .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: var(--spacing-md);
+    padding-bottom: var(--spacing-md);
+}
+
+.navbar-brand .logo {
+    display: flex;
+    flex-direction: column;
+    color: var(--primary-gradient-start);
+    transition: color var(--transition-base);
+}
+
+.navbar-brand .logo:hover {
+    color: var(--primary-gradient-end);
+}
+
+.logo-text {
+    font-size: var(--font-size-2xl);
+    font-weight: bold;
+    letter-spacing: -0.5px;
+}
+
+.logo-subtext {
+    font-size: var(--font-size-xs);
+    color: var(--text-secondary);
+    font-weight: 400;
+}
+
+.navbar-menu {
+    display: flex;
+    gap: var(--spacing-lg);
+    align-items: center;
+}
+
+.nav-link {
+    color: var(--text-primary);
+    font-weight: 500;
+    font-size: var(--font-size-base);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-base);
+    position: relative;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%) scaleX(0);
+    width: 80%;
+    height: 2px;
+    background: var(--primary-gradient-start);
+    transition: transform var(--transition-base);
+}
+
+.nav-link:hover {
+    background: var(--background-alt);
+    color: var(--primary-gradient-start);
+}
+
+.nav-link:hover::after {
+    transform: translateX(-50%) scaleX(1);
+}
+
+.nav-link.active {
+    color: var(--primary-gradient-start);
+    background: var(--background-alt);
+}
+
+.nav-link.active::after {
+    transform: translateX(-50%) scaleX(1);
+}
+
+/* ========================================================================
+   HERO SECTIONS
+   ======================================================================== */
+
+.hero {
+    /* Ubuntu Earth-Tone Gradient - Used on ALL pages */
+    background: linear-gradient(135deg, #8AA67E 0%, #7FC7C4 50%, #B8D4E8 100%);
+    color: white;
+    padding: var(--spacing-xxxl) 0;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+/* Alternative gradients for specific pages (if needed) */
+/* Uncomment and apply class to customize individual pages */
+
+/* .hero-professional {
+    background: linear-gradient(135deg, #8FBC8F 0%, #87CEEB 100%);
+}
+
+.hero-community {
+    background: linear-gradient(135deg, #8AA67E 0%, #E8A87C 100%);
+}
+
+.hero-subtle {
+    background: linear-gradient(135deg, #7FC7C4 0%, #8FBC8F 100%);
+} */
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+}
+
+.hero-title {
+    font-size: var(--font-size-5xl);
+    font-weight: 700;
+    margin-bottom: var(--spacing-md);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.hero-subtitle {
+    font-size: var(--font-size-xl);
+    margin-bottom: var(--spacing-xxl);
+    opacity: 0.95;
+    font-weight: 300;
+    line-height: 1.6;
+}
+
+.hero-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: var(--spacing-xl);
+    margin-top: var(--spacing-xxl);
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: var(--spacing-lg);
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-lg);
+    backdrop-filter: blur(10px);
+    transition: transform var(--transition-base);
+}
+
+.stat:hover {
+    transform: translateY(-4px);
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.stat-value {
+    font-size: var(--font-size-4xl);
+    font-weight: bold;
+    margin-bottom: var(--spacing-xs);
+}
+
+.stat-label {
+    font-size: var(--font-size-sm);
+    opacity: 0.9;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ========================================================================
+   FOUR ELEMENTS SECTION
+   ======================================================================== */
+
+.four-elements {
+    padding: var(--spacing-xxxl) 0;
+    background: var(--background-alt);
+}
+
+.elements-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--spacing-xl);
+    margin-top: var(--spacing-xxl);
+}
+
+.element-card {
+    background: var(--background);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+    box-shadow: var(--shadow-md);
+    transition: all var(--transition-slow);
+    border-top: 4px solid transparent;
+    position: relative;
+    overflow: hidden;
+}
+
+.element-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    transition: height var(--transition-slow);
+}
+
+.element-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-lg);
+}
+
+.element-card:hover::before {
+    height: 8px;
+}
+
+/* Element-specific colors and gradients */
+.element-air {
+    border-top-color: var(--element-air);
+}
+
+.element-air::before {
+    background: linear-gradient(90deg, var(--element-air), var(--ubuntu-contributor));
+}
+
+.element-water {
+    border-top-color: var(--element-water);
+}
+
+.element-water::before {
+    background: linear-gradient(90deg, var(--element-water), var(--ubuntu-integrator));
+}
+
+.element-earth {
+    border-top-color: var(--element-earth);
+}
+
+.element-earth::before {
+    background: linear-gradient(90deg, var(--element-earth), var(--ubuntu-integrator));
+}
+
+.element-fire {
+    border-top-color: var(--element-fire);
+}
+
+.element-fire::before {
+    background: linear-gradient(90deg, var(--element-fire), var(--ubuntu-participant));
+}
+
+.element-header {
+    text-align: center;
+    margin-bottom: var(--spacing-lg);
+    padding-bottom: var(--spacing-lg);
+    border-bottom: 1px solid var(--border-light);
+}
+
+.element-symbol {
+    font-size: var(--font-size-5xl);
+    display: block;
+    margin-bottom: var(--spacing-sm);
+    line-height: 1;
+}
+
+.element-name {
+    font-size: var(--font-size-2xl);
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-xs);
+}
+
+.element-body {
+    text-align: center;
+}
+
+.token-code {
+    font-size: var(--font-size-xl);
+    font-weight: bold;
+    color: var(--primary-gradient-start);
+    margin-bottom: var(--spacing-xs);
+    font-family: var(--font-monospace);
+}
+
+.ubuntu-principle {
+    font-size: var(--font-size-base);
+    color: var(--text-secondary);
+    font-style: italic;
+    margin-bottom: var(--spacing-md);
+}
+
+.element-description {
+    color: var(--text-primary);
+    line-height: 1.6;
+    margin-bottom: var(--spacing-lg);
+}
+
+.element-stats {
+    display: flex;
+    justify-content: space-around;
+    margin-top: var(--spacing-lg);
+    padding-top: var(--spacing-lg);
+    border-top: 1px solid var(--border-light);
+}
+
+.element-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.element-stat .stat-label {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: var(--spacing-xs);
+}
+
+.element-stat .stat-value {
+    font-size: var(--font-size-xl);
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.element-status {
+    margin-top: var(--spacing-md);
+    padding: var(--spacing-xs) var(--spacing-md);
+    border-radius: var(--radius-full);
+    display: inline-block;
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.element-status.status-live {
+    background: #e8f5e9;
+    color: var(--success);
+}
+
+.element-status.status-pending {
+    background: #fff3e0;
+    color: var(--warning);
+}
+
+.element-status.status-ready {
+    background: #e3f2fd;
+    color: var(--info);
+}
+
+/* ========================================================================
+   BUTTONS
+   ======================================================================== */
+
+.btn {
+    display: inline-block;
+    padding: var(--spacing-md) var(--spacing-xl);
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    font-size: var(--font-size-base);
+    text-align: center;
+    transition: all var(--transition-base);
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-md);
+    transition: transform var(--transition-base);
+}
+
+.btn:hover::before {
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary-gradient-start), var(--primary-gradient-end));
+    color: white;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-secondary {
+    background: var(--background);
+    color: var(--primary-gradient-start);
+    border: 2px solid var(--primary-gradient-start);
+}
+
+.btn-secondary:hover {
+    background: var(--primary-gradient-start);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.cta-buttons {
+    display: flex;
+    gap: var(--spacing-md);
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: var(--spacing-xl);
+}
+
+/* ========================================================================
+   CARDS & BOXES
+   ======================================================================== */
+
+.card {
+    background: var(--background);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+    box-shadow: var(--shadow-md);
+    transition: all var(--transition-base);
+}
+
+.card:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
+}
+
+.card-header {
+    margin-bottom: var(--spacing-lg);
+    padding-bottom: var(--spacing-lg);
+    border-bottom: 1px solid var(--border-light);
+}
+
+.card-title {
+    font-size: var(--font-size-2xl);
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-xs);
+}
+
+.card-body {
+    color: var(--text-primary);
+}
+
+/* ========================================================================
+   FOOTER
+   ======================================================================== */
+
+.footer {
+    background: var(--background-dark);
+    color: white;
+    padding: var(--spacing-xxl) 0 var(--spacing-lg);
+    margin-top: auto;
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-xl);
+    margin-bottom: var(--spacing-xl);
+}
+
+.footer-section h3,
+.footer-section h4 {
+    margin-bottom: var(--spacing-md);
+    color: white;
+}
+
+.footer-section ul {
+    list-style: none;
+}
+
+.footer-section ul li {
+    margin-bottom: var(--spacing-sm);
+}
+
+.footer-section a {
+    color: rgba(255, 255, 255, 0.8);
+    transition: color var(--transition-base);
+}
+
+.footer-section a:hover {
+    color: white;
+}
+
+.footer-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: var(--spacing-lg);
+    text-align: center;
+    font-size: var(--font-size-sm);
+    opacity: 0.8;
+}
+
+.attribution {
+    margin-top: var(--spacing-md);
+    font-size: var(--font-size-xs);
+    opacity: 0.7;
+}
+
+/* ========================================================================
+   UTILITY CLASSES
+   ======================================================================== */
+
+.badge {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    display: inline-block;
+}
+
+.badge.status-live {
+    background: #e8f5e9;
+    color: var(--success);
+}
+
+.badge.status-pending {
+    background: #fff3e0;
+    color: var(--warning);
+}
+
+.badge.status-error {
+    background: #ffebee;
+    color: var(--error);
+}
+
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+.mt-sm { margin-top: var(--spacing-sm); }
+.mt-md { margin-top: var(--spacing-md); }
+.mt-lg { margin-top: var(--spacing-lg); }
+.mt-xl { margin-top: var(--spacing-xl); }
+
+.mb-sm { margin-bottom: var(--spacing-sm); }
+.mb-md { margin-bottom: var(--spacing-md); }
+.mb-lg { margin-bottom: var(--spacing-lg); }
+.mb-xl { margin-bottom: var(--spacing-xl); }
+
+/* ========================================================================
+   RESPONSIVE DESIGN
+   ======================================================================== */
+
+/* Stories Page Specific Styles */
+/* Note: .stories-hero inherits the earth-tone gradient from .hero class above */
+/* No need to redefine - maintains consistency across all pages */
+
+.stories-hero .hero-content,
+.stories-hero h1,
+.stories-hero .lead,
+.stories-hero .hero-description {
+    position: relative;
+    z-index: 1;
+}
+
+/* Page-Specific Header Variations (Optional) */
+/* Apply these classes alongside .hero if you want different gradients for specific pages */
+
+/* Dashboard: Subtle zen gradient */
+.dashboard-header.hero {
+    background: linear-gradient(135deg, #7FC7C4 0%, #8FBC8F 100%);
+}
+
+/* Protocol: Professional sage to sky */
+.protocol-hero.hero {
+    background: linear-gradient(135deg, #8FBC8F 0%, #87CEEB 100%);
+}
+
+/* About: Warm community gradient */
+.about-header.hero {
+    background: linear-gradient(135deg, #8AA67E 0%, #E8A87C 100%);
+}
+
+/* ========================================================================
+   RESPONSIVE DESIGN
+   ======================================================================== */
+
+@media (max-width: 768px) {
+    :root {
+        --font-size-5xl: 2rem;
+        --font-size-4xl: 1.75rem;
+        --font-size-3xl: 1.5rem;
+    }
+    
+    .navbar .container {
+        flex-direction: column;
+        gap: var(--spacing-md);
+    }
+    
+    .navbar-menu {
+        flex-direction: column;
+        width: 100%;
+        text-align: center;
+    }
+    
+    .hero-title {
+        font-size: var(--font-size-4xl);
+    }
+    
+    .section-title {
+        font-size: var(--font-size-3xl);
+    }
+    
+    .elements-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .hero-stats {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+    }
+    
+    .cta-buttons {
+        flex-direction: column;
+    }
+    
+    .btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 0 var(--spacing-md);
+    }
+    
+    .section {
+        padding: var(--spacing-xl) 0;
+    }
+    
+    .element-card {
+        padding: var(--spacing-lg);
+    }
+}
+
+/* ========================================================================
+   ANIMATIONS
+   ======================================================================== */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.6s ease-out;
+}
+
+.animate-slide-in {
+    animation: slideIn 0.6s ease-out;
+}
+
+/* ========================================================================
+   PRINT STYLES
+   ======================================================================== */
+
+@media print {
+    .navbar,
+    .footer,
+    .btn {
+        display: none;
+    }
+    
+    * {
+        box-shadow: none !important;
+    }
+    
+    a {
+        text-decoration: underline;
+    }
+}

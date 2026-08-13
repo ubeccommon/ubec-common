@@ -1,0 +1,14 @@
+# .gitignore
+# Ignore specific files
+.env
+*.log
+*.pyc
+*.csv
+*.png
+*.html
+*.json
+
+# Ignore entire directories
+__pycache__/
+reports
+backups
